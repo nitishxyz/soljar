@@ -50,6 +50,18 @@ body {
     --code-comment: hsl(220 15% 35%);
     --code-operator: hsl(180 85% 30%);
     --code-punctuation: hsl(220 15% 20%);
+    --accent-purple: 267 100% 60%;
+    --accent-purple-foreground: 267 100% 98%;
+    --accent-purple-muted: 267 70% 95%;
+    --accent-purple-dark: 267 100% 50%;
+    --accent-blue: 210 100% 60%;
+    --accent-blue-foreground: 210 100% 98%;
+    --accent-blue-muted: 210 70% 95%;
+    --accent-blue-dark: 210 100% 50%;
+    --accent-green: 142 100% 60%;
+    --accent-green-foreground: 142 100% 98%;
+    --accent-green-muted: 142 70% 95%;
+    --accent-green-dark: 142 100% 50%;
   }
   .dark {
     --background: 240 10% 8%;
@@ -93,6 +105,18 @@ body {
     --code-comment: hsl(240 5% 64.9%);
     --code-operator: #56b6c2;
     --code-punctuation: hsl(240 5% 64.9%);
+    --accent-purple: 267 100% 75%;
+    --accent-purple-foreground: 267 100% 15%;
+    --accent-purple-muted: 267 30% 15%;
+    --accent-purple-dark: 267 100% 65%;
+    --accent-blue: 210 100% 75%;
+    --accent-blue-foreground: 210 100% 15%;
+    --accent-blue-muted: 210 30% 15%;
+    --accent-blue-dark: 210 100% 65%;
+    --accent-green: 142 100% 75%;
+    --accent-green-foreground: 142 100% 15%;
+    --accent-green-muted: 142 30% 15%;
+    --accent-green-dark: 142 100% 65%;
   }
 }
 

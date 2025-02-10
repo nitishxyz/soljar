@@ -1,4 +1,4 @@
 {
-  "rpcUrl": "http://127.0.0.1:8899",
+  "rpcUrl": "https://api.devnet.solana.com",
   "keypairPath": "/Users/nitishxyz/.config/solana/id.json"
 }

@@ -1,10 +1,11 @@
 import "./globals.css";
-import { ClusterProvider } from "@/components/cluster/cluster-data-access";
-import { SolanaProvider } from "@/components/solana/solana-provider";
+import { ClusterProvider } from "@/web3/cluster/cluster-data-access";
+import { SolanaProvider } from "@/web3/solana/solana-provider";
 import { ReactQueryProvider } from "./react-query-provider";
 import { Root } from "@/components/root";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,6 +39,7 @@ export default function RootLayout({
             </ClusterProvider>
           </ReactQueryProvider>
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -53,10 +53,9 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        {/* Logo */}
         <div className="flex items-center justify-center gap-2 py-4">
-          <Beaker className="w-8 h-8" />
-          <h1 className="text-2xl font-medium">soljar.xyz</h1>
+          <Beaker className="w-8 h-8 text-accent-purple" />
+          <span className="text-2xl font-medium">soljar.xyz</span>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -66,12 +65,21 @@ export function AppSidebar() {
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                className="gap-4 px-6  w-full"
+                className={`gap-4 px-6 w-full hover:bg-accent-purple/10 ${
+                  pathname === item.href
+                    ? `bg-accent-purple/15 text-accent-purple`
+                    : ""
+                }`}
                 size="lg"
                 data-active={pathname === item.href}
               >
                 <a href={item.href} className="font-medium">
-                  <item.icon style={{ width: "24px", height: "24px" }} />
+                  <item.icon
+                    className={
+                      pathname === item.href ? "text-accent-purple" : ""
+                    }
+                    style={{ width: "24px", height: "24px" }}
+                  />
                   <span>{item.title}</span>
                 </a>
               </SidebarMenuButton>

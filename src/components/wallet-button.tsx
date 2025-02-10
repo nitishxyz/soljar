@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
 
 function truncateAddress(address: string, startLength = 4, endLength = 4) {
   if (address.length <= startLength + endLength) return address;
@@ -24,6 +25,8 @@ export function WalletButton() {
   const { setVisible: setModalVisible } = useWalletModal();
   const [copied, setCopied] = React.useState(false);
   const [rpcProvider, setRpcProvider] = React.useState("helius");
+  const { getUser } = useSoljarUser();
+  const { data: user, isLoading } = getUser;
 
   const copyToClipboard = async (address: string) => {
     await navigator.clipboard.writeText(address);
@@ -52,7 +55,7 @@ export function WalletButton() {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="font-mono text-lg" size="lg">
           <CreditCard className="!size-7 mr-2" />
-          {truncateAddress(address)}
+          {user?.username || truncateAddress(address)}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[280px] space-y-2 p-2">

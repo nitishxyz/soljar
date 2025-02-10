@@ -1,5 +1,7 @@
 "use client";
 
+import { usePlatform } from "@/web3/hooks/use-platform";
+import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 export const Root = ({
@@ -11,11 +13,22 @@ export const Root = ({
   all: React.ReactNode;
   auth: React.ReactNode;
 }) => {
-  const { connected, connecting } = useWallet();
+  const { publicKey, connecting } = useWallet();
+  const { getUser } = useSoljarUser();
+  const { platform, isPlatformLoading, initPlatform } = usePlatform();
+  const { data: user, isLoading } = getUser;
 
-  if (connecting) {
-    return loading;
+  if (isLoading || isPlatformLoading || connecting) {
+    return <>{loading}</>;
   }
 
-  return <>{connected ? auth : all}</>;
+  if (!platform) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <button onClick={() => initPlatform()}>Initialize Platform</button>
+      </div>
+    );
+  }
+
+  return <>{user && publicKey ? auth : all}</>;
 };
