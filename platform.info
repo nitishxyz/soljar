@@ -1,0 +1,29 @@
+Soljar – A Decentralized Tipping & Funding Platform
+
+Soljar is a Web3-native sponsorship and tipping platform built on Solana, allowing creators, developers, and anyone else to receive crypto donations seamlessly. The goal is to provide a simple and permissionless way for users to accept SOL, USDC, and other tokens without requiring sign-ups, intermediaries, or centralized control.
+
+How It Works
+	1.	Set Up Your Jar
+	•	Users create a Jar (a personal treasury) that serves as their on-chain tipping account.
+	•	Each Jar is tied to their wallet and acts as a place to receive and track donations.
+	2.	Generate a “Sponsor Me” Button or Link
+	•	Users can generate a custom button or link (e.g., soljar.xyz/yourname) to embed on their website, GitHub, or social media.
+	•	Anyone clicking the button can send a tip instantly in SOL or USDC via a simple on-chain transaction.
+	3.	Flexible Funding Options
+	•	Direct Payments: Tips go straight to the recipient’s wallet.
+	•	Treasury Mode: Funds are pooled in the Jar, allowing users to track sources (e.g., which website sent the tip) before claiming them later.
+	4.	Transparent & Decentralized
+	•	Every transaction happens on-chain, meaning no middlemen, no platform lock-ins.
+	•	Built-in tracking allows users to see where their tips are coming from (e.g., which website link generated the tip).
+	5.	For More Than Just Developers
+	•	While starting with developers (similar to GitHub Sponsors), Soljar can be used by anyone—artists, writers, educators, or anyone seeking community support.
+	•	Future features could include fundraising campaigns, community funding pools, and even NFT-based memberships.
+
+Why Soljar?
+
+✅ Decentralized & Open – No sign-ups, no banks, no middlemen.
+✅ Instant Crypto Tips – Users can receive SOL/USDC instantly.
+✅ Simple & Transparent – No complicated setup, just share a link and start receiving tips.
+✅ Multi-Use – Great for devs, creators, communities, and more.
+
+Soljar makes tipping and sponsoring creators in crypto as easy as sharing a link. 🚀
