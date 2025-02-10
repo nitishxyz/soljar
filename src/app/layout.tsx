@@ -14,13 +14,9 @@ const inter = Inter({
 });
 
 export default function RootLayout({
-  loading,
-  all,
-  auth,
+  children,
 }: {
-  loading: React.ReactNode;
-  all: React.ReactNode;
-  auth: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -34,7 +30,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <ClusterProvider>
               <SolanaProvider>
-                <Root loading={loading} all={all} auth={auth} />
+                <Root>{children}</Root>
               </SolanaProvider>
             </ClusterProvider>
           </ReactQueryProvider>

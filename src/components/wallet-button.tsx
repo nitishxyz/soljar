@@ -20,7 +20,7 @@ function truncateAddress(address: string, startLength = 4, endLength = 4) {
   return `${address.slice(0, startLength)}...${address.slice(-endLength)}`;
 }
 
-export function WalletButton() {
+export function WalletButton({ className }: { className?: string }) {
   const { connected, publicKey, disconnect, select } = useWallet();
   const { setVisible: setModalVisible } = useWalletModal();
   const [copied, setCopied] = React.useState(false);
@@ -40,7 +40,7 @@ export function WalletButton() {
         variant="outline"
         onClick={() => setModalVisible(true)}
         size="lg"
-        className="font-medium text-lg"
+        className={cn("font-medium text-lg", className)}
       >
         <CreditCard className="mr-2 !size-6" />
         Connect Wallet
