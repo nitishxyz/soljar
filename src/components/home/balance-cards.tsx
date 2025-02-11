@@ -1,6 +1,7 @@
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useBalances } from "@/web3/hooks/use-balances";
+import { ArrowDownToLine } from "lucide-react";
 
 export function BalanceCards() {
   const { solBalance, usdcBalance, usdtBalance, isLoading } = useBalances();
@@ -39,7 +40,8 @@ export function BalanceCards() {
             variant="ghost"
             className="w-full bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 transition-all duration-300 group-hover:scale-105"
           >
-            <span className="mr-2">↑</span> Withdraw
+            <ArrowDownToLine className="w-4 h-4 mr-2" />
+            Withdraw
           </Button>
         </CardHeader>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
@@ -78,7 +80,8 @@ export function BalanceCards() {
             variant="ghost"
             className="w-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-all duration-300 group-hover:scale-105"
           >
-            <span className="mr-2">↑</span> Withdraw
+            <ArrowDownToLine className="w-4 h-4 mr-2" />
+            Withdraw
           </Button>
         </CardHeader>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
@@ -117,7 +120,8 @@ export function BalanceCards() {
             variant="ghost"
             className="w-full bg-green-500/10 hover:bg-green-500/20 text-green-700 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 transition-all duration-300 group-hover:scale-105"
           >
-            <span className="mr-2">↑</span> Withdraw
+            <ArrowDownToLine className="w-4 h-4 mr-2" />
+            Withdraw
           </Button>
         </CardHeader>
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-500/20 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
