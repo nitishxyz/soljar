@@ -152,39 +152,40 @@ export function WithdrawalHistoryCard() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3 relative">
-          {isLoading ? (
-            Array(4)
-              .fill(0)
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="animate-pulse flex items-center justify-between p-3 rounded-lg"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full bg-muted" />
-                    <div className="h-4 w-24 bg-muted rounded" />
+          {isLoading
+            ? Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="animate-pulse flex items-center justify-between p-3 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-muted" />
+                      <div className="h-4 w-24 bg-muted rounded" />
+                    </div>
+                    <div className="h-4 w-16 bg-muted rounded" />
                   </div>
-                  <div className="h-4 w-16 bg-muted rounded" />
-                </div>
-              ))
-          ) : (
-            <>
-              <div
-                className="absolute -inset-px top-0 left-0 right-0 -bottom-10 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"
-                style={{ margin: "-1.5rem", marginBottom: "-3.5rem" }}
-              >
-                <p className="text-sm text-muted-foreground">
-                  No withdrawals yet
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Withdraw your funds to see them here!
-                </p>
-              </div>
-              {renderWithdrawalsList(mockWithdrawals, true)}
-            </>
-          )}
+                ))
+            : null}
         </div>
 
+        {!isLoading ? (
+          <>
+            <div
+              className="absolute -inset-px top-20 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"
+              // style={{ margin: "-1.5rem", marginBottom: "-3.5rem" }}
+            >
+              <p className="text-sm text-muted-foreground">
+                No withdrawals yet
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Withdraw your funds to see them here!
+              </p>
+            </div>
+            {renderWithdrawalsList(mockWithdrawals, true)}
+          </>
+        ) : null}
         {/* Bottom gradient line */}
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </CardContent>

@@ -148,44 +148,42 @@ export function RecentTipsCard() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3 relative">
-          {isLoading ? (
-            // Add loading skeleton
-            Array(4)
-              .fill(0)
-              .map((_, index) => (
-                <div
-                  key={index}
-                  className="animate-pulse flex items-center justify-between py-3 px-4 rounded-lg"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-8 h-8 rounded-full bg-muted" />
-                    <div>
-                      <div className="h-4 w-24 bg-muted rounded" />
-                      <div className="h-3 w-16 bg-muted rounded mt-2" />
+          {isLoading
+            ? // Add loading skeleton
+              Array(4)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="animate-pulse flex items-center justify-between py-3 px-4 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-8 h-8 rounded-full bg-muted" />
+                      <div>
+                        <div className="h-4 w-24 bg-muted rounded" />
+                        <div className="h-3 w-16 bg-muted rounded mt-2" />
+                      </div>
                     </div>
+                    <div className="h-4 w-32 bg-muted rounded" />
                   </div>
-                  <div className="h-4 w-32 bg-muted rounded" />
-                </div>
-              ))
-          ) : formatDeposits && formatDeposits.length > 0 ? (
-            renderTipsList(formatDeposits)
-          ) : (
-            <>
-              <div
-                className="absolute -inset-px top-0 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"
-                style={{ margin: "-1.5rem", marginBottom: "-3.5rem" }}
-              >
-                <p className="text-sm text-muted-foreground">No tips yet</p>
-                <p className="text-xs text-muted-foreground">
-                  Share your link to start receiving tips!
-                </p>
-              </div>
-              {renderTipsList(mockRecentTips, true)}
-            </>
-          )}
+                ))
+            : formatDeposits && formatDeposits.length > 0
+            ? renderTipsList(formatDeposits)
+            : null}
         </div>
       </CardContent>
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      {!formatDeposits || formatDeposits.length === 0 ? (
+        <>
+          <div className="absolute -inset-px top-20 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3">
+            <p className="text-sm text-muted-foreground">No tips yet</p>
+            <p className="text-xs text-muted-foreground">
+              Share your link to start receiving tips!
+            </p>
+          </div>
+          {renderTipsList(mockRecentTips, true)}
+        </>
+      ) : null}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10" />
     </Card>
   );
 }

@@ -6,10 +6,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
 
 export function CreateUserForm() {
-  const { getUserByUsername, createUser } = useSoljarUser();
+  const { useGetUserByUsername, createUser } = useSoljarUser();
   const [username, setUsername] = useState("");
   const [isChecking, setIsChecking] = useState(false);
   const { toast } = useToast();
+
+  const userByName = useGetUserByUsername(username, { enabled: false });
 
   const handleCreateUser = async () => {
     if (!username) {
@@ -32,9 +34,8 @@ export function CreateUserForm() {
 
     setIsChecking(true);
     try {
-      const userByName = await getUserByUsername.refetch();
-
-      if (userByName.data?.usernameTaken) {
+      const result = await userByName.refetch();
+      if (result.data?.usernameTaken) {
         toast({
           title: "Username taken",
           description: "This username is already in use",

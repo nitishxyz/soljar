@@ -59,24 +59,29 @@ export function useSoljarUser() {
     retry: false,
   });
 
-  const getUserByUsername = useQuery({
-    queryKey: ["soljar", "user-by-username"],
-    queryFn: async ({ queryKey }) => {
-      const username = queryKey[2] as string;
-      const userByNamePDA = findUserNamePDA(program, username);
+  const useGetUserByUsername = (
+    username: string,
+    options?: { enabled: boolean }
+  ) =>
+    useQuery({
+      queryKey: ["soljar", "user-by-username", username],
+      queryFn: async () => {
+        if (!username) return { usernameTaken: false };
 
-      try {
-        const userByName = await program.account.userByName.fetch(
-          userByNamePDA
-        );
-        return userByName;
-      } catch (error) {
-        console.error("Error fetching user by username:", error);
-        return null;
-      }
-    },
-    enabled: false,
-  });
+        const userByNamePDA = findUserNamePDA(program, username);
+
+        try {
+          const userByName = await program.account.userByName.fetch(
+            userByNamePDA
+          );
+          return { usernameTaken: true, user: userByName };
+        } catch (error) {
+          console.error("Error fetching user by username:", error);
+          return { usernameTaken: false };
+        }
+      },
+      enabled: options?.enabled ?? true,
+    });
 
   const createUser = useMutation({
     mutationKey: ["soljar", "create-user"],
@@ -113,7 +118,7 @@ export function useSoljarUser() {
   return {
     getUser,
     checkUser,
-    getUserByUsername,
+    useGetUserByUsername,
     createUser,
   };
 }
