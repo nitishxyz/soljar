@@ -1,7 +1,7 @@
 import { PublicKey, Connection } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 
-type Currency = "SOL" | "USDC" | "USDT";
+export type Currency = "SOL" | "USDC" | "USDT";
 
 /**
  * Determines the appropriate token program ID based on the mint address by checking the mint account's owner

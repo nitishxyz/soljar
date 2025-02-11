@@ -2,51 +2,35 @@ import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
+import { useRecentDeposits } from "@/hooks/use-recent-deposits";
+import { Currency } from "@/web3/utils";
 
 const mockRecentTips = [
   {
-    id: 1,
+    id: "mock1",
     amount: 0.5,
     currency: "SOL",
     usdPrice: 98.45,
-    from: "alex.sol",
+    from: "wallet.sol",
     timestamp: "2h ago",
     color: "purple" as const,
-    signature: "1234567890",
+    signature: "mock1",
   },
   {
-    id: 2,
-    amount: 25,
-    currency: "USDC",
-    usdPrice: 1,
-    from: "maria.sol",
-    timestamp: "5h ago",
-    color: "blue" as const,
-    signature: "1234567890",
-  },
-  {
-    id: 3,
-    amount: 15.5,
-    currency: "USDT",
-    usdPrice: 1,
-    from: "john.sol",
-    timestamp: "1d ago",
-    color: "green" as const,
-    signature: "1234567890",
-  },
-  {
-    id: 4,
-    amount: 0.8,
+    id: "mock2",
+    amount: 0.3,
     currency: "SOL",
     usdPrice: 98.45,
-    from: "sarah.sol",
-    timestamp: "1d ago",
+    from: "user.sol",
+    timestamp: "5h ago",
     color: "purple" as const,
-    signature: "1234567890",
+    signature: "mock2",
   },
 ];
 
 export function RecentTipsCard() {
+  const { data: recentDeposits, isLoading } = useRecentDeposits();
+
   const getColorClasses = (color: string) => {
     if (color === "green") {
       return {
@@ -71,6 +55,86 @@ export function RecentTipsCard() {
     };
   };
 
+  const formatTimeAgo = (timestamp: number) => {
+    const now = Date.now() / 1000; // Convert to seconds
+    const diff = now - timestamp;
+
+    if (diff < 3600) {
+      const minutes = Math.floor(diff / 60);
+      return `${minutes}m ago`;
+    } else if (diff < 86400) {
+      const hours = Math.floor(diff / 3600);
+      return `${hours}h ago`;
+    } else {
+      const days = Math.floor(diff / 86400);
+      return `${days}d ago`;
+    }
+  };
+
+  const formatDeposits = recentDeposits?.map((deposit) => ({
+    id: deposit.meta.toString(),
+    amount: deposit.amount,
+    currency: "SOL", // Since currencyMint is SOL's native mint
+    usdPrice: 98.45, // You might want to fetch this dynamically
+    from:
+      deposit.signer.toString().slice(0, 4) +
+      "..." +
+      deposit.signer.toString().slice(-4),
+    timestamp: formatTimeAgo(deposit.createdAt),
+    color: "purple" as const,
+    signature: deposit.meta.toString(),
+  }));
+
+  const renderTipsList = (tips: typeof mockRecentTips, isBlurred = false) => {
+    return tips.map((tip, index) => {
+      const colors = getColorClasses(tip.color);
+      return (
+        <motion.a
+          href={
+            isBlurred ? undefined : `https://solscan.io/tx/${tip.signature}`
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
+          key={tip.id}
+          className={`group relative flex items-center justify-between py-3 px-4 rounded-lg ${
+            colors.bg
+          } transition-colors ${
+            isBlurred ? "pointer-events-none" : "cursor-pointer"
+          }`}
+        >
+          <div className="flex items-center gap-4">
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${colors.iconBg}`}
+            >
+              <CurrencyIcon
+                currency={tip.currency as Currency}
+                className="w-5 h-5"
+              />
+            </div>
+            <div>
+              <p className="font-medium text-sm">{tip.from}</p>
+              <p className="text-xs text-muted-foreground">{tip.timestamp}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <p
+              className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
+            >
+              +{tip.amount} {tip.currency}
+            </p>
+            <span className="text-xs text-muted-foreground">
+              (≈${(tip.amount * tip.usdPrice).toFixed(2)})
+            </span>
+            <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+        </motion.a>
+      );
+    });
+  };
+
   return (
     <Card className="overflow-hidden relative group">
       <CardHeader>
@@ -83,50 +147,42 @@ export function RecentTipsCard() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-3">
-          {mockRecentTips.map((tip, index) => {
-            const colors = getColorClasses(tip.color);
-            return (
-              <motion.a
-                href={`https://solscan.io/tx/${tip.signature}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                key={tip.id}
-                className={`group relative flex items-center justify-between py-3 px-4 rounded-lg ${colors.bg} transition-colors cursor-pointer`}
+        <div className="space-y-3 relative">
+          {isLoading ? (
+            // Add loading skeleton
+            Array(4)
+              .fill(0)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className="animate-pulse flex items-center justify-between py-3 px-4 rounded-lg"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-muted" />
+                    <div>
+                      <div className="h-4 w-24 bg-muted rounded" />
+                      <div className="h-3 w-16 bg-muted rounded mt-2" />
+                    </div>
+                  </div>
+                  <div className="h-4 w-32 bg-muted rounded" />
+                </div>
+              ))
+          ) : formatDeposits && formatDeposits.length > 0 ? (
+            renderTipsList(formatDeposits)
+          ) : (
+            <>
+              <div
+                className="absolute -inset-px top-0 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"
+                style={{ margin: "-1.5rem", marginBottom: "-3.5rem" }}
               >
-                <div className="flex items-center gap-4">
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center ${colors.iconBg}`}
-                  >
-                    <CurrencyIcon
-                      currency={tip.currency as "SOL" | "USDC" | "USDT"}
-                      className="w-5 h-5"
-                    />
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">{tip.from}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {tip.timestamp}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p
-                    className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
-                  >
-                    +{tip.amount} {tip.currency}
-                  </p>
-                  <span className="text-xs text-muted-foreground">
-                    (≈${(tip.amount * tip.usdPrice).toFixed(2)})
-                  </span>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-              </motion.a>
-            );
-          })}
+                <p className="text-sm text-muted-foreground">No tips yet</p>
+                <p className="text-xs text-muted-foreground">
+                  Share your link to start receiving tips!
+                </p>
+              </div>
+              {renderTipsList(mockRecentTips, true)}
+            </>
+          )}
         </div>
       </CardContent>
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
