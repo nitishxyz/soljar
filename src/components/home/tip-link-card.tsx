@@ -12,7 +12,7 @@ interface TipLinkCardProps {
 
 export function TipLinkCard({ username }: TipLinkCardProps) {
   const [copied, setCopied] = useState(false);
-  const tipLink = `https://soljar.xyz/${username}`;
+  const tipLink = `https://soljar.vercel.app/${username}`;
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(tipLink);
