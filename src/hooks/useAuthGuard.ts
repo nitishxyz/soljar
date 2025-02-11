@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { usePlatform } from "@/web3/hooks/use-platform";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
+import { useSoljarProgram } from "@/web3/soljar-data-access";
 
 const authPaths = [
   "/dashboard",
@@ -17,6 +18,7 @@ const useAuthGuard = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { publicKey, connecting } = useWallet();
+  const { userPublicKey } = useSoljarProgram();
   const { getUser } = useSoljarUser();
   const { platform, isPlatformLoading, initPlatform } = usePlatform();
   const { data: user, isLoading } = getUser;

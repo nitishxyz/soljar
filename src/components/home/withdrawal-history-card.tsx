@@ -38,6 +38,13 @@ export function WithdrawalHistoryCard() {
         bg: "hover:bg-green-500/5",
         iconBg: "bg-green-500/10",
       };
+    } else if (color === "blue") {
+      return {
+        text: "text-blue-500",
+        hover: "hover:text-blue-400",
+        bg: "hover:bg-blue-500/5",
+        iconBg: "bg-blue-500/10",
+      };
     }
     return {
       text: `text-accent-${color}`,
