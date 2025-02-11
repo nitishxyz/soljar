@@ -15,6 +15,7 @@ import { useCluster } from "@/web3/cluster/cluster-data-access";
 import { useAnchorProvider } from "@/web3/solana/solana-provider";
 import Loading from "@/app/loading/page";
 import { findUserPDA } from "./pda-helper";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SoljarContextState {
   program: ReturnType<typeof getSoljarProgram>;
@@ -79,7 +80,7 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
   };
 
   if (!isInitialized) {
-    return <Loading />;
+    return <Skeleton className="w-full h-screen" />;
   }
 
   return (

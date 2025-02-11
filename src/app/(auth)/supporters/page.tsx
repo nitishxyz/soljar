@@ -76,11 +76,12 @@ export default function SupportersPage() {
                     className="w-7 h-7"
                   />
                 </div>
-                <div>
+                <div className="flex flex-col">
                   <p className="font-medium text-lg">
                     {formatAddress(supporter.signer.toString())}
                   </p>
-                  <p className="text-sm text-muted-foreground">
+                  <span className="text-sm text-muted-foreground">
+                    Last active{" "}
                     {formatDistance(
                       new Date(supporter.updatedAt * 1000),
                       new Date(),
@@ -88,17 +89,16 @@ export default function SupportersPage() {
                         addSuffix: true,
                       }
                     )}
-                  </p>
+                  </span>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <p className="font-medium text-lg text-accent-purple hover:text-accent-purple/80 transition-colors">
+              <div className="flex flex-col items-end gap-1 min-w-[140px]">
+                <span className="font-medium text-lg text-accent-purple">
+                  {supporter.amount} {getCurrencyFromMint(supporter.mint)}
+                </span>
+                <p className="text-sm text-muted-foreground">
                   {supporter.tipCount} tips
                 </p>
-                <span className="text-sm text-muted-foreground">
-                  ({supporter.amount} {getCurrencyFromMint(supporter.mint)})
-                </span>
-                <ExternalLink className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             </motion.a>
           ))}

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ThemeToggleButton } from "@/components/theme-toggle-button";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const menuItems = [
   {
@@ -74,7 +75,7 @@ export function AppSidebar() {
                 size="lg"
                 data-active={pathname === item.href}
               >
-                <a href={item.href} className="font-medium">
+                <Link href={item.href} className="font-medium">
                   <item.icon
                     className={
                       pathname === item.href ? "text-accent-purple" : ""
@@ -82,7 +83,7 @@ export function AppSidebar() {
                     style={{ width: "24px", height: "24px" }}
                   />
                   <span>{item.title}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}

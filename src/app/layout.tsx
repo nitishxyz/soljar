@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { SoljarBaseProvider } from "@/web3/soljar-base-provider";
+import { LoadingProvider } from "@/providers/loading-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,15 +29,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>
-            <ClusterProvider>
-              <SolanaProvider>
-                <SoljarBaseProvider>
-                  <Root>{children}</Root>
-                </SoljarBaseProvider>
-              </SolanaProvider>
-            </ClusterProvider>
-          </ReactQueryProvider>
+          <LoadingProvider>
+            <ReactQueryProvider>
+              <ClusterProvider>
+                <SolanaProvider>
+                  <SoljarBaseProvider>
+                    <Root>{children}</Root>
+                  </SoljarBaseProvider>
+                </SolanaProvider>
+              </ClusterProvider>
+            </ReactQueryProvider>
+          </LoadingProvider>
         </ThemeProvider>
         <Toaster />
       </body>
