@@ -14,7 +14,7 @@ export function ThemeToggleButton({ isCollapsed }: { isCollapsed: boolean }) {
   return (
     <button
       onClick={toggleTheme}
-      className={`w-full rounded-lg gap-3 px-3 py-2.5 text-lg stext-muted-foreground hover:bg-secondary hover:text-primary focus:bg-secondary focus:text-primary focus:outline-none transition-colors flex items-center ${
+      className={`w-full rounded-lg gap-3 px-7 py-2.5 text-lg font-medium stext-muted-foreground hover:bg-secondary hover:text-primary focus:bg-secondary focus:text-primary focus:outline-none transition-colors flex items-center ${
         isCollapsed ? "justify-center" : "text-left gap-2"
       }`}
     >
