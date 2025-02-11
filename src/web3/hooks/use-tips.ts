@@ -44,8 +44,15 @@ export function useTips(initialPage = 0) {
       const index = await program.account.index.fetch(indexPda);
       const totalPages = Math.ceil(index.totalDeposits / 50);
 
+      // Calculate the page number from the end (reverse order)
+      const reversedPageParam = totalPages - 1 - pageParam;
+
       // Fetch deposit index for the requested page
-      const depositIndexPda = findDepositIndexPDA(program, indexPda, pageParam);
+      const depositIndexPda = findDepositIndexPDA(
+        program,
+        indexPda,
+        reversedPageParam
+      );
       const depositIndex = await program.account.depositIndex.fetch(
         depositIndexPda
       );
@@ -53,6 +60,7 @@ export function useTips(initialPage = 0) {
       // Fetch all deposits and their meta data from the current page
       const tipPromises = depositIndex.deposits
         .slice(0, depositIndex.totalItems)
+        .reverse() // Reverse the array to get newest first
         .map(async (pubkey: PublicKey) => {
           const deposit = await program.account.deposit.fetch(pubkey);
           let meta_data;
@@ -73,7 +81,7 @@ export function useTips(initialPage = 0) {
         meta: tip.meta,
         tipLink: tip.tipLink,
         currencyMint: tip.currencyMint,
-        amount: tip.amount.toNumber() / 1e9, // Convert from lamports
+        amount: tip.amount.toNumber() / 1e9,
         createdAt: tip.createdAt.toNumber(),
         updatedAt: tip.updatedAt.toNumber(),
         meta_data: tip.meta_data
@@ -103,7 +111,7 @@ export function useTips(initialPage = 0) {
     initialPageParam: initialPage,
   });
 
-  // Flatten the pages
+  // Flatten the pages and maintain reverse chronological order
   const tips = data?.pages.flatMap((page) => page.tips) ?? [];
   const totalTips = data?.pages[0]?.totalTips ?? 0;
 

@@ -39,11 +39,14 @@ export function useSupporters(initialPage = 0) {
       const index = await program.account.index.fetch(indexPda);
       const totalPages = Math.ceil(index.totalSupporters / 50);
 
+      // Calculate the page number from the end (reverse order)
+      const reversedPageParam = totalPages - 1 - pageParam;
+
       // Fetch supporter index for the requested page
       const supporterIndexPda = findSupporterIndexPDA(
         program,
         indexPda,
-        pageParam
+        reversedPageParam
       );
       const supporterIndex = await program.account.supporterIndex.fetch(
         supporterIndexPda
@@ -52,6 +55,7 @@ export function useSupporters(initialPage = 0) {
       // Fetch all supporters from the current page
       const supporterPromises = supporterIndex.supporters
         .slice(0, supporterIndex.totalItems)
+        .reverse() // Reverse the array to get newest first
         .map((pubkey: PublicKey) => program.account.supporter.fetch(pubkey));
 
       const supporters = await Promise.all(supporterPromises);
@@ -87,7 +91,7 @@ export function useSupporters(initialPage = 0) {
     initialPageParam: initialPage,
   });
 
-  // Flatten the pages
+  // Flatten the pages and maintain reverse chronological order
   const supporters = data?.pages.flatMap((page) => page.supporters) ?? [];
   const totalSupporters = data?.pages[0]?.totalSupporters ?? 0;
 

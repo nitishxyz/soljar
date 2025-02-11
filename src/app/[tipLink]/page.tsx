@@ -54,8 +54,6 @@ export default function TipPage() {
 
   const { tipLink: tipLinkData, user } = data;
 
-  console.log(tipLinkData);
-
   const handleSendTip = async () => {
     if (!wallet.publicKey) return;
 

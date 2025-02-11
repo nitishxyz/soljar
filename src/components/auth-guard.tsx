@@ -34,34 +34,25 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const isTipLinkRoute = pathname.match(/^\/[^/]+$/); // Matches /{tipLink} pattern
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
     const checkAuth = async () => {
-      if (connecting) {
-        timeoutId = setTimeout(checkAuth, 500);
-        return;
-      }
+      if (connecting) return; // Don't proceed if still connecting
 
       if (publicKey) {
         const { data } = await checkUser.refetch();
         setUser(data);
-        setIsCheckingAuth(false);
-        setIsInitialLoading(false);
-        return;
       }
 
       setIsCheckingAuth(false);
       setIsInitialLoading(false);
     };
 
-    timeoutId = setTimeout(checkAuth, 2000);
+    // Only run auth check if we're checking auth
+    if (isCheckingAuth) {
+      checkAuth();
+    }
 
-    return () => clearTimeout(timeoutId);
-  }, [connecting, publicKey, checkUser, setIsInitialLoading]);
-
-  console.log("isInitialLoading", isInitialLoading);
-  console.log("isCheckingAuth", isCheckingAuth);
-  console.log("user", user);
+    // No timeout needed
+  }, [connecting, publicKey, checkUser, isCheckingAuth, setIsInitialLoading]);
 
   // Only show full-page loading on initial app load
   if (isInitialLoading) {

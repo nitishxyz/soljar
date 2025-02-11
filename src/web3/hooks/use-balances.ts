@@ -69,8 +69,6 @@ export const useBalances = () => {
     enabled: !!jarPda,
   });
 
-  console.log(solBalance, usdcBalance, usdtBalance);
-
   return {
     solBalance: solBalance ?? 0,
     usdcBalance: usdcBalance ?? 0,

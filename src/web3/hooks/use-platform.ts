@@ -43,8 +43,6 @@ export const usePlatform = () => {
     },
   });
 
-  console.log(connection.rpcEndpoint);
-
   return {
     platform,
     isPlatformLoading,
