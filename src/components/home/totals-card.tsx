@@ -1,7 +1,10 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Coins, ArrowDownToLine } from "lucide-react";
+import { useIndex } from "@/web3/hooks/use-index";
 
 export function TotalsCard() {
+  const { index, isIndexLoading } = useIndex();
+
   return (
     <Card className="group relative overflow-hidden">
       {/* Decorative grid background */}
@@ -25,7 +28,9 @@ export function TotalsCard() {
                 <Coins className="w-5 h-5 text-accent-purple" />
               </div>
               <div>
-                <div className="text-2xl font-bold">24</div>
+                <div className="text-2xl font-bold">
+                  {isIndexLoading ? "..." : index?.totalDeposits ?? 0}
+                </div>
                 <div className="text-sm text-muted-foreground">Total Tips</div>
               </div>
             </div>
@@ -38,7 +43,9 @@ export function TotalsCard() {
                 <ArrowDownToLine className="w-5 h-5 text-green-500" />
               </div>
               <div>
-                <div className="text-2xl font-bold">12</div>
+                <div className="text-2xl font-bold">
+                  {isIndexLoading ? "..." : index?.totalWithdrawals ?? 0}
+                </div>
                 <div className="text-sm text-muted-foreground">
                   Total Withdrawals
                 </div>
