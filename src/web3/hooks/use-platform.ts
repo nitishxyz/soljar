@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-import { useSoljarProgram } from "../soljar-data-access";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { findPlatformPDA } from "../pda-helper";
 import { useSoljarBase } from "../soljar-base-provider";
@@ -7,7 +5,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 
 export const usePlatform = () => {
   const { publicKey } = useWallet();
-  const { program, connection } = useSoljarBase();
+  const { program } = useSoljarBase();
   const queryClient = useQueryClient();
 
   const { data: platform, isLoading: isPlatformLoading } = useQuery({
