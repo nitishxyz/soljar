@@ -81,6 +81,22 @@ export const findWithdrawlIndexPDA = (
   return pda;
 };
 
+export const findSupporterIndexPDA = (
+  program: Program,
+  indexPDA: PublicKey,
+  page: number
+) => {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("supporter_index"),
+      indexPDA.toBuffer(),
+      Buffer.from(new Uint32Array([page]).buffer),
+    ],
+    program.programId
+  );
+  return pda;
+};
+
 export const findTipLinkPDA = (program: Program, id: string) => {
   const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from("tip_link"), Buffer.from(id)],
@@ -107,6 +123,24 @@ export const findDepositPDA = (
       Buffer.from("deposit"),
       depositIndexPDA.toBuffer(),
       Buffer.from(new Uint8Array([index]).buffer),
+    ],
+    program.programId
+  );
+  return pda;
+};
+
+export const findSupporterPDA = (
+  program: Program,
+  jarPDA: PublicKey,
+  signer: PublicKey,
+  mint: PublicKey
+) => {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("supporter"),
+      jarPDA.toBuffer(),
+      signer.toBuffer(),
+      mint.toBuffer(),
     ],
     program.programId
   );

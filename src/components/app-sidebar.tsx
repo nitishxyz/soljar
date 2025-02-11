@@ -2,12 +2,13 @@
 
 import {
   LayoutDashboard,
-  Users,
   GiftIcon,
   ArrowDownToLine,
   Settings,
   Beaker,
 } from "lucide-react";
+
+import { HeartIcon } from "@heroicons/react/24/outline";
 import {
   Sidebar,
   SidebarContent,
@@ -27,7 +28,7 @@ const menuItems = [
   },
   {
     title: "Supporters",
-    icon: Users,
+    icon: HeartIcon,
     href: "/supporters",
   },
   {

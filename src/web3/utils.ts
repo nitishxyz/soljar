@@ -69,3 +69,27 @@ export const getMintAddress = (currency: Currency): PublicKey => {
       throw new Error("Unsupported currency");
   }
 };
+
+/**
+ * Formats an address by showing the first 4 and last 4 characters
+ * @param address The address to format
+ * @returns The formatted address
+ */
+export const formatAddress = (address: string) => {
+  return address.slice(0, 4) + "..." + address.slice(-4);
+};
+
+export const NATIVE_MINT = PublicKey.default; // SOL's native mint
+export const USDC_MINT = new PublicKey(
+  "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+);
+export const USDT_MINT = new PublicKey(
+  "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+);
+
+export const getCurrencyFromMint = (mint: PublicKey): Currency => {
+  if (mint.equals(NATIVE_MINT)) return "SOL";
+  if (mint.equals(USDC_MINT)) return "USDC";
+  if (mint.equals(USDT_MINT)) return "USDT";
+  return "SOL"; // Default fallback
+};

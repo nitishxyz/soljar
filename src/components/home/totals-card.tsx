@@ -1,5 +1,7 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { Coins, ArrowDownToLine, Heart } from "lucide-react";
+import { Coins, ArrowDownToLine } from "lucide-react";
+
+import { HeartIcon } from "@heroicons/react/24/outline";
 import { useIndex } from "@/web3/hooks/use-index";
 
 export function TotalsCard() {
@@ -50,7 +52,7 @@ export function TotalsCard() {
           {/* Total Supporters */}
           <div className="flex flex-col items-center text-center">
             <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
-              <Heart className="w-8 h-8 text-red-500" />
+              <HeartIcon className="w-8 h-8 text-red-500" />
             </div>
             <div className="text-3xl font-bold tracking-tight mb-1">
               {isIndexLoading ? "..." : index?.totalSupporters ?? 0}
