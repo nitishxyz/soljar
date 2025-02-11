@@ -51,7 +51,10 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
         setUserPublicKey(publicKey);
         const userPda = findUserPDA(program, publicKey);
         console.log(userPda);
-        const user = program.account.user.fetch(userPda);
+        const user = program.account.user.fetch(userPda).catch((error) => {
+          console.log("Error fetching user:", error);
+          return null;
+        });
         console.log(user);
         setUser(user);
         setUserChecked(true);
@@ -67,7 +70,10 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (publicKey && !userPublicKey) {
       const userPda = findUserPDA(program, publicKey);
-      const user = program.account.user.fetch(userPda);
+      const user = program.account.user.fetch(userPda).catch((error) => {
+        console.log("Error fetching user:", error);
+        return null;
+      });
       setUserPublicKey(publicKey);
       setUser(user);
     }
