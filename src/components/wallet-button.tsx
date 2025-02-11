@@ -14,6 +14,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
+import { useQueryClient } from "@tanstack/react-query";
 
 function truncateAddress(address: string, startLength = 4, endLength = 4) {
   if (address.length <= startLength + endLength) return address;
@@ -27,11 +28,17 @@ export function WalletButton({ className }: { className?: string }) {
   const [rpcProvider, setRpcProvider] = React.useState("helius");
   const { getUser } = useSoljarUser();
   const { data: user, isLoading } = getUser;
+  const queryClient = useQueryClient();
 
   const copyToClipboard = async (address: string) => {
     await navigator.clipboard.writeText(address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDisconnect = () => {
+    disconnect();
+    queryClient.clear();
   };
 
   if (!connected) {
@@ -86,7 +93,7 @@ export function WalletButton({ className }: { className?: string }) {
           </div>
         </div>
 
-        <div className="rounded-lg bg-muted/50 p-2">
+        {/* <div className="rounded-lg bg-muted/50 p-2">
           <div className="mb-2 px-1 text-xs font-medium">RPC Connection</div>
           <ToggleGroup
             type="single"
@@ -106,11 +113,11 @@ export function WalletButton({ className }: { className?: string }) {
               Custom
             </ToggleGroupItem>
           </ToggleGroup>
-        </div>
+        </div> */}
 
         <DropdownMenuItem
           className="w-full justify-start gap-2 rounded-md p-2 text-destructive focus:text-destructive"
-          onClick={() => disconnect()}
+          onClick={handleDisconnect}
         >
           <Power className="size-4" />
           <span className="font-medium">Disconnect</span>

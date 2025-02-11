@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSoljarProgram } from "@/web3/soljar-data-access";
 import {
   findWithdrawlIndexPDA,
   findIndexPDA,
@@ -7,6 +6,8 @@ import {
   findUserPDA,
 } from "@/web3/pda-helper";
 import { PublicKey } from "@solana/web3.js";
+import { useSoljarBase } from "../soljar-base-provider";
+import { useSoljarAuth } from "../soljar-auth-provider";
 
 interface Withdrawal {
   jar: PublicKey;
@@ -16,7 +17,8 @@ interface Withdrawal {
 }
 
 export function useRecentWithdrawals(limit = 10) {
-  const { program, userPublicKey } = useSoljarProgram();
+  const { program } = useSoljarBase();
+  const { userPublicKey } = useSoljarAuth();
 
   return useQuery({
     queryKey: ["recent-withdrawals", userPublicKey?.toString()],

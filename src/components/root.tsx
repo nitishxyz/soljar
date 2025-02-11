@@ -1,9 +1,7 @@
 "use client";
 
-import useAuthGuard from "@/hooks/useAuthGuard";
+import { AuthGuard } from "@/components/auth-guard";
 
 export const Root = ({ children }: { children: React.ReactNode }) => {
-  useAuthGuard();
-
-  return <>{children}</>;
+  return <AuthGuard>{children}</AuthGuard>;
 };

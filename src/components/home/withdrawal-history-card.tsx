@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { ExternalLink, ArrowDownToLine } from "lucide-react";
-import { useRecentWithdrawals } from "@/hooks/use-recent-withdrawals";
+import { useRecentWithdrawals } from "@/web3/hooks/use-recent-withdrawals";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { Currency } from "@/web3/utils";
 

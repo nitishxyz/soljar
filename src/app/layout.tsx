@@ -6,7 +6,7 @@ import { Root } from "@/components/root";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
-import { SoljarProvider } from "@/web3/soljar-data-access";
+import { SoljarBaseProvider } from "@/web3/soljar-base-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,9 +31,9 @@ export default function RootLayout({
           <ReactQueryProvider>
             <ClusterProvider>
               <SolanaProvider>
-                <SoljarProvider>
+                <SoljarBaseProvider>
                   <Root>{children}</Root>
-                </SoljarProvider>
+                </SoljarBaseProvider>
               </SolanaProvider>
             </ClusterProvider>
           </ReactQueryProvider>

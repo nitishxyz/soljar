@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSoljarProgram } from "../soljar-data-access";
+import { useSoljarBase } from "../soljar-base-provider";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { findJarPDA, findTreasuryPDA, findUserPDA } from "../pda-helper";
-
+import { useSoljarAuth } from "../soljar-auth-provider";
 // Common token mint addresses for devnet/mainnet
 const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"); // Mainnet USDC
 const USDT_MINT = new PublicKey("Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"); // Mainnet USDT
 
 export const useBalances = () => {
-  const { userPublicKey, program } = useSoljarProgram();
-  const { connection } = useSoljarProgram();
+  const { program, connection } = useSoljarBase();
+  const { userPublicKey } = useSoljarAuth();
 
   const userPda = findUserPDA(program, userPublicKey!);
   const jarPda = findJarPDA(program, userPda);

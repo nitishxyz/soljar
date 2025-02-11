@@ -2,7 +2,7 @@ import { ArrowUpRight, ExternalLink } from "lucide-react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
-import { useRecentDeposits } from "@/hooks/use-recent-deposits";
+import { useRecentDeposits } from "@/web3/hooks/use-recent-deposits";
 import { Currency } from "@/web3/utils";
 
 const mockRecentTips = [

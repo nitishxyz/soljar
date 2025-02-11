@@ -1,10 +1,10 @@
 import { PublicKey } from "@solana/web3.js";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useSoljarProgram } from "../soljar-data-access";
-import { findTipLinkPDA, findUserPDA } from "../pda-helper";
+import { findTipLinkPDA } from "../pda-helper";
 import { BN } from "@coral-xyz/anchor";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { getTokenProgramId } from "../utils";
+import { useSoljarBase } from "../soljar-base-provider";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 export interface TipLink {
   user: PublicKey;
@@ -16,7 +16,8 @@ export interface TipLink {
 }
 
 export function useTipLink(tipLinkId: string) {
-  const { program, userPublicKey } = useSoljarProgram();
+  const { program } = useSoljarBase();
+  const { publicKey } = useWallet();
 
   const getTipLink = useQuery({
     queryKey: ["soljar", "tip-link", tipLinkId],
@@ -59,7 +60,7 @@ export function useTipLink(tipLinkId: string) {
       memo?: string;
       sourceTokenAccount?: PublicKey;
     }) => {
-      if (!userPublicKey) throw new Error("Wallet not connected");
+      if (!publicKey) throw new Error("Wallet not connected");
       if (!tipLinkId) throw new Error("Tip link ID is required");
 
       const bnAmount = new BN(amount);

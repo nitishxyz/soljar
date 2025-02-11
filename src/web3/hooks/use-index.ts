@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSoljarProgram } from "../soljar-data-access";
+import { useSoljarBase } from "../soljar-base-provider";
 import { findIndexPDA, findUserPDA, findJarPDA } from "../pda-helper";
+import { useSoljarAuth } from "../soljar-auth-provider";
 
 export const useIndex = () => {
-  const { program, userPublicKey } = useSoljarProgram();
+  const { program } = useSoljarBase();
+  const { userPublicKey } = useSoljarAuth();
 
   const { data: index, isLoading: isIndexLoading } = useQuery({
     queryKey: ["soljar", "index"],

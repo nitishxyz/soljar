@@ -1,6 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useSoljarProgram } from "../soljar-data-access";
+import { useSoljarBase } from "../soljar-base-provider";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { findUserNamePDA, findUserPDA } from "../pda-helper";
 import toast from "react-hot-toast";
 import { useToast } from "@/hooks/use-toast";
@@ -16,19 +17,46 @@ export interface UserAccount {
 }
 
 export function useSoljarUser() {
-  const { program, userPublicKey } = useSoljarProgram();
+  const { program } = useSoljarBase();
+  const { publicKey } = useWallet();
   const { toast } = useToast();
 
   const getUser = useQuery({
     queryKey: ["soljar", "user"],
     queryFn: async () => {
-      if (!userPublicKey) {
+      if (!publicKey) {
         return null;
       }
-      const userPDA = findUserPDA(program, userPublicKey);
-      const user = await program.account.user.fetch(userPDA);
-      return user;
+      const userPDA = findUserPDA(program, publicKey);
+      try {
+        const user = await program.account.user.fetch(userPDA);
+        return user;
+      } catch (error) {
+        console.log("Error fetching user:", error);
+        return null;
+      }
     },
+    enabled: !!publicKey,
+  });
+
+  const checkUser = useQuery({
+    queryKey: ["soljar", "check-user", publicKey?.toBase58()],
+    queryFn: async () => {
+      if (!publicKey) {
+        return null;
+      }
+      const userPDA = findUserPDA(program, publicKey);
+      try {
+        const user = await program.account.user.fetch(userPDA);
+        return user;
+      } catch (error) {
+        console.log("Error checking user:", error);
+        return null;
+      }
+    },
+    enabled: false,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
   });
 
   const getUserByUsername = useQuery({
@@ -71,6 +99,8 @@ export function useSoljarUser() {
         title: "User created successfully",
         description: "User created successfully",
       });
+      getUser.refetch();
+      checkUser.refetch();
     },
     onError: (error) => {
       toast({
@@ -82,6 +112,7 @@ export function useSoljarUser() {
 
   return {
     getUser,
+    checkUser,
     getUserByUsername,
     createUser,
   };

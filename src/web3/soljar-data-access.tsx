@@ -22,7 +22,8 @@ interface SoljarContextState {
   connection: ReturnType<typeof useConnection>["connection"];
   cluster: ReturnType<typeof useCluster>["cluster"];
   provider: ReturnType<typeof useAnchorProvider>;
-  userPublicKey: ReturnType<typeof useWallet>["publicKey"];
+  userPublicKey: PublicKey | null;
+  user: any | null;
 }
 
 const SoljarContext = createContext<SoljarContextState | null>(null);
@@ -30,7 +31,7 @@ const SoljarContext = createContext<SoljarContextState | null>(null);
 export function SoljarProvider({ children }: { children: ReactNode }) {
   const [userPublicKey, setUserPublicKey] = useState<PublicKey | null>(null);
   const [user, setUser] = useState<any | null>(null);
-  const [userChecked, setUserChecked] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const { connection } = useConnection();
   const { cluster } = useCluster();
   const { publicKey } = useWallet();
@@ -46,38 +47,26 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const initializeUser = async () => {
       if (publicKey) {
         setUserPublicKey(publicKey);
         const userPda = findUserPDA(program, publicKey);
-        console.log(userPda);
-        const user = program.account.user.fetch(userPda).catch((error) => {
+        try {
+          const userData = await program.account.user.fetch(userPda);
+          setUser(userData);
+        } catch (error) {
           console.log("Error fetching user:", error);
-          return null;
-        });
-        console.log(user);
-        setUser(user);
-        setUserChecked(true);
+          setUser(null);
+        }
       } else {
-        setUserChecked(true);
+        setUserPublicKey(null);
+        setUser(null);
       }
-    }, 1000);
-    return () => {
-      clearTimeout(timeout);
+      setIsInitialized(true);
     };
-  }, []);
 
-  useEffect(() => {
-    if (publicKey && !userPublicKey) {
-      const userPda = findUserPDA(program, publicKey);
-      const user = program.account.user.fetch(userPda).catch((error) => {
-        console.log("Error fetching user:", error);
-        return null;
-      });
-      setUserPublicKey(publicKey);
-      setUser(user);
-    }
-  }, [publicKey, program, userPublicKey]);
+    initializeUser();
+  }, [publicKey, program]);
 
   const value = {
     program,
@@ -89,7 +78,7 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
     user,
   };
 
-  if (!userChecked) {
+  if (!isInitialized) {
     return <Loading />;
   }
 

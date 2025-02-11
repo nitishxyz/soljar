@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSoljarProgram } from "@/web3/soljar-data-access";
+import { useSoljarBase } from "../soljar-base-provider";
 import {
   findDepositIndexPDA,
   findIndexPDA,
@@ -7,7 +7,7 @@ import {
   findUserPDA,
 } from "@/web3/pda-helper";
 import { PublicKey } from "@solana/web3.js";
-
+import { useSoljarAuth } from "../soljar-auth-provider";
 interface Deposit {
   signer: PublicKey;
   jar: PublicKey;
@@ -20,7 +20,8 @@ interface Deposit {
 }
 
 export function useRecentDeposits(limit = 10) {
-  const { program, userPublicKey } = useSoljarProgram();
+  const { program } = useSoljarBase();
+  const { userPublicKey } = useSoljarAuth();
 
   return useQuery({
     queryKey: ["recent-deposits", userPublicKey?.toString()],
