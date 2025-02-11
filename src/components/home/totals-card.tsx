@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { Coins, ArrowDownToLine } from "lucide-react";
+import { Coins, ArrowDownToLine, Heart } from "lucide-react";
 import { useIndex } from "@/web3/hooks/use-index";
 
 export function TotalsCard() {
@@ -19,37 +19,44 @@ export function TotalsCard() {
           Platform Totals
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 gap-6">
+      <CardContent className="pt-6">
+        <div className="grid grid-cols-3 gap-16">
           {/* Total Tips */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-accent-purple/10 flex items-center justify-center">
-                <Coins className="w-5 h-5 text-accent-purple" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {isIndexLoading ? "..." : index?.totalDeposits ?? 0}
-                </div>
-                <div className="text-sm text-muted-foreground">Total Tips</div>
-              </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-accent-purple/10 flex items-center justify-center mb-4">
+              <Coins className="w-8 h-8 text-accent-purple" />
+            </div>
+            <div className="text-3xl font-bold tracking-tight mb-1">
+              {isIndexLoading ? "..." : index?.totalDeposits ?? 0}
+            </div>
+            <div className="text-sm text-muted-foreground font-medium">
+              Total Tips
             </div>
           </div>
 
           {/* Total Withdrawals */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                <ArrowDownToLine className="w-5 h-5 text-green-500" />
-              </div>
-              <div>
-                <div className="text-2xl font-bold">
-                  {isIndexLoading ? "..." : index?.totalWithdrawals ?? 0}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Total Withdrawals
-                </div>
-              </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center mb-4">
+              <ArrowDownToLine className="w-8 h-8 text-green-500" />
+            </div>
+            <div className="text-3xl font-bold tracking-tight mb-1">
+              {isIndexLoading ? "..." : index?.totalWithdrawals ?? 0}
+            </div>
+            <div className="text-sm text-muted-foreground font-medium">
+              Total Withdrawals
+            </div>
+          </div>
+
+          {/* Total Supporters */}
+          <div className="flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
+              <Heart className="w-8 h-8 text-red-500" />
+            </div>
+            <div className="text-3xl font-bold tracking-tight mb-1">
+              {isIndexLoading ? "..." : index?.totalSupporters ?? 0}
+            </div>
+            <div className="text-sm text-muted-foreground font-medium">
+              Total Supporters
             </div>
           </div>
         </div>

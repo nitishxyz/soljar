@@ -74,7 +74,15 @@ export function useTipLink(tipLinkId: string) {
 
       if (isSolDeposit) {
         // Handle SOL deposit
-        return await baseTransaction.signers([]).rpc();
+        return await baseTransaction
+          .postInstructions([
+            await program.methods
+              .addSupporter(tipLinkId, mint, bnAmount)
+              .accounts({})
+              .instruction(),
+          ])
+          .signers([])
+          .rpc();
       } else {
         // Handle SPL token deposit
         if (!sourceTokenAccount)
@@ -87,6 +95,10 @@ export function useTipLink(tipLinkId: string) {
 
         return await baseTransaction
           .postInstructions([
+            await program.methods
+              .addSupporter(tipLinkId, mint, bnAmount)
+              .accounts({})
+              .instruction(),
             await program.methods
               .transferTokens(tipLinkId, bnAmount)
               .accounts({

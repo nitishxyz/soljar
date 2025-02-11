@@ -58,7 +58,7 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
         </motion.div>
       </CardHeader>
 
-      <CardContent className="space-y-4 relative">
+      <CardContent className="flex flex-col flex-grow space-y-4 relative h-full justify-center">
         <div className="relative group/input">
           <Input
             type="text"
@@ -77,14 +77,14 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
         </div>
 
         {/* Helper text */}
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground mt-auto">
           Share this link with your supporters to receive tips in SOL, USDC, or
           USDT.
         </p>
-
-        {/* Bottom gradient line */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </CardContent>
+
+      {/* Bottom gradient line */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </Card>
   );
 }

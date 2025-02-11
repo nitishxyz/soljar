@@ -16,7 +16,7 @@ interface Withdrawal {
   updatedAt: number;
 }
 
-export function useRecentWithdrawals(limit = 10) {
+export function useRecentWithdrawals(limit = 5) {
   const { program } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 

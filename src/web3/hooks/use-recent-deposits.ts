@@ -19,7 +19,7 @@ interface Deposit {
   updatedAt: number;
 }
 
-export function useRecentDeposits(limit = 10) {
+export function useRecentDeposits(limit = 5) {
   const { program } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 
