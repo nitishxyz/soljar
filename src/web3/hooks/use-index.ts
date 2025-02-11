@@ -22,8 +22,7 @@ export const useIndex = () => {
         return {
           totalDeposits: index.totalDeposits,
           totalWithdrawals: index.totalWithdrawls, // Note: matches typo in Rust
-          totalMetas: index.totalMetas,
-          totalTipLinks: index.totalTipLinks,
+          totalSupporters: index.totalSupporters,
           createdAt: new Date(index.createdAt.toNumber() * 1000),
           updatedAt: new Date(index.updatedAt.toNumber() * 1000),
         };

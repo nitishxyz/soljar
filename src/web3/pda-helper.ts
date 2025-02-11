@@ -19,6 +19,14 @@ export const findUserPDA = (program: Program, user: PublicKey) => {
   return pda;
 };
 
+export const findUserInfoPDA = (program: Program, userPDA: PublicKey) => {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [Buffer.from("user_info"), userPDA.toBuffer()],
+    program.programId
+  );
+  return pda;
+};
+
 export const findUserNamePDA = (program: Program, username: string) => {
   const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from("username"), Buffer.from(username)],
@@ -34,13 +42,6 @@ export const findJarPDA = (program: Program, userPDA: PublicKey) => {
   return pda;
 };
 
-export const findTreasuryPDA = (program: Program, jarPDA: PublicKey) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("treasury"), jarPDA.toBuffer()],
-    program.programId
-  );
-  return pda;
-};
 export const findIndexPDA = (program: Program, jarPDA: PublicKey) => {
   const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from("index"), jarPDA.toBuffer()],
@@ -72,38 +73,6 @@ export const findWithdrawlIndexPDA = (
   const [pda] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("withdrawl_index"),
-      indexPDA.toBuffer(),
-      Buffer.from(new Uint32Array([page]).buffer),
-    ],
-    program.programId
-  );
-  return pda;
-};
-
-export const findMetaIndexPDA = (
-  program: Program,
-  indexPDA: PublicKey,
-  page: number
-) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("meta_index"),
-      indexPDA.toBuffer(),
-      Buffer.from(new Uint32Array([page]).buffer),
-    ],
-    program.programId
-  );
-  return pda;
-};
-
-export const findTipLinkIndexPDA = (
-  program: Program,
-  indexPDA: PublicKey,
-  page: number
-) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("tip_link_index"),
       indexPDA.toBuffer(),
       Buffer.from(new Uint32Array([page]).buffer),
     ],

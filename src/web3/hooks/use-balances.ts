@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
+
 import { PublicKey } from "@solana/web3.js";
-import { findJarPDA, findTreasuryPDA, findUserPDA } from "../pda-helper";
+import { findJarPDA, findUserPDA } from "../pda-helper";
 import { useSoljarAuth } from "../soljar-auth-provider";
 // Common token mint addresses for devnet/mainnet
 const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"); // Mainnet USDC
@@ -14,26 +14,25 @@ export const useBalances = () => {
 
   const userPda = findUserPDA(program, userPublicKey!);
   const jarPda = findJarPDA(program, userPda);
-  const treasuryPda = findTreasuryPDA(program, jarPda);
 
   const { data: solBalance, isLoading: isSolLoading } = useQuery({
-    queryKey: ["balance", "sol", treasuryPda?.toString()],
+    queryKey: ["balance", "sol", jarPda?.toString()],
     queryFn: async () => {
-      if (!treasuryPda) return 0;
-      const balance = await connection.getBalance(treasuryPda);
+      if (!jarPda) return 0;
+      const balance = await connection.getBalance(jarPda);
       console.log("SOL balance:", balance / 10 ** 9);
       return balance / 10 ** 9; // Convert lamports to SOL
     },
-    enabled: !!treasuryPda,
+    enabled: !!jarPda,
   });
 
   const { data: usdcBalance, isLoading: isUsdcLoading } = useQuery({
-    queryKey: ["balance", "usdc", treasuryPda?.toString()],
+    queryKey: ["balance", "usdc", jarPda?.toString()],
     queryFn: async () => {
-      if (!treasuryPda) return 0;
+      if (!jarPda) return 0;
       try {
         const accountInfo = await connection.getParsedTokenAccountsByOwner(
-          treasuryPda,
+          jarPda,
           { mint: USDC_MINT }
         );
         console.log("USDC account info:", accountInfo);
@@ -47,16 +46,16 @@ export const useBalances = () => {
         return 0;
       }
     },
-    enabled: !!treasuryPda,
+    enabled: !!jarPda,
   });
 
   const { data: usdtBalance, isLoading: isUsdtLoading } = useQuery({
-    queryKey: ["balance", "usdt", treasuryPda?.toString()],
+    queryKey: ["balance", "usdt", jarPda?.toString()],
     queryFn: async () => {
-      if (!treasuryPda) return 0;
+      if (!jarPda) return 0;
       try {
         const accountInfo = await connection.getParsedTokenAccountsByOwner(
-          treasuryPda,
+          jarPda,
           { mint: USDT_MINT }
         );
         if (accountInfo.value.length === 0) return 0;
@@ -67,7 +66,7 @@ export const useBalances = () => {
         return 0;
       }
     },
-    enabled: !!treasuryPda,
+    enabled: !!jarPda,
   });
 
   console.log(solBalance, usdcBalance, usdtBalance);

@@ -3,7 +3,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { findUserNamePDA, findUserPDA } from "../pda-helper";
-import toast from "react-hot-toast";
 import { useToast } from "@/hooks/use-toast";
 
 export interface UserAccount {
@@ -91,7 +90,6 @@ export function useSoljarUser() {
         .accounts({})
         .postInstructions([
           await program.methods.initIndexes(0).accounts({}).instruction(),
-          await program.methods.initTreasury().accounts({}).instruction(),
           await program.methods
             .initTipLink(username, "My tiplink", 0)
             .accounts({})

@@ -71,7 +71,7 @@ export function RecentTipsCard() {
     }
   };
 
-  const formatDeposits = recentDeposits?.map((deposit) => ({
+  const formatDeposits = recentDeposits?.map((deposit: any) => ({
     id: deposit.meta.toString(),
     amount: deposit.amount,
     currency: "SOL", // Since currencyMint is SOL's native mint
