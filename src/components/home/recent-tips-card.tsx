@@ -72,7 +72,7 @@ export function RecentTipsCard() {
   };
 
   const formatDeposits = recentDeposits?.map((deposit: any) => ({
-    id: deposit.meta.toString(),
+    id: `${deposit.signer.toString()}-${deposit.createdAt}`,
     amount: deposit.amount,
     currency: "SOL", // Since currencyMint is SOL's native mint
     usdPrice: 98.45, // You might want to fetch this dynamically
@@ -82,7 +82,7 @@ export function RecentTipsCard() {
       deposit.signer.toString().slice(-4),
     timestamp: formatTimeAgo(deposit.createdAt),
     color: "purple" as const,
-    signature: deposit.meta.toString(),
+    signature: deposit.signer.toString(),
   }));
 
   const renderTipsList = (tips: typeof mockRecentTips, isBlurred = false) => {
