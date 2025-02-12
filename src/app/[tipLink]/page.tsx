@@ -141,8 +141,8 @@ export default function TipPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-accent-purple/5 to-blue-500/10">
       <div className="w-full max-w-4xl">
-        <Card className="backdrop-blur-sm bg-card/95 p-4 sm:p-8 md:py-12 shadow-xl border border-accent-purple/10">
-          <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-12">
+        <Card className="backdrop-blur-sm bg-card/95 p-4 md:py-12 shadow-xl border border-accent-purple/10">
+          <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-12 sm:px-6">
             {/* QR Code Section - Always visible on desktop, hidden on mobile in wallet browser */}
             <div className={`hidden lg:block lg:w-[320px]`}>
               <QRCodeSection url={window.location.href} />
