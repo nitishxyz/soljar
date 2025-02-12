@@ -2,10 +2,9 @@
 import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
 import { BalanceCards } from "./balance-cards";
 import { TipLinkCard } from "./tip-link-card";
-import { RecentTipsCard } from "./recent-tips-card";
 import { TotalsCard } from "./totals-card";
 import { WithdrawalHistoryCard } from "./withdrawal-history-card";
-
+import { TipHistoryCard } from "./tip-history-card";
 export default function Dashboard() {
   const { getUser } = useSoljarUser();
   const { data: user, isLoading } = getUser;
@@ -27,7 +26,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <RecentTipsCard />
+          <TipHistoryCard />
           <WithdrawalHistoryCard />
         </div>
       </div>
