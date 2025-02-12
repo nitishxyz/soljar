@@ -49,11 +49,13 @@ export function useRecentDeposits(limit = 5) {
 
       const depositIndexPages = await Promise.all(depositIndexPromises);
 
-      // Collect all deposit pubkeys from the pages, reverse them to get newest first, then limit
-      const recentDepositPubkeys = depositIndexPages
-        .flatMap((page) => page.deposits.slice(0, page.totalItems))
-        .reverse()
-        .slice(0, limit);
+      // Collect all deposit pubkeys from the pages
+      const allDepositPubkeys = depositIndexPages.flatMap((page) =>
+        page.deposits.slice(0, page.totalItems)
+      );
+
+      // Sort by newest first and limit
+      const recentDepositPubkeys = allDepositPubkeys.slice(0, limit);
 
       // Fetch actual deposits
       const depositPromises = recentDepositPubkeys.map((pubkey) =>

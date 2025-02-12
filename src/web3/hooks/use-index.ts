@@ -23,8 +23,6 @@ export const useIndex = () => {
           totalDeposits: index.totalDeposits,
           totalWithdrawals: index.totalWithdrawls, // Note: matches typo in Rust
           totalSupporters: index.totalSupporters,
-          createdAt: new Date(index.createdAt.toNumber() * 1000),
-          updatedAt: new Date(index.updatedAt.toNumber() * 1000),
         };
       } catch (error) {
         console.error("Error fetching index:", error);
