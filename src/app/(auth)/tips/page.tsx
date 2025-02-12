@@ -88,9 +88,9 @@ export default function TipsPage() {
                       }
                     )}
                   </span>
-                  {tip.meta_data?.memo && (
+                  {tip.memo && (
                     <span className="text-sm text-muted-foreground mt-1">
-                      &quot;{tip.meta_data.memo}&quot;
+                      &quot;{tip.memo}&quot;
                     </span>
                   )}
                 </div>
@@ -99,9 +99,9 @@ export default function TipsPage() {
                 <span className="font-medium text-lg text-accent-purple">
                   {tip.amount} {getCurrencyFromMint(tip.currencyMint)}
                 </span>
-                {tip.meta_data?.referrer && (
+                {tip.referrer && (
                   <p className="text-sm text-muted-foreground">
-                    via {tip.meta_data.referrer}
+                    via {tip.referrer}
                   </p>
                 )}
               </div>

@@ -18,10 +18,8 @@ interface Tip {
   currencyMint: PublicKey;
   amount: number;
   createdAt: number;
-  meta_data?: {
-    referrer: string;
-    memo: string;
-  };
+  referrer: string;
+  memo: string;
 }
 
 export function useTips(initialPage = 0) {
@@ -62,13 +60,7 @@ export function useTips(initialPage = 0) {
         .reverse() // Reverse the array to get newest first
         .map(async (pubkey: PublicKey) => {
           const deposit = await program.account.deposit.fetch(pubkey);
-          let meta_data;
-          try {
-            meta_data = await program.account.meta.fetch(deposit.meta);
-          } catch (error) {
-            console.error("Error fetching meta data:", error);
-          }
-          return { ...deposit, meta_data };
+          return { ...deposit };
         });
 
       const tips = await Promise.all(tipPromises);
@@ -82,12 +74,8 @@ export function useTips(initialPage = 0) {
         currencyMint: tip.currencyMint,
         amount: tip.amount.toNumber() / 1e9,
         createdAt: tip.createdAt.toNumber(),
-        meta_data: tip.meta_data
-          ? {
-              referrer: tip.meta_data.referrer,
-              memo: tip.meta_data.memo,
-            }
-          : undefined,
+        referrer: tip.referrer,
+        memo: tip.memo,
       }));
 
       return {
