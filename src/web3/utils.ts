@@ -1,6 +1,8 @@
 import { PublicKey, Connection } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 
+export const SOLANA_CLUSTER = "devnet";
+
 export type Currency = "SOL" | "USDC" | "USDT";
 
 /**
@@ -94,4 +96,27 @@ export const getCurrencyFromMint = (mint: PublicKey): Currency => {
   if (mint.equals(USDC_MINT)) return "USDC";
   if (mint.equals(USDT_MINT)) return "USDT";
   return "SOL"; // Default fallback
+};
+
+/**
+ * Fetches the most recent transaction signature for a given account
+ * @param connection The Solana connection object
+ * @param address The account address to fetch the signature for
+ * @returns The transaction signature
+ */
+export const fetchTransactionSignature = async (
+  connection: Connection,
+  address: string
+): Promise<string | null> => {
+  try {
+    const signatures = await connection.getSignaturesForAddress(
+      new PublicKey(address),
+      { limit: 1 }
+    );
+
+    return signatures[0]?.signature || null;
+  } catch (error) {
+    console.error("Error fetching transaction signature:", error);
+    return null;
+  }
 };

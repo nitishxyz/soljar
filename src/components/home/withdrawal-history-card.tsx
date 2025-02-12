@@ -4,6 +4,9 @@ import { ExternalLink, ArrowDownToLine } from "lucide-react";
 import { useRecentWithdrawals } from "@/web3/hooks/use-recent-withdrawals";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { Currency } from "@/web3/utils";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { useState } from "react";
+import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
 
 const mockWithdrawals = [
   {
@@ -34,6 +37,8 @@ const mockWithdrawals = [
 
 export function WithdrawalHistoryCard() {
   const { data: recentWithdrawals, isLoading } = useRecentWithdrawals();
+  const { connection } = useConnection();
+  const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
 
   const getColorClasses = (color: string) => {
     if (color === "green") {
@@ -84,6 +89,24 @@ export function WithdrawalHistoryCard() {
     signature: withdrawal.jar.toString(),
   }));
 
+  const handleWithdrawalClick = async (withdrawal: any) => {
+    try {
+      setLoadingSignature(withdrawal.signature);
+      const signature = await fetchTransactionSignature(
+        connection,
+        withdrawal.signature
+      );
+      if (signature) {
+        window.open(
+          `https://solscan.io/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
+          "_blank"
+        );
+      }
+    } finally {
+      setLoadingSignature(null);
+    }
+  };
+
   const renderWithdrawalsList = (
     withdrawals: typeof mockWithdrawals,
     isBlurred = false
@@ -91,18 +114,12 @@ export function WithdrawalHistoryCard() {
     return withdrawals.map((withdrawal, index) => {
       const colors = getColorClasses(withdrawal.color);
       return (
-        <motion.a
-          href={
-            isBlurred
-              ? undefined
-              : `https://solscan.io/tx/${withdrawal.signature}`
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-          key={withdrawal.id}
+        <motion.div
+          onClick={() => !isBlurred && handleWithdrawalClick(withdrawal)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
+          key={withdrawal.id}
           className={`group relative flex items-center justify-between p-3 rounded-lg ${
             colors.bg
           } transition-colors ${
@@ -128,9 +145,13 @@ export function WithdrawalHistoryCard() {
             <div className="text-xs text-muted-foreground">
               {withdrawal.timestamp}
             </div>
-            <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            {loadingSignature === withdrawal.signature ? (
+              <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            )}
           </div>
-        </motion.a>
+        </motion.div>
       );
     });
   };

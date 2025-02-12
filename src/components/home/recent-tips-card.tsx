@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useRecentDeposits } from "@/web3/hooks/use-recent-deposits";
 import { Currency } from "@/web3/utils";
+import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { useState } from "react";
 
 const mockRecentTips = [
   {
@@ -30,6 +33,8 @@ const mockRecentTips = [
 
 export function RecentTipsCard() {
   const { data: recentDeposits, isLoading } = useRecentDeposits();
+  const { connection } = useConnection();
+  const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
 
   const getColorClasses = (color: string) => {
     if (color === "green") {
@@ -85,16 +90,30 @@ export function RecentTipsCard() {
     signature: deposit.signer.toString(),
   }));
 
+  const handleTipClick = async (tip: any) => {
+    try {
+      setLoadingSignature(tip.signature);
+      const signature = await fetchTransactionSignature(
+        connection,
+        tip.signature
+      );
+      if (signature) {
+        window.open(
+          `https://solscan.io/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
+          "_blank"
+        );
+      }
+    } finally {
+      setLoadingSignature(null);
+    }
+  };
+
   const renderTipsList = (tips: typeof mockRecentTips, isBlurred = false) => {
     return tips.map((tip, index) => {
       const colors = getColorClasses(tip.color);
       return (
-        <motion.a
-          href={
-            isBlurred ? undefined : `https://solscan.io/tx/${tip.signature}`
-          }
-          target="_blank"
-          rel="noopener noreferrer"
+        <motion.div
+          onClick={() => !isBlurred && handleTipClick(tip)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
@@ -128,9 +147,13 @@ export function RecentTipsCard() {
             <span className="text-xs text-muted-foreground">
               (≈${(tip.amount * tip.usdPrice).toFixed(2)})
             </span>
-            <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            {loadingSignature === tip.signature ? (
+              <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            )}
           </div>
-        </motion.a>
+        </motion.div>
       );
     });
   };
