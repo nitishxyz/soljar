@@ -139,8 +139,9 @@ export default function TipPage() {
   const { tipLink: tipLinkData, user } = data;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-accent-purple/5 to-blue-500/10">
-      <div className="w-full max-w-4xl">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-card lg:bg-gradient-to-br lg:from-background lg:via-accent-purple/5 lg:to-blue-500/10 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-accent-purple/5 via-transparent to-transparent lg:hidden" />
+      <div className="w-full max-w-4xl relative">
         <Card className="backdrop-blur-sm bg-transparent lg:bg-card/95 p-4 md:py-12 shadow-none lg:shadow-xl border-transparent lg:border-accent-purple/10">
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-12 sm:px-6">
             {/* QR Code Section - Always visible on desktop, hidden on mobile in wallet browser */}
