@@ -61,6 +61,8 @@ export const convertAmountToSmallestUnit = (
  */
 export const getMintAddress = (currency: Currency): PublicKey => {
   switch (currency) {
+    case "SOL":
+      return PublicKey.default; // Native SOL mint
     case "USDC":
       return new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"); // Mainnet USDC
     case "USDT":

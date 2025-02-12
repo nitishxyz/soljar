@@ -9,7 +9,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useSoljarBase } from "../soljar-base-provider";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
-interface Withdrawal {
+export interface Withdrawal {
   jar: PublicKey;
   amount: number;
   createdAt: number;
@@ -58,24 +58,21 @@ export function useRecentWithdrawals(limit = 5) {
       // Sort by newest first and limit
       const recentWithdrawalPubkeys = allWithdrawalPubkeys.slice(0, limit);
 
-      return [];
-
       // Fetch actual withdrawals
-      //   const withdrawalPromises = recentWithdrawalPubkeys.map((pubkey) =>
-      //     program.account.withdrawal.fetch(pubkey)
-      //   );
+      const withdrawalPromises = recentWithdrawalPubkeys.map((pubkey) =>
+        program.account.withdrawl.fetch(pubkey)
+      );
 
-      //   const withdrawals = await Promise.all(withdrawalPromises);
+      const withdrawals = await Promise.all(withdrawalPromises);
 
       // Sort by creation time, newest first
-      //   return withdrawals
-      //     .map((withdrawal) => ({
-      //       ...withdrawal,
-      //       amount: withdrawal.amount.toNumber() / 1e9, // Convert from lamports/smallest unit
-      //       createdAt: withdrawal.createdAt.toNumber(),
-      //       updatedAt: withdrawal.updatedAt.toNumber(),
-      //     }))
-      //     .sort((a, b) => b.createdAt - a.createdAt);
+      return withdrawals
+        .map((withdrawal) => ({
+          ...withdrawal,
+          amount: withdrawal.amount.toNumber() / 1e9, // Convert from lamports/smallest unit
+          createdAt: withdrawal.createdAt.toNumber(),
+        }))
+        .sort((a, b) => b.createdAt - a.createdAt);
     },
     enabled: Boolean(program && userPublicKey),
   });

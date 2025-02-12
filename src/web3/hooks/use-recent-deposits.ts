@@ -49,16 +49,14 @@ export function useRecentDeposits(limit = 5) {
 
       const depositIndexPages = await Promise.all(depositIndexPromises);
 
-      // Collect all deposit pubkeys from the pages
-      const allDepositPubkeys = depositIndexPages.flatMap((page: any) =>
-        page.deposits.slice(0, page.totalItems)
-      );
-
-      // Sort by newest first and limit
-      const recentDepositPubkeys = allDepositPubkeys.slice(0, limit);
+      // Collect all deposit pubkeys from the pages, reverse them to get newest first, then limit
+      const recentDepositPubkeys = depositIndexPages
+        .flatMap((page) => page.deposits.slice(0, page.totalItems))
+        .reverse()
+        .slice(0, limit);
 
       // Fetch actual deposits
-      const depositPromises = recentDepositPubkeys.map((pubkey: any) =>
+      const depositPromises = recentDepositPubkeys.map((pubkey) =>
         program.account.deposit.fetch(pubkey)
       );
 
@@ -66,13 +64,12 @@ export function useRecentDeposits(limit = 5) {
 
       // Sort by creation time, newest first
       return deposits
-        .map((deposit: any) => ({
+        .map((deposit) => ({
           ...deposit,
           amount: deposit.amount.toNumber() / 1e9, // Convert from lamports/smallest unit
           createdAt: deposit.createdAt.toNumber(),
-          updatedAt: deposit.updatedAt.toNumber(),
         }))
-        .sort((a: any, b: any) => b.createdAt - a.createdAt);
+        .sort((a, b) => b.createdAt - a.createdAt);
     },
     enabled: Boolean(program && userPublicKey),
   });

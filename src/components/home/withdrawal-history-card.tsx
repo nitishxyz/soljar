@@ -7,7 +7,7 @@ import { Currency } from "@/web3/utils";
 
 const mockWithdrawals = [
   {
-    id: 1,
+    id: "1",
     amount: 1.2,
     currency: "SOL",
     timestamp: "2h ago",
@@ -15,7 +15,7 @@ const mockWithdrawals = [
     signature: "1234567890",
   },
   {
-    id: 2,
+    id: "2",
     amount: 50,
     currency: "USDC",
     timestamp: "1d ago",
@@ -23,7 +23,7 @@ const mockWithdrawals = [
     signature: "1234567890",
   },
   {
-    id: 3,
+    id: "3",
     amount: 25,
     currency: "USDT",
     timestamp: "3d ago",
@@ -75,15 +75,14 @@ export function WithdrawalHistoryCard() {
     }
   };
 
-  // const formatWithdrawals = recentWithdrawals?.map((withdrawal) => ({
-  //   id: withdrawal.jar.toString(),
-  //   amount: withdrawal.amount,
-  //   currency: "SOL" as Currency, // Since we only support SOL withdrawals for now
-  //   timestamp: formatTimeAgo(withdrawal.createdAt),
-  //   color: "purple" as const,
-  //   signature: withdrawal.jar.toString(),
-  // }));
-  const formatWithdrawals = [];
+  const formatWithdrawals = recentWithdrawals?.map((withdrawal) => ({
+    id: withdrawal.jar.toString(),
+    amount: withdrawal.amount,
+    currency: "SOL" as Currency, // Since we only support SOL withdrawals for now
+    timestamp: formatTimeAgo(withdrawal.createdAt),
+    color: "purple" as const,
+    signature: withdrawal.jar.toString(),
+  }));
 
   const renderWithdrawalsList = (
     withdrawals: typeof mockWithdrawals,
@@ -167,10 +166,12 @@ export function WithdrawalHistoryCard() {
                     <div className="h-4 w-16 bg-muted rounded" />
                   </div>
                 ))
+            : formatWithdrawals && formatWithdrawals.length > 0
+            ? renderWithdrawalsList(formatWithdrawals)
             : null}
         </div>
 
-        {!isLoading ? (
+        {!formatWithdrawals || formatWithdrawals.length === 0 ? (
           <>
             <div
               className="absolute -inset-px top-20 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"

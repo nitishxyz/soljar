@@ -1,133 +1,83 @@
-"use client";
-
-import { useMemo, useState } from "react";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { WalletButton } from "@/components/wallet-button";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { motion } from "framer-motion";
-import { Coins } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { useParams } from "next/navigation";
-import { useTipLink } from "@/web3/hooks/use-tip-link";
-import Loading from "../loading/page";
-import { PublicKey } from "@solana/web3.js";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
-import { convertAmountToSmallestUnit, getMintAddress } from "@/web3/utils";
-import { useToast } from "@/hooks/use-toast";
+import { Coins, ArrowDownToLine } from "lucide-react";
+import { CurrencyIcon } from "@/components/ui/currency-icon";
+import { useWithdrawal } from "@/web3/hooks/use-withdrawal";
+import { useBalances } from "@/web3/hooks/use-balances";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletButton } from "@/components/wallet-button";
+import { getCurrencyFromMint, getMintAddress } from "@/web3/utils";
 
 type Currency = "SOL" | "USDC" | "USDT";
 
-export default function TipPage() {
-  const { tipLink } = useParams();
-  const { getTipLink, createDeposit } = useTipLink(tipLink as string);
-  const wallet = useWallet();
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency>("SOL");
+interface WithdrawalDialogProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultCurrency: Currency;
+}
+
+export function WithdrawalDialog({
+  isOpen,
+  onOpenChange,
+  defaultCurrency,
+}: WithdrawalDialogProps) {
+  const [selectedCurrency, setSelectedCurrency] =
+    useState<Currency>(defaultCurrency);
   const [amount, setAmount] = useState("");
-  const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
   const [isSuccess, setIsSuccess] = useState(false);
   const [successData, setSuccessData] = useState<{
     amount: string;
     currency: Currency;
-    recipient: string;
   } | null>(null);
 
+  const { mutateAsync: withdraw } = useWithdrawal();
+  const { solBalance, usdcBalance, usdtBalance } = useBalances();
+  const wallet = useWallet();
+
   const currencies: Currency[] = ["SOL", "USDC", "USDT"];
-  const colorMap = {
-    SOL: "purple",
-    USDC: "blue",
-    USDT: "green",
-  };
 
-  const disabled = useMemo(() => {
-    return !amount || parseFloat(amount) <= 0;
-  }, [amount]);
+  useEffect(() => {
+    setSelectedCurrency(defaultCurrency);
+  }, [defaultCurrency]);
 
-  const { data, isLoading } = getTipLink;
-
-  if (isLoading) return <Loading />;
-
-  if (!data) return <div>Tip link not found</div>;
-
-  const { tipLink: tipLinkData, user } = data;
-
-  const handleSendTip = async () => {
-    if (!wallet.publicKey) return;
+  const handleWithdraw = async () => {
+    if (!amount || isSubmitting) return;
 
     setIsSubmitting(true);
     try {
-      const amountInSmallestUnit = convertAmountToSmallestUnit(
-        parseFloat(amount),
-        selectedCurrency
-      );
+      await withdraw({
+        amount: parseFloat(amount),
+        mint: getMintAddress(selectedCurrency),
+      });
 
-      if (selectedCurrency === "SOL") {
-        await createDeposit.mutateAsync({
-          amount: amountInSmallestUnit,
-          mint: PublicKey.default,
-          memo: message,
-        });
-      } else {
-        const mint = getMintAddress(selectedCurrency);
-        const sourceTokenAccount = await getAssociatedTokenAddress(
-          mint,
-          wallet.publicKey
-        );
-
-        await createDeposit.mutateAsync({
-          amount: amountInSmallestUnit,
-          mint,
-          memo: message,
-          sourceTokenAccount,
-        });
-      }
-
-      // Set success data
       setSuccessData({
         amount,
         currency: selectedCurrency,
-        recipient: user.username || "Anonymous",
       });
       setIsSuccess(true);
-
-      toast({
-        title: "Tip sent successfully!",
-        description: `You sent ${amount} ${selectedCurrency} to ${user.username}`,
-      });
-
-      // Reset form
-      setAmount("");
-      setMessage("");
-    } catch (error: any) {
-      toast({
-        title: "Failed to send tip",
-        description: error.message,
-        variant: "destructive",
-      });
-      console.error("Error sending tip:", error);
+    } catch (error) {
+      console.error("Withdrawal failed:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Add this new function to handle resetting the form
   const handleReset = () => {
     setIsSuccess(false);
     setSuccessData(null);
+    setAmount("");
+    onOpenChange(false);
   };
 
+  const disabled = !amount || parseFloat(amount) <= 0;
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-accent-purple/5 to-blue-500/10">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="w-full max-w-md"
-      >
-        <Card className="backdrop-blur-sm bg-card/95 p-4 sm:p-8 space-y-6 sm:space-y-10 shadow-xl border border-accent-purple/10">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md p-0 overflow-hidden">
+        <div className="p-6 space-y-6">
           {isSuccess && successData ? (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
@@ -159,10 +109,10 @@ export default function TipPage() {
                   </svg>
                 </motion.div>
                 <h2 className="text-2xl font-bold text-foreground">
-                  Tip Sent Successfully!
+                  Withdrawal Successful!
                 </h2>
                 <p className="text-muted-foreground">
-                  Your tip has been sent and received
+                  Your funds have been sent to your wallet
                 </p>
               </div>
 
@@ -173,10 +123,6 @@ export default function TipPage() {
                     <CurrencyIcon currency={successData.currency} />
                     {successData.amount} {successData.currency}
                   </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Recipient</span>
-                  <span className="font-medium">{successData.recipient}</span>
                 </div>
               </div>
 
@@ -189,7 +135,7 @@ export default function TipPage() {
                   className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
                   onClick={handleReset}
                 >
-                  Send Another Tip
+                  Close
                 </Button>
               </motion.div>
             </motion.div>
@@ -207,16 +153,12 @@ export default function TipPage() {
                   transition={{ duration: 0.2 }}
                 >
                   <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-purple/10 to-blue-500/10 flex items-center justify-center backdrop-blur-sm">
-                    <Coins className="w-10 h-10 text-accent-purple/80" />
+                    <ArrowDownToLine className="w-10 h-10 text-accent-purple/80" />
                   </div>
                 </motion.div>
-                <h1 className="text-4xl font-bold text-foreground/90">
-                  Send a Tip
+                <h1 className="text-2xl font-bold text-foreground/90">
+                  Withdraw Funds
                 </h1>
-                <p className="text-muted-foreground text-lg">
-                  Support {user.username ? user.username : "this creator"} with
-                  crypto
-                </p>
               </motion.div>
 
               <motion.div
@@ -251,6 +193,30 @@ export default function TipPage() {
               </motion.div>
 
               <motion.div
+                className="flex items-center justify-between text-sm"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 }}
+              >
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Coins className="w-4 h-4" />
+                  Available Balance
+                </div>
+                <div className="flex items-center gap-2 text-foreground/90">
+                  <CurrencyIcon
+                    currency={selectedCurrency}
+                    className="w-4 h-4"
+                  />
+                  {selectedCurrency === "SOL" &&
+                    `${solBalance?.toFixed(4) ?? "0"} SOL`}
+                  {selectedCurrency === "USDC" &&
+                    `${usdcBalance?.toFixed(2) ?? "0"} USDC`}
+                  {selectedCurrency === "USDT" &&
+                    `${usdtBalance?.toFixed(2) ?? "0"} USDT`}
+                </div>
+              </motion.div>
+
+              <motion.div
                 className="space-y-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -282,14 +248,6 @@ export default function TipPage() {
                     </span>
                   </div>
                 </div>
-
-                <Textarea
-                  placeholder="Add a message (optional)"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  disabled={isSubmitting}
-                  className="min-h-[100px] text-lg bg-background/50 border-accent-purple/20 focus:border-accent-purple/30 transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
-                />
               </motion.div>
 
               <motion.div
@@ -298,62 +256,52 @@ export default function TipPage() {
                 transition={{ delay: 0.5 }}
               >
                 {wallet.connected ? (
-                  <div className="space-y-4">
-                    <motion.div
-                      whileHover={{ scale: !disabled ? 1.01 : 1 }}
-                      whileTap={{ scale: !disabled ? 0.99 : 1 }}
-                    >
-                      <Button
-                        className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
-                        onClick={handleSendTip}
-                        disabled={disabled || isSubmitting}
-                      >
-                        {isSubmitting ? (
-                          <span className="flex items-center justify-center">
-                            <svg
-                              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                            >
-                              <circle
-                                className="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                strokeWidth="4"
-                              ></circle>
-                              <path
-                                className="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0v4c4.418 0 8 3.582 8 8z"
-                              ></path>
-                            </svg>
-                            Sending...
-                          </span>
-                        ) : (
-                          "Send Tip"
-                        )}
-                      </Button>
-                    </motion.div>
+                  <motion.div
+                    whileHover={{ scale: !disabled ? 1.01 : 1 }}
+                    whileTap={{ scale: !disabled ? 0.99 : 1 }}
+                  >
                     <Button
-                      variant="outline"
-                      className="w-full h-12 text-muted-foreground hover:text-foreground border-accent-purple/20 hover:border-accent-purple/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={wallet.disconnect}
-                      disabled={isSubmitting}
+                      className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
+                      onClick={handleWithdraw}
+                      disabled={disabled || isSubmitting}
                     >
-                      Disconnect Wallet
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0v4c4.418 0 8 3.582 8 8z"
+                            ></path>
+                          </svg>
+                          Withdrawing...
+                        </span>
+                      ) : (
+                        "Withdraw"
+                      )}
                     </Button>
-                  </div>
+                  </motion.div>
                 ) : (
                   <WalletButton className="w-full h-16" />
                 )}
               </motion.div>
             </>
           )}
-        </Card>
-      </motion.div>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }

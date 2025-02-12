@@ -18,7 +18,6 @@ interface Tip {
   currencyMint: PublicKey;
   amount: number;
   createdAt: number;
-  updatedAt: number;
   meta_data?: {
     referrer: string;
     memo: string;
@@ -83,7 +82,6 @@ export function useTips(initialPage = 0) {
         currencyMint: tip.currencyMint,
         amount: tip.amount.toNumber() / 1e9,
         createdAt: tip.createdAt.toNumber(),
-        updatedAt: tip.updatedAt.toNumber(),
         meta_data: tip.meta_data
           ? {
               referrer: tip.meta_data.referrer,
