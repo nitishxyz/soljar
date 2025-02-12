@@ -7,16 +7,11 @@ declare global {
 
 import { useMemo, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { WalletButton } from "@/components/wallet-button";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { motion } from "framer-motion";
-import { Coins } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
 import { useParams } from "next/navigation";
 import { useTipLink } from "@/web3/hooks/use-tip-link";
-import Loading from "../loading/page";
+import Loading from "@/app/loading/page";
 import { PublicKey } from "@solana/web3.js";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { convertAmountToSmallestUnit, getMintAddress } from "@/web3/utils";
@@ -136,12 +131,12 @@ export default function TipPage() {
 
   if (!data) return <div>Tip link not found</div>;
 
-  const { tipLink: tipLinkData, user } = data;
+  const { user } = data;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-card lg:bg-gradient-to-br lg:from-background lg:via-accent-purple/5 lg:to-blue-500/10 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-accent-purple/5 via-transparent to-transparent lg:hidden" />
-      <div className="w-full max-w-4xl relative">
+      <div className="w-full max-w-5xl relative">
         <Card className="backdrop-blur-sm bg-transparent lg:bg-card/95 p-4 md:py-12 shadow-none lg:shadow-xl border-transparent lg:border-accent-purple/10">
           <div className="flex flex-col lg:flex-row items-stretch gap-6 lg:gap-12 sm:px-6">
             {/* QR Code Section - Always visible on desktop, hidden on mobile in wallet browser */}

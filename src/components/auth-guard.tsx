@@ -28,7 +28,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     pathname.startsWith(route)
   );
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
-  const isTipLinkRoute = pathname.match(/^\/[^/]+$/); // Matches /{tipLink} pattern
+  const isTipLinkRoute = pathname.includes("/tip/"); // Matches /{tipLink} pattern
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;

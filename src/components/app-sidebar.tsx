@@ -43,9 +43,9 @@ const menuItems = [
     href: "/withdrawls",
   },
   {
-    title: "Settings",
+    title: "More",
     icon: Settings,
-    href: "/settings",
+    href: "/more",
   },
 ];
 
