@@ -105,7 +105,7 @@ export function TipForm({
           value={message}
           onChange={(e) => onMessageChange(e.target.value)}
           disabled={isSubmitting}
-          maxLength={25}
+          maxLength={20}
           className="min-h-[100px] text-lg bg-background/50 border-accent-purple/20 focus:border-accent-purple/30 transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
         />
       </motion.div>
