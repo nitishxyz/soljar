@@ -4,9 +4,11 @@ import { useBalances } from "@/web3/hooks/use-balances";
 import { ArrowDownToLine } from "lucide-react";
 import { WithdrawalDialog } from "@/components/withdrawal-dialog";
 import { useState } from "react";
+import { useTokenPrices } from "@/web3/hooks/use-token-prices";
 
 export function BalanceCards() {
   const { solBalance, usdcBalance, usdtBalance, isLoading } = useBalances();
+  const { data: prices } = useTokenPrices();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedCurrency, setSelectedCurrency] = useState<
     "SOL" | "USDC" | "USDT"
@@ -16,6 +18,11 @@ export function BalanceCards() {
     setSelectedCurrency(currency);
     setIsDialogOpen(true);
   };
+
+  // Calculate USD values
+  const solUsdValue = (solBalance ?? 0) * (prices?.SOL ?? 0);
+  const usdcUsdValue = (usdcBalance ?? 0) * (prices?.USDC ?? 1);
+  const usdtUsdValue = (usdtBalance ?? 0) * (prices?.USDT ?? 1);
 
   return (
     <>
@@ -42,7 +49,7 @@ export function BalanceCards() {
                   </span>
                 </p>
                 <p className="text-sm text-muted-foreground group-hover:text-purple-500 transition-colors flex items-center gap-1">
-                  <span>≈ $0.00 USD</span>
+                  <span>≈ ${solUsdValue.toFixed(2)} USD</span>
                   <span className="inline-block transition-transform group-hover:rotate-12">
                     💰
                   </span>
@@ -76,14 +83,14 @@ export function BalanceCards() {
               <div className="space-y-1">
                 <p className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight group-hover:scale-105 transition-transform duration-300 relative">
                   <span className="bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent opacity-0 group-hover:opacity-100 absolute inset-0 transition-opacity duration-300">
-                    $245.00
+                    {usdcBalance} USDC
                   </span>
                   <span className="group-hover:opacity-0 transition-opacity duration-300">
-                    $245.00
+                    {usdcBalance} USDC
                   </span>
                 </p>
                 <p className="text-sm text-muted-foreground group-hover:text-blue-500 transition-colors flex items-center gap-1">
-                  <span>≈ 245.00 USDC</span>
+                  <span>≈ ${usdcUsdValue.toFixed(2)} USD</span>
                   <span className="inline-block transition-transform group-hover:rotate-12">
                     💰
                   </span>
@@ -117,14 +124,14 @@ export function BalanceCards() {
               <div className="space-y-1">
                 <p className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight group-hover:scale-105 transition-transform duration-300 relative">
                   <span className="bg-gradient-to-r from-green-500 to-green-700 dark:from-green-400 dark:to-green-600 bg-clip-text text-transparent opacity-0 group-hover:opacity-100 absolute inset-0 transition-opacity duration-300">
-                    $127.50
+                    {usdtBalance} USDT
                   </span>
                   <span className="group-hover:opacity-0 transition-opacity duration-300">
-                    $127.50
+                    {usdtBalance} USDT
                   </span>
                 </p>
                 <p className="text-sm text-muted-foreground group-hover:text-green-500 transition-colors flex items-center gap-1">
-                  <span>≈ 127.50 USDT</span>
+                  <span>≈ ${usdtUsdValue.toFixed(2)} USD</span>
                   <span className="inline-block transition-transform group-hover:rotate-12">
                     💰
                   </span>

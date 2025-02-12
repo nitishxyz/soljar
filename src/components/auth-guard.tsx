@@ -33,31 +33,35 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
-    const checkAuth = () => {
+    const checkAuth = async () => {
       // If still connecting, wait longer
       if (connecting) {
         timeoutId = setTimeout(checkAuth, 500);
         return;
       }
 
-      // If we have a wallet, check for user
-      if (publicKey) {
-        checkUser.refetch().then(({ data }) => {
+      // Only check user if we have a public key and no user data yet
+      if (publicKey && !user) {
+        try {
+          const { data } = await checkUser.refetch();
           setUser(data);
+        } finally {
           setIsCheckingAuth(false);
-        });
+        }
         return;
       }
 
-      // No wallet, we can stop checking
+      // No wallet or already have user data, we can stop checking
       setIsCheckingAuth(false);
     };
 
-    // Initial timeout to allow wallet to initialize
-    timeoutId = setTimeout(checkAuth, 2000);
+    // Only start the auth check if we're checking auth
+    if (isCheckingAuth) {
+      timeoutId = setTimeout(checkAuth, 2000);
+    }
 
     return () => clearTimeout(timeoutId);
-  }, [connecting, publicKey, checkUser]);
+  }, [connecting, publicKey, checkUser, user, isCheckingAuth]);
 
   // Show loading during initial checks
   if (isCheckingAuth) {

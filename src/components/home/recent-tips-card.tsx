@@ -7,6 +7,7 @@ import { Currency } from "@/web3/utils";
 import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
+import { useTokenPrices } from "@/web3/hooks/use-token-prices";
 
 const mockRecentTips = [
   {
@@ -33,6 +34,7 @@ const mockRecentTips = [
 
 export function RecentTipsCard() {
   const { data: recentDeposits, isLoading } = useRecentDeposits();
+  const { data: prices } = useTokenPrices();
   const { connection } = useConnection();
   const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
 
@@ -79,8 +81,8 @@ export function RecentTipsCard() {
   const formatDeposits = recentDeposits?.map((deposit: any) => ({
     id: `${deposit.signer.toString()}-${deposit.createdAt}`,
     amount: deposit.amount,
-    currency: "SOL", // Since currencyMint is SOL's native mint
-    usdPrice: 98.45, // You might want to fetch this dynamically
+    currency: "SOL" as Currency, // Since currencyMint is SOL's native mint
+    usdPrice: prices?.SOL ?? 0, // Use real-time price
     from:
       deposit.signer.toString().slice(0, 4) +
       "..." +
