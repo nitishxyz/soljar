@@ -16,7 +16,7 @@ export function Hero() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center overflow-x-hidden">
+    <div className="relative min-h-screen flex items-center py-24">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-grid-white/[0.02] -z-10" />
       <div className="absolute h-48 w-48 blur-3xl bg-accent-purple/20 rounded-full -top-12 -left-12 animate-pulse" />
