@@ -45,6 +45,10 @@ export function TipForm({
   const shouldShowMobileWalletButton =
     !wallet && isMobile && !window?.solana && !window?.phantom;
 
+  const phantomUrl = `https://phantom.app/ul/browse/${encodeURIComponent(
+    window.location.href
+  )}?ref=${encodeURIComponent(window.location.origin)}`;
+
   return (
     <div className="space-y-8 py-4 sm:py-6 md:py-8">
       <motion.div
@@ -189,8 +193,7 @@ export function TipForm({
             <Button
               className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
               onClick={() => {
-                const deepLink = "https://phantom.app/ul/browse/";
-                window.open(`${deepLink}${window.location.href}`);
+                window.open(phantomUrl);
               }}
             >
               Open in Wallet
