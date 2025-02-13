@@ -5,7 +5,7 @@ import { WalletButton } from "@/components/wallet-button";
 
 export function Header() {
   return (
-    <header className="flex h-20 items-center justify-between gap-4 bg-background px-6">
+    <header className="flex h-20 items-center justify-between gap-4 bg-background px-4 sm:px-6">
       <div className="flex ">
         <SidebarTrigger size={"lg"} className="h-12" />
       </div>

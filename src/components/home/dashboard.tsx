@@ -15,7 +15,7 @@ export default function Dashboard() {
 
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full max-w-[1400px] p-6 space-y-6">
+      <div className="w-full max-w-[1400px] p-8 px-4 sm:px-6 space-y-6">
         <h1 className="text-3xl font-medium">Welcome back, {user?.username}</h1>
 
         <BalanceCards />

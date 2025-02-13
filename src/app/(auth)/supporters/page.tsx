@@ -33,16 +33,16 @@ export default function SupportersPage() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="animate-pulse flex items-center justify-between py-4 px-6 rounded-lg"
+            className="animate-pulse flex items-start gap-3 sm:gap-6 py-3 sm:py-4 px-4 sm:px-6 rounded-lg"
           >
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-full bg-muted" />
-              <div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-muted shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
                 <div className="h-5 w-32 bg-muted rounded" />
-                <div className="h-4 w-24 bg-muted rounded mt-2" />
+                <div className="h-5 w-24 bg-muted rounded shrink-0" />
               </div>
+              <div className="h-4 w-40 bg-muted rounded mt-2" />
             </div>
-            <div className="h-5 w-40 bg-muted rounded" />
           </div>
         ))}
       </div>
@@ -50,7 +50,7 @@ export default function SupportersPage() {
   }
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 px-4 sm:px-6">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <HeartIcon className="w-7 h-7 text-accent-purple" />
@@ -67,38 +67,31 @@ export default function SupportersPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               key={supporter.signer.toString()}
-              className="group flex items-center justify-between py-4 px-6 rounded-lg hover:bg-accent-purple/5 transition-colors"
+              className="group flex flex-col sm:flex-row sm:items-center justify-between py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:bg-accent-purple/5 transition-colors gap-2 sm:gap-4"
             >
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-12 rounded-full bg-accent-purple/10 flex items-center justify-center">
+              <div className="flex-1 flex items-start gap-3 sm:gap-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
                     currency={getCurrencyFromMint(supporter.mint)}
-                    className="w-7 h-7"
+                    className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="font-medium text-lg">
-                    {formatAddress(supporter.signer.toString())}
-                  </p>
-                  <span className="text-sm text-muted-foreground">
-                    Last active{" "}
-                    {formatDistance(
-                      new Date(supporter.updatedAt * 1000),
-                      new Date(),
-                      {
-                        addSuffix: true,
-                      }
-                    )}
-                  </span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-medium text-base sm:text-lg truncate">
+                      {formatAddress(supporter.signer.toString())}
+                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-medium text-base sm:text-lg text-accent-purple whitespace-nowrap">
+                        {supporter.amount} {getCurrencyFromMint(supporter.mint)}
+                      </span>
+                      <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                    <span>{supporter.tipCount} tips</span>
+                  </div>
                 </div>
-              </div>
-              <div className="flex flex-col items-end gap-1 min-w-[140px]">
-                <span className="font-medium text-lg text-accent-purple">
-                  {supporter.amount} {getCurrencyFromMint(supporter.mint)}
-                </span>
-                <p className="text-sm text-muted-foreground">
-                  {supporter.tipCount} tips
-                </p>
               </div>
             </motion.a>
           ))}

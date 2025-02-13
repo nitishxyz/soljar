@@ -32,7 +32,7 @@ export function TotalsCard() {
               {isIndexLoading ? "..." : index?.totalDeposits ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
-              Total Tips
+              Tips
             </div>
           </div>
 
@@ -45,7 +45,7 @@ export function TotalsCard() {
               {isIndexLoading ? "..." : index?.totalWithdrawals ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
-              Total Withdrawals
+              Withdrawals
             </div>
           </div>
 
@@ -58,7 +58,7 @@ export function TotalsCard() {
               {isIndexLoading ? "..." : index?.totalSupporters ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
-              Total Supporters
+              Supporters
             </div>
           </div>
         </div>

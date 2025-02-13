@@ -51,7 +51,7 @@ export default function MorePage() {
   ];
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 px-4 sm:px-6">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <Settings className="w-7 h-7 text-accent-purple" />

@@ -58,16 +58,17 @@ export default function TipsPage() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="animate-pulse flex items-center justify-between py-4 px-6 rounded-lg"
+            className="animate-pulse flex items-start gap-3 sm:gap-6 py-3 sm:py-4 px-4 sm:px-6 rounded-lg"
           >
-            <div className="flex items-center gap-6">
-              <div className="w-12 h-12 rounded-full bg-muted" />
-              <div>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-muted shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
                 <div className="h-5 w-32 bg-muted rounded" />
-                <div className="h-4 w-24 bg-muted rounded mt-2" />
+                <div className="h-5 w-24 bg-muted rounded shrink-0" />
               </div>
+              <div className="h-4 w-40 bg-muted rounded mt-2" />
+              <div className="h-4 w-48 bg-muted rounded mt-2" />
             </div>
-            <div className="h-5 w-40 bg-muted rounded" />
           </div>
         ))}
       </div>
@@ -75,7 +76,7 @@ export default function TipsPage() {
   }
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 px-4 sm:px-6">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <GiftIcon className="w-7 h-7 text-accent-purple" />
@@ -87,49 +88,54 @@ export default function TipsPage() {
             <motion.div
               key={`${tip.signer.toString()}-${tip.createdAt}`}
               onClick={() => handleTipClick(tip)}
-              className="group flex items-center justify-between py-4 px-6 rounded-lg hover:bg-accent-purple/5 transition-colors cursor-pointer"
+              className="group flex flex-col sm:flex-row sm:items-center justify-between py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:bg-accent-purple/5 transition-colors cursor-pointer gap-2 sm:gap-4"
             >
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-12 rounded-full bg-accent-purple/10 flex items-center justify-center">
+              <div className="flex-1 flex items-start gap-3 sm:gap-6">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
                     currency={getCurrencyFromMint(tip.currencyMint)}
-                    className="w-7 h-7"
+                    className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <p className="font-medium text-lg">
-                    {formatAddress(tip.signer.toString())}
-                  </p>
-                  <span className="text-sm text-muted-foreground">
-                    {formatDistance(
-                      new Date(tip.createdAt * 1000),
-                      new Date(),
-                      {
-                        addSuffix: true,
-                      }
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-medium text-base sm:text-lg truncate">
+                      {formatAddress(tip.signer.toString())}
+                    </p>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-medium text-base sm:text-lg text-accent-purple whitespace-nowrap">
+                        {tip.amount} {getCurrencyFromMint(tip.currencyMint)}
+                      </span>
+                      <div className="relative w-4 h-4 shrink-0">
+                        {loadingSignature === tip.signer.toString() ? (
+                          <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <ExternalLink className="absolute inset-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+                    <span>
+                      {formatDistance(
+                        new Date(tip.createdAt * 1000),
+                        new Date(),
+                        {
+                          addSuffix: true,
+                        }
+                      )}
+                    </span>
+                    {tip.referrer && (
+                      <>
+                        <span>•</span>
+                        <span>via {tip.referrer}</span>
+                      </>
                     )}
-                  </span>
+                  </div>
                   {tip.memo && (
-                    <span className="text-sm text-muted-foreground mt-1">
+                    <span className="block text-xs sm:text-sm text-muted-foreground mt-1">
                       &quot;{tip.memo}&quot;
                     </span>
-                  )}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-lg text-accent-purple">
-                  {tip.amount} {getCurrencyFromMint(tip.currencyMint)}
-                </span>
-                {tip.referrer && (
-                  <p className="text-sm text-muted-foreground">
-                    via {tip.referrer}
-                  </p>
-                )}
-                <div className="relative w-4 h-4">
-                  {loadingSignature === tip.signer.toString() ? (
-                    <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <ExternalLink className="absolute inset-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   )}
                 </div>
               </div>

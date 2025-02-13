@@ -141,14 +141,16 @@ export function TipHistoryCard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <p
-              className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
-            >
-              +{tip.amount} {tip.currency}
-            </p>
-            <span className="text-xs text-muted-foreground">
-              (≈${(tip.amount * tip.usdPrice).toFixed(2)})
-            </span>
+            <div className="flex flex-col items-end">
+              <p
+                className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
+              >
+                +{tip.amount} {tip.currency}
+              </p>
+              <span className="text-xs text-muted-foreground">
+                (≈${(tip.amount * tip.usdPrice).toFixed(2)})
+              </span>
+            </div>
             {loadingSignature === tip.signature ? (
               <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
             ) : (

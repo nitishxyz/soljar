@@ -58,26 +58,25 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
         </motion.div>
       </CardHeader>
 
-      <CardContent className="flex flex-col flex-grow space-y-4 relative h-full justify-center">
+      <CardContent className="flex flex-col space-y-4 relative p-6">
         <div className="relative group/input">
           <Input
             type="text"
             value={tipLink}
             readOnly
-            className="font-mono text-sm pr-24 bg-accent-purple/5 border-accent-purple/20 focus:border-accent-purple focus:ring-accent-purple/20"
+            className="font-mono text-sm pr-8 bg-accent-purple/5 border-accent-purple/20 focus:border-accent-purple focus:ring-accent-purple/20 overflow-x-auto"
           />
           <a
             href={tipLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-accent-purple transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-accent-purple transition-colors bg-background/80 p-1"
           >
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>
 
-        {/* Helper text */}
-        <p className="text-sm text-muted-foreground mt-auto">
+        <p className="text-sm text-muted-foreground min-h-[2.5rem]">
           Share this link with your supporters to receive tips in SOL, USDC, or
           USDT.
         </p>

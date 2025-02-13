@@ -48,7 +48,7 @@ export default function WithdrawlsPage() {
 
   if (isLoading && currentPage === 0) {
     return (
-      <div className="container mx-auto p-8 space-y-4">
+      <div className="container mx-auto p-8 px-4 sm:px-6 space-y-4">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <BanknotesIcon className="w-7 h-7 text-accent-purple animate-pulse" />
           Withdrawals
@@ -74,7 +74,7 @@ export default function WithdrawlsPage() {
   }
 
   return (
-    <div className="container mx-auto p-8">
+    <div className="container mx-auto p-8 px-4 sm:px-6">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <BanknotesIcon className="w-7 h-7 text-accent-purple" />
