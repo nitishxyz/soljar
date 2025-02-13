@@ -1,3 +1,4 @@
+"use client";
 import { Benefits } from "./benefits";
 import { CTA } from "./cta";
 import { FAQ } from "./faq";
