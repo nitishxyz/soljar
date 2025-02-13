@@ -86,7 +86,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   // Handle home page with authenticated user
-  if ((pathname === "/" || pathname === "/start") && publicKey && user) {
+  if (pathname === "/start" && publicKey && user) {
     goToRoute("/dashboard");
     return <Loading />; // Show loading while redirecting
   }
