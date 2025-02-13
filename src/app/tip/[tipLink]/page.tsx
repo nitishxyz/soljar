@@ -1,9 +1,4 @@
 "use client";
-declare global {
-  interface Window {
-    phantom?: any;
-  }
-}
 
 import { TipView } from "@/components/tip/tip-view";
 import { TipFooter } from "@/components/tip/tip-footer";
