@@ -55,24 +55,22 @@ export function useRecentWithdrawals(limit = 5) {
         page.withdrawls.slice(0, page.totalItems)
       );
 
-      // Sort by newest first and limit
-      const recentWithdrawalPubkeys = allWithdrawalPubkeys.slice(0, limit);
-
-      // Fetch actual withdrawals
-      const withdrawalPromises = recentWithdrawalPubkeys.map((pubkey) =>
+      // Fetch actual withdrawals for all pubkeys
+      const withdrawalPromises = allWithdrawalPubkeys.map((pubkey) =>
         program.account.withdrawl.fetch(pubkey)
       );
 
       const withdrawals = await Promise.all(withdrawalPromises);
 
-      // Sort by creation time, newest first
+      // Sort by creation time, newest first, then limit
       return withdrawals
         .map((withdrawal) => ({
           ...withdrawal,
           amount: withdrawal.amount.toNumber() / 1e9, // Convert from lamports/smallest unit
           createdAt: withdrawal.createdAt.toNumber(),
         }))
-        .sort((a, b) => b.createdAt - a.createdAt);
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, limit);
     },
     enabled: Boolean(program && userPublicKey),
   });

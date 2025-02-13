@@ -54,24 +54,22 @@ export function useRecentDeposits(limit = 5) {
         page.deposits.slice(0, page.totalItems)
       );
 
-      // Sort by newest first and limit
-      const recentDepositPubkeys = allDepositPubkeys.slice(0, limit);
-
-      // Fetch actual deposits
-      const depositPromises = recentDepositPubkeys.map((pubkey) =>
+      // Fetch actual deposits for all pubkeys first
+      const depositPromises = allDepositPubkeys.map((pubkey) =>
         program.account.deposit.fetch(pubkey)
       );
 
       const deposits = await Promise.all(depositPromises);
 
-      // Sort by creation time, newest first
+      // Sort by creation time, newest first, then limit
       return deposits
         .map((deposit) => ({
           ...deposit,
           amount: deposit.amount.toNumber() / 1e9, // Convert from lamports/smallest unit
           createdAt: deposit.createdAt.toNumber(),
         }))
-        .sort((a, b) => b.createdAt - a.createdAt);
+        .sort((a, b) => b.createdAt - a.createdAt)
+        .slice(0, limit);
     },
     enabled: Boolean(program && userPublicKey),
   });

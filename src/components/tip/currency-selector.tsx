@@ -17,6 +17,12 @@ export function CurrencySelector({
 }: CurrencySelectorProps) {
   const currencies: Currency[] = ["SOL", "USDC", "USDT"];
 
+  const currencyColors = {
+    SOL: "purple-500",
+    USDC: "blue-500",
+    USDT: "green-500",
+  } as const;
+
   return (
     <motion.div
       className="grid grid-cols-3 gap-4"
@@ -34,8 +40,8 @@ export function CurrencySelector({
             variant={selectedCurrency === currency ? "default" : "outline"}
             className={`w-full flex items-center justify-center gap-2 h-14 transition-all duration-200 ${
               selectedCurrency === currency
-                ? `bg-accent-purple/10 hover:bg-accent-purple/20 text-accent-purple border-accent-purple/20`
-                : "hover:bg-accent-purple/5"
+                ? `bg-${currencyColors[currency]}/10 hover:bg-${currencyColors[currency]}/20 text-${currencyColors[currency]} border-${currencyColors[currency]}/20`
+                : `hover:bg-${currencyColors[currency]}/5`
             } disabled:opacity-50 disabled:cursor-not-allowed`}
             onClick={() => onCurrencySelect(currency)}
             disabled={isSubmitting}

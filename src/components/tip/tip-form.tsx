@@ -4,6 +4,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { WalletButton } from "@/components/wallet-button";
 import { Coins } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useWalletBalances } from "@/web3/hooks/use-wallet-balances";
 
 type Currency = "SOL" | "USDC" | "USDT";
 
@@ -36,6 +39,12 @@ export function TipForm({
   isWalletConnected,
   onDisconnect,
 }: TipFormProps) {
+  const { wallet } = useWallet();
+  const isMobile = useIsMobile();
+  const { data: balances } = useWalletBalances();
+  const shouldShowMobileWalletButton =
+    !wallet && isMobile && !window?.solana && !window?.phantom;
+
   return (
     <div className="space-y-8 py-4 sm:py-6 md:py-8">
       <motion.div
@@ -72,6 +81,15 @@ export function TipForm({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
+        {isWalletConnected && (
+          <div className="flex justify-between items-center text-sm text-muted-foreground">
+            <span>Available Balance</span>
+            <span>
+              {balances?.[selectedCurrency] ?? 0} {selectedCurrency}
+            </span>
+          </div>
+        )}
+
         {/* Amount Input */}
         <div className="relative group">
           <div className="absolute inset-0 bg-gradient-to-br from-accent-purple/20 to-blue-500/20 rounded-xl blur-xl group-hover:blur-2xl transition-all opacity-0 group-hover:opacity-100" />
@@ -166,7 +184,20 @@ export function TipForm({
             </Button>
           </>
         ) : (
-          <WalletButton className="w-full h-16" />
+          !isWalletConnected &&
+          (shouldShowMobileWalletButton ? (
+            <Button
+              className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
+              onClick={() => {
+                const deepLink = "https://phantom.app/ul/browse/";
+                window.open(`${deepLink}${window.location.href}`);
+              }}
+            >
+              Open in Wallet
+            </Button>
+          ) : (
+            <WalletButton className="w-full h-16" />
+          ))
         )}
       </motion.div>
     </div>
