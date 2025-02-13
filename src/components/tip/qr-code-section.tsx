@@ -141,17 +141,6 @@ export function QRCodeSection({ url }: QRCodeSectionProps) {
               </>
             )}
           </Button>
-          <p className="text-xs text-center text-muted-foreground">
-            or open directly in{" "}
-            <a
-              href={phantomUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-accent-purple hover:text-accent-purple/80 transition-colors"
-            >
-              Phantom Browser
-            </a>
-          </p>
         </div>
       </div>
     </motion.div>
