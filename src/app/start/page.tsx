@@ -10,10 +10,8 @@ import { OnboardingSection } from "@/components/onboarding-section";
 import { Card, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Landing } from "@/components/landing/landing";
 
 export default function Page() {
-  return <Landing />;
   return (
     <div className="flex min-h-screen bg-gradient-to-b from-background to-background/95">
       {/* Left section (2/3) - Landing page information */}

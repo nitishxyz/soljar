@@ -6,13 +6,15 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { CreateUserForm } from "./create-user-form";
 import { AnimatePresence, motion } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 export function OnboardingSection() {
   const { publicKey, connected } = useWallet();
   const { getUser } = useSoljarUser();
   const { data: user, isLoading, isFetching } = getUser;
   const queryClient = useQueryClient();
-
+  const router = useRouter();
   // Reset the component state when wallet is disconnected
   useEffect(() => {
     if (!connected) {
@@ -58,6 +60,13 @@ export function OnboardingSection() {
                 <CreateUserForm />
               </div>
             </motion.div>
+          )}
+
+          {/* show go to dashboard button if user is connected */}
+          {connected && user && (
+            <Button onClick={() => router.push("/dashboard")}>
+              Go to Dashboard
+            </Button>
           )}
         </AnimatePresence>
       </div>

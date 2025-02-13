@@ -20,7 +20,6 @@ export const useBalances = () => {
     queryFn: async () => {
       if (!jarPda) return 0;
       const balance = await connection.getBalance(jarPda);
-      console.log("SOL balance:", balance / 10 ** 9);
       return balance / 10 ** 9; // Convert lamports to SOL
     },
     enabled: !!jarPda,
@@ -35,11 +34,9 @@ export const useBalances = () => {
           jarPda,
           { mint: USDC_MINT }
         );
-        console.log("USDC account info:", accountInfo);
         if (accountInfo.value.length === 0) return 0;
         const balance =
           accountInfo.value[0].account.data.parsed.info.tokenAmount.uiAmount;
-        console.log("USDC balance:", balance);
         return balance;
       } catch (error) {
         console.error("Error fetching USDC balance:", error);

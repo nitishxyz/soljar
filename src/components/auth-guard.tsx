@@ -20,9 +20,9 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const { publicKey, connecting } = useWallet();
-  const { checkUser } = useSoljarUser();
+  const { getUser } = useSoljarUser();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const { data: user } = getUser;
 
   const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
     pathname.startsWith(route)
@@ -43,8 +43,8 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
       // Only check user if we have a public key and no user data yet
       if (publicKey && !user) {
         try {
-          const { data } = await checkUser.refetch();
-          setUser(data);
+          const { data } = await getUser.refetch();
+          // setUser(data);
         } finally {
           setIsCheckingAuth(false);
         }
@@ -61,7 +61,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     }
 
     return () => clearTimeout(timeoutId);
-  }, [connecting, publicKey, checkUser, user, isCheckingAuth]);
+  }, [connecting, publicKey, getUser, user, isCheckingAuth]);
 
   // Show loading during initial checks
   if (isCheckingAuth) {
@@ -73,15 +73,21 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
+  const goToRoute = (route: string) => {
+    setTimeout(() => {
+      router.push(route);
+    }, 100);
+  };
+
   // Handle protected routes
   if (isProtectedRoute && (!publicKey || !user)) {
-    router.push("/");
+    goToRoute("/");
     return <Loading />; // Show loading while redirecting
   }
 
   // Handle home page with authenticated user
-  if (pathname === "/" && publicKey && user) {
-    router.push("/dashboard");
+  if ((pathname === "/" || pathname === "/start") && publicKey && user) {
+    goToRoute("/dashboard");
     return <Loading />; // Show loading while redirecting
   }
 

@@ -43,8 +43,6 @@ export function QRCodeSection({ url }: QRCodeSectionProps) {
 
   const colors = isDark ? qrColors.dark : qrColors.light;
 
-  console.log("Theme:", theme, "Resolved Theme:", resolvedTheme);
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
