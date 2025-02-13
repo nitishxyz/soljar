@@ -22,7 +22,7 @@ export function CTA() {
             transition={{ duration: 0.5 }}
             className="space-y-8"
           >
-            <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent pb-[5px]">
               Start Accepting Tips Today
             </h2>
 
@@ -40,13 +40,6 @@ export function CTA() {
                 Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <motion.a
-                href="/docs"
-                whileHover={{ x: 4 }}
-                className="flex items-center gap-2 text-accent-purple hover:text-accent-purple/80 transition-colors"
-              >
-                View Documentation <ArrowRight className="w-4 h-4" />
-              </motion.a>
             </div>
           </motion.div>
         </div>

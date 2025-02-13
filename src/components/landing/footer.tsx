@@ -4,24 +4,6 @@ import Link from "next/link";
 
 const footerLinks = [
   {
-    title: "Product",
-    links: [
-      { label: "Features", href: "/#features" },
-      { label: "How it Works", href: "/#how-it-works" },
-      { label: "Use Cases", href: "/#use-cases" },
-      { label: "FAQ", href: "/#faq" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Documentation", href: "/docs" },
-      { label: "API Reference", href: "/docs/api" },
-      { label: "Examples", href: "/docs/examples" },
-      { label: "Guides", href: "/docs/guides" },
-    ],
-  },
-  {
     title: "Legal",
     links: [
       { label: "Privacy Policy", href: "/privacy" },
@@ -47,9 +29,9 @@ export function Footer() {
   return (
     <footer className="border-t border-accent-purple/10">
       <div className="container mx-auto px-4 py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
           {/* Brand Column */}
-          <div className="col-span-2 md:col-span-1">
+          <div className="col-span-2 md:col-span-2">
             <Link href="/" className="inline-block">
               <h3 className="text-2xl font-bold bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
                 Soljar

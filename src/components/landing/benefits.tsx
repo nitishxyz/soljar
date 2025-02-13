@@ -84,7 +84,7 @@ export function Benefits() {
             whileInView={{ scale: 1 }}
             transition={{ duration: 0.8, type: "spring" }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent pb-[2px]">
               Why Choose Soljar?
             </h2>
           </motion.div>

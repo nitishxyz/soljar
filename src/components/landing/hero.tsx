@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import { PreviewAnimation } from "./animations/preview-animation";
 export function Hero() {
   const router = useRouter();
 
@@ -16,17 +16,17 @@ export function Hero() {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center py-24">
+    <div className="relative min-h-screen flex items-center justify-center py-24 overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-grid-white/[0.02] -z-10" />
       <div className="absolute h-48 w-48 blur-3xl bg-accent-purple/20 rounded-full -top-12 -left-12 animate-pulse" />
       <div className="absolute h-48 w-48 blur-3xl bg-blue-500/20 rounded-full -bottom-12 -right-12 animate-pulse delay-300" />
 
-      <div className="container mx-auto px-2 sm:px-4 py-24">
-        <div className="flex flex-col lg:flex-row items-center gap-12 w-full">
+      <div className="w-full max-w-7xl mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
           {/* Left Column - Text Content */}
           <motion.div
-            className="flex-1 space-y-6 max-w-full"
+            className="w-full lg:w-1/2 lg:max-w-xl space-y-6 text-center lg:text-left"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -47,10 +47,10 @@ export function Hero() {
               Accept SOL & USDC instantly. No signups. Just a link.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 pt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-8">
               <Button
                 size="lg"
-                className="h-14 text-lg bg-accent-purple hover:bg-accent-purple/90"
+                className="h-14 text-lg bg-accent-purple hover:bg-accent-purple/90 w-full sm:w-auto"
                 onClick={() => router.push("/start")}
               >
                 Get Started
@@ -59,7 +59,7 @@ export function Hero() {
               <Button
                 variant="outline"
                 size="lg"
-                className="h-14 text-lg group"
+                className="h-14 text-lg group w-full sm:w-auto"
                 onClick={scrollToDemo}
               >
                 Try Demo
@@ -67,7 +67,7 @@ export function Hero() {
               </Button>
             </div>
 
-            <div className="flex items-center gap-2 text-muted-foreground pt-4">
+            <div className="flex items-center justify-center lg:justify-start gap-2 text-muted-foreground pt-4">
               <Sparkles className="w-4 h-4 text-accent-purple" />
               <span>
                 Generate a button or link, share it, and start receiving tips
@@ -77,33 +77,9 @@ export function Hero() {
           </motion.div>
 
           {/* Right Column - Preview */}
-          <motion.div
-            className="flex-1"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-purple/10 to-blue-500/10 rounded-xl blur-xl" />
-              <div className="relative bg-card/50 backdrop-blur-sm border border-accent-purple/20 rounded-xl p-6 shadow-2xl">
-                {/* Preview content here */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-accent-purple/10" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-24 bg-accent-purple/10 rounded" />
-                      <div className="h-3 w-32 bg-muted rounded" />
-                    </div>
-                  </div>
-                  <div className="h-24 bg-accent-purple/5 rounded-lg" />
-                  <div className="flex gap-2">
-                    <div className="h-10 w-20 bg-accent-purple/10 rounded" />
-                    <div className="h-10 w-20 bg-blue-500/10 rounded" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <div className="w-full lg:w-1/2 lg:max-w-xl flex justify-center items-center h-[600px]">
+            <PreviewAnimation />
+          </div>
         </div>
       </div>
     </div>
