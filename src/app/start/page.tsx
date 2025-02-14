@@ -13,26 +13,26 @@ import { cn } from "@/lib/utils";
 
 export default function Page() {
   return (
-    <div className="flex min-h-screen bg-gradient-to-b from-background to-background/95">
-      {/* Left section (2/3) - Landing page information */}
-      <div className="w-2/3 flex flex-col justify-center px-16 py-12">
+    <div className="flex min-h-screen flex-col lg:flex-row bg-gradient-to-b from-background to-background/95">
+      {/* Left section - Landing page information */}
+      <div className="w-full lg:w-2/3 flex flex-col justify-center px-6 lg:px-16 py-8 lg:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-7xl font-bold mb-4 bg-gradient-to-r from-accent-purple to-accent-purple/70 bg-clip-text text-transparent">
+          <h1 className="text-5xl lg:text-7xl font-bold mb-4 bg-gradient-to-r from-accent-purple to-accent-purple/70 bg-clip-text text-transparent">
             Soljar
           </h1>
-          <p className="text-2xl mb-4 font-medium">
+          <p className="text-xl lg:text-2xl mb-4 font-medium">
             Web3-native sponsorship and tipping platform on Solana
           </p>
-          <p className="text-muted-foreground/80 text-lg mb-16">
+          <p className="text-muted-foreground/80 text-base lg:text-lg mb-8 lg:mb-16">
             Accept SOL, USDC, and other tokens instantly - no sign-ups required
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -73,7 +73,7 @@ export default function Page() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-16 flex items-center space-x-3 text-sm"
+          className="mt-8 lg:mt-16 flex items-center space-x-3 text-sm"
         >
           <div className="p-2 rounded-full bg-accent-purple/10">
             <LockOpenIcon className="w-4 h-4 text-accent-purple" />
@@ -84,8 +84,10 @@ export default function Page() {
         </motion.div>
       </div>
 
-      {/* Right section (1/3) - Wallet connection & onboarding */}
-      <OnboardingSection />
+      {/* Right section - Wallet connection & onboarding */}
+      <div className="w-full lg:w-1/3">
+        <OnboardingSection />
+      </div>
     </div>
   );
 }
