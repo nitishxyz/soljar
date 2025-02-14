@@ -5,7 +5,6 @@ import {
   GiftIcon,
   ArrowDownToLine,
   Settings,
-  Beaker,
 } from "lucide-react";
 
 import { HeartIcon } from "@heroicons/react/24/outline";
@@ -56,7 +55,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center justify-center gap-2 py-4">
-          <Beaker className="w-8 h-8 text-accent-purple" />
+          <img src="/meta/logo.svg" alt="Logo" className="w-8 h-8" />
           <span className="text-2xl font-medium">soljar.xyz</span>
         </div>
       </SidebarHeader>

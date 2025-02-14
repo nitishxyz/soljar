@@ -9,15 +9,19 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
-interface Supporter {
-  signer: PublicKey;
-  jar: PublicKey;
+export interface TipInfo {
   mint: PublicKey;
   tipLink: PublicKey;
   amount: number;
+  tipCount: number;
+}
+
+export interface Supporter {
+  signer: PublicKey;
+  jar: PublicKey;
+  tips: TipInfo[];
   createdAt: number;
   updatedAt: number;
-  tipCount: number;
 }
 
 export function useSupporters(initialPage = 0) {
@@ -64,12 +68,14 @@ export function useSupporters(initialPage = 0) {
       const formattedSupporters = supporters.map((supporter: any) => ({
         signer: supporter.signer,
         jar: supporter.jar,
-        mint: supporter.mint,
-        tipLink: supporter.tipLink,
-        amount: supporter.amount.toNumber() / 1e9, // Convert from lamports
+        tips: supporter.tips.map((tip: any) => ({
+          mint: tip.mint,
+          tipLink: tip.tipLink,
+          amount: tip.amount.toNumber() / 1e9, // Convert from lamports
+          tipCount: tip.tipCount,
+        })),
         createdAt: supporter.createdAt.toNumber(),
         updatedAt: supporter.updatedAt.toNumber(),
-        tipCount: supporter.tipCount,
       }));
 
       return {

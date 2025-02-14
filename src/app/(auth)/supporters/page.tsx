@@ -8,6 +8,7 @@ import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
+import type { Supporter, TipInfo } from "@/web3/hooks/use-supporters";
 
 export default function SupportersPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -58,7 +59,7 @@ export default function SupportersPage() {
         </div>
 
         <div className="space-y-3">
-          {data?.supporters.map((supporter, index) => (
+          {data?.supporters.map((supporter: Supporter, index: number) => (
             <motion.a
               href={`https://solscan.io/account/${supporter.signer.toString()}`}
               target="_blank"
@@ -72,7 +73,7 @@ export default function SupportersPage() {
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
-                    currency={getCurrencyFromMint(supporter.mint)}
+                    currency={getCurrencyFromMint(supporter.tips[0].mint)}
                     className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
@@ -82,14 +83,27 @@ export default function SupportersPage() {
                       {formatAddress(supporter.signer.toString())}
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="font-medium text-base sm:text-lg text-accent-purple whitespace-nowrap">
-                        {supporter.amount} {getCurrencyFromMint(supporter.mint)}
-                      </span>
+                      <div className="flex flex-col items-end gap-1">
+                        {supporter.tips.map((tip: TipInfo) => (
+                          <span
+                            key={tip.mint.toString()}
+                            className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
+                          >
+                            {tip.amount} {getCurrencyFromMint(tip.mint)}
+                          </span>
+                        ))}
+                      </div>
                       <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                    <span>{supporter.tipCount} tips</span>
+                    <span>
+                      {supporter.tips.reduce(
+                        (acc: number, tip: TipInfo) => acc + tip.tipCount,
+                        0
+                      )}{" "}
+                      tips
+                    </span>
                   </div>
                 </div>
               </div>

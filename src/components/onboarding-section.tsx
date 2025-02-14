@@ -29,14 +29,14 @@ export function OnboardingSection() {
 
   if (showLoading) {
     return (
-      <div className="w-1/3 border-l flex flex-col items-center justify-center p-8">
+      <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center p-8">
         <div className="animate-pulse">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="w-1/3 border-l flex flex-col items-center justify-center p-8">
+    <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center p-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-semibold mb-4">Get Started</h2>
         <p className="text-gray-600 mb-6">
