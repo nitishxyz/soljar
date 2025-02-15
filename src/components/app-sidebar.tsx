@@ -58,7 +58,7 @@ export function AppSidebar() {
           <Image
             src="/meta/logo_wordmark.svg"
             alt="Logo"
-            className="h-8"
+            className="h-8 brightness-0 dark:brightness-100 transition-all duration-200"
             width={130}
             height={32}
           />
