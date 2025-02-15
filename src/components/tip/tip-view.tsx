@@ -145,7 +145,7 @@ export function TipView({ tipLinkId, isDemo = false }: TipViewProps) {
                 <QRCodeSection
                   url={
                     isDemo
-                      ? "https://soljar.vercel.app/tip/nitishxyz"
+                      ? "https://soljar.xyz/tip/nitishxyz"
                       : window.location.href
                   }
                 />
@@ -188,7 +188,7 @@ export function TipView({ tipLinkId, isDemo = false }: TipViewProps) {
                 <QRCodeSection
                   url={
                     isDemo
-                      ? "https://soljar.vercel.app/tip/nitishxyz"
+                      ? "https://soljar.xyz/tip/nitishxyz"
                       : window.location.href
                   }
                 />
