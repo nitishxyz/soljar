@@ -10,10 +10,8 @@ import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 interface Deposit {
   signer: PublicKey;
-  jar: PublicKey;
-  meta: PublicKey;
   tipLink: PublicKey;
-  currencyMint: PublicKey;
+  currency: string;
   amount: number;
   createdAt: number;
   updatedAt: number;

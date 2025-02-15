@@ -10,16 +10,15 @@ import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
 export interface TipInfo {
-  mint: PublicKey;
-  tipLink: PublicKey;
+  currency: string;
   amount: number;
-  tipCount: number;
 }
 
 export interface Supporter {
   signer: PublicKey;
   jar: PublicKey;
   tips: TipInfo[];
+  tipCount: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -69,11 +68,10 @@ export function useSupporters(initialPage = 0) {
         signer: supporter.signer,
         jar: supporter.jar,
         tips: supporter.tips.map((tip: any) => ({
-          mint: tip.mint,
-          tipLink: tip.tipLink,
+          currency: tip.currency,
           amount: tip.amount.toNumber() / 1e9, // Convert from lamports
-          tipCount: tip.tipCount,
         })),
+        tipCount: supporter.tipCount,
         createdAt: supporter.createdAt.toNumber(),
         updatedAt: supporter.updatedAt.toNumber(),
       }));

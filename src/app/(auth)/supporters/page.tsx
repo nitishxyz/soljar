@@ -73,7 +73,9 @@ export default function SupportersPage() {
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
-                    currency={getCurrencyFromMint(supporter.tips[0].mint)}
+                    currency={
+                      supporter.tips[0].currency as "SOL" | "USDC" | "USDT"
+                    }
                     className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
@@ -86,10 +88,10 @@ export default function SupportersPage() {
                       <div className="flex flex-col items-end gap-1">
                         {supporter.tips.map((tip: TipInfo) => (
                           <span
-                            key={tip.mint.toString()}
+                            key={tip.currency}
                             className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
                           >
-                            {tip.amount} {getCurrencyFromMint(tip.mint)}
+                            {tip.amount} {tip.currency}
                           </span>
                         ))}
                       </div>
@@ -97,13 +99,7 @@ export default function SupportersPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-                    <span>
-                      {supporter.tips.reduce(
-                        (acc: number, tip: TipInfo) => acc + tip.tipCount,
-                        0
-                      )}{" "}
-                      tips
-                    </span>
+                    <span>{supporter.tipCount} tips</span>
                   </div>
                 </div>
               </div>
