@@ -46,7 +46,7 @@ export function LiveDemo() {
         </motion.div>
 
         <div className=" mx-auto">
-          <TipView tipLinkId="nitishxyz" isDemo={true} />
+          <TipView tipLinkId="soljar" isDemo={true} />
         </div>
       </div>
     </section>
