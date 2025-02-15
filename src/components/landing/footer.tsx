@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Github, Twitter } from "lucide-react";
+import { Github, X } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "../ui/logo";
 
 const footerLinks = [
   {
@@ -15,13 +16,13 @@ const footerLinks = [
 const socialLinks = [
   {
     label: "GitHub",
-    href: "https://github.com/soljar",
+    href: "https://github.com/soljar-xyz",
     icon: Github,
   },
   {
     label: "Twitter",
-    href: "https://twitter.com/soljarxyz",
-    icon: Twitter,
+    href: "https://x.com/soljarxyz",
+    icon: X,
   },
 ];
 
@@ -33,9 +34,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="col-span-2 md:col-span-2">
             <Link href="/" className="inline-block">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
-                Soljar
-              </h3>
+              <Logo />
             </Link>
             <p className="mt-4 text-muted-foreground">
               The easiest way to accept crypto tips on Solana.
