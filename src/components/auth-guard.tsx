@@ -80,7 +80,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
   };
 
   // Handle protected routes
-  if (isProtectedRoute && (!publicKey || !user)) {
+  if (isProtectedRoute && (!publicKey || !user) && pathname !== "/start") {
     goToRoute("/");
     return <Loading />; // Show loading while redirecting
   }
