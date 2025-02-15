@@ -19,7 +19,8 @@ import {
 import { ThemeToggleButton } from "@/components/theme-toggle-button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { Logo } from "@/components/ui/logo";
+
 const menuItems = [
   {
     title: "Dashboard",
@@ -55,13 +56,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader>
         <div className="flex items-center justify-center gap-2 py-4">
-          <Image
-            src="/meta/logo_wordmark.svg"
-            alt="Logo"
-            className="h-8 brightness-0 dark:brightness-100 transition-all duration-200"
-            width={130}
-            height={32}
-          />
+          <Logo className="h-8" />
         </div>
       </SidebarHeader>
       <SidebarContent>
