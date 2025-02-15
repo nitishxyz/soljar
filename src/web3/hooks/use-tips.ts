@@ -12,10 +12,8 @@ import { getCurrencyFromMint } from "../utils";
 
 interface Tip {
   signer: PublicKey;
-  jar: PublicKey;
-  meta: PublicKey;
   tipLink: PublicKey;
-  currencyMint: PublicKey;
+  currency: string;
   amount: number;
   createdAt: number;
   referrer: string;
@@ -68,11 +66,9 @@ export function useTips(initialPage = 0) {
       // Format the tip data
       const formattedTips = tips.map((tip: any) => ({
         signer: tip.signer,
-        jar: tip.jar,
-        meta: tip.meta,
         tipLink: tip.tipLink,
-        currencyMint: tip.currencyMint,
-        amount: tip.amount.toNumber() / 1e9,
+        currency: tip.currency,
+        amount: tip.amount.toNumber(),
         createdAt: tip.createdAt.toNumber(),
         referrer: tip.referrer,
         memo: tip.memo,

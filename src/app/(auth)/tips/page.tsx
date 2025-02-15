@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { formatDistance } from "date-fns";
 import {
   formatAddress,
-  getCurrencyFromMint,
   fetchTransactionSignature,
   SOLANA_CLUSTER,
+  formatCurrencyAmount,
 } from "@/web3/utils";
 import { GiftIcon } from "@heroicons/react/24/solid";
 import { ExternalLink } from "lucide-react";
@@ -93,7 +93,7 @@ export default function TipsPage() {
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
-                    currency={getCurrencyFromMint(tip.currencyMint)}
+                    currency={tip.currency as "SOL" | "USDC" | "USDT"}
                     className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
@@ -104,7 +104,8 @@ export default function TipsPage() {
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="font-medium text-base sm:text-lg text-accent-purple whitespace-nowrap">
-                        {tip.amount} {getCurrencyFromMint(tip.currencyMint)}
+                        {formatCurrencyAmount(tip.amount, tip.currency)}{" "}
+                        {tip.currency}
                       </span>
                       <div className="relative w-4 h-4 shrink-0">
                         {loadingSignature === tip.signer.toString() ? (

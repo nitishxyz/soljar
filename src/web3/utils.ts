@@ -120,3 +120,12 @@ export const fetchTransactionSignature = async (
     return null;
   }
 };
+
+export const formatCurrencyAmount = (amount: number, currency: Currency) => {
+  const decimals = currency === "SOL" ? 9 : 6;
+  const maxFractionDigits = currency === "SOL" ? 4 : 2;
+
+  return (amount / Math.pow(10, decimals)).toLocaleString(undefined, {
+    maximumFractionDigits: maxFractionDigits,
+  });
+};
