@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PreviewAnimation } from "./animations/preview-animation";
+import { Logo } from "@/components/ui/logo";
+
 export function Hero() {
   const router = useRouter();
 
@@ -31,6 +33,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            <Logo width={120} />
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold break-words">
               <span className="bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
                 Crypto Tips &
