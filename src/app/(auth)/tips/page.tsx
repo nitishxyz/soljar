@@ -25,9 +25,12 @@ export default function TipsPage() {
   // Load more when the last element comes into view
   useEffect(() => {
     if (inView && hasNextPage) {
-      setCurrentPage((p) => p + 1);
+      fetchNextPage();
     }
-  }, [inView, hasNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const tips = data?.pages.flatMap((page) => page.tips) ?? [];
+  const totalTips = data?.pages[0]?.totalTips ?? 0;
 
   const handleTipClick = async (tip: any) => {
     try {
@@ -80,11 +83,11 @@ export default function TipsPage() {
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <GiftIcon className="w-7 h-7 text-accent-purple" />
-          Tips ({data?.totalTips || 0})
+          Tips ({totalTips})
         </div>
 
         <div className="space-y-3">
-          {data?.tips.map((tip, index) => (
+          {tips.map((tip, index) => (
             <motion.div
               key={`${tip.signer.toString()}-${tip.createdAt}`}
               onClick={() => handleTipClick(tip)}

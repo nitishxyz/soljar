@@ -1,11 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
-import {
-  findIndexPDA,
-  findJarPDA,
-  findSupporterIndexPDA,
-  findUserPDA,
-} from "../pda-helper";
+import { findJarPDA, findSupporterIndexPDA, findUserPDA } from "../pda-helper";
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
@@ -34,22 +29,30 @@ export function useSupporters(initialPage = 0) {
         return { supporters: [], totalPages: 0, totalSupporters: 0 };
 
       // Get necessary PDAs
-      const userPda = findUserPDA(program, userPublicKey);
-      const jarPda = findJarPDA(program, userPda);
-      const indexPda = findIndexPDA(program, jarPda);
+      const jarPda = findJarPDA(program, userPublicKey!);
 
       // Fetch the index account to get total supporters and current page
-      const index = await program.account.index.fetch(indexPda);
-      const totalPages = Math.ceil(index.totalSupporters / 50);
+      const jar = await program.account.jar.fetch(jarPda);
+      const totalPages = Math.max(0, jar.supporterIndex - 1); // Subtract 1 since index starts at 1
 
       // Calculate the page number from the end (reverse order)
-      const reversedPageParam = totalPages - 1 - pageParam;
+      const reversedPageParam = totalPages - pageParam;
+
+      // Skip if we're trying to fetch a non-existent page
+      if (reversedPageParam < 0) {
+        return {
+          supporters: [],
+          totalPages,
+          totalSupporters: jar.supporterCount,
+          currentPage: pageParam,
+        };
+      }
 
       // Fetch supporter index for the requested page
       const supporterIndexPda = findSupporterIndexPDA(
         program,
-        indexPda,
-        reversedPageParam
+        jarPda,
+        reversedPageParam + 1 // Add 1 back since PDA expects 1-based index
       );
       const supporterIndex = await program.account.supporterIndex.fetch(
         supporterIndexPda
@@ -79,14 +82,14 @@ export function useSupporters(initialPage = 0) {
       return {
         supporters: formattedSupporters,
         totalPages,
-        totalSupporters: index.totalSupporters,
+        totalSupporters: jar.supporterCount,
         currentPage: pageParam,
       };
     },
     getNextPageParam: (lastPage) => {
       if (
         !lastPage?.currentPage ||
-        lastPage.currentPage >= lastPage.totalPages - 1
+        lastPage.currentPage >= Math.max(0, lastPage.totalPages - 1)
       ) {
         return undefined;
       }

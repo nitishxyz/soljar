@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { ExternalLink, ArrowDownToLine } from "lucide-react";
-import { useRecentWithdrawals } from "@/web3/hooks/use-recent-withdrawals";
+import { ExternalLink } from "lucide-react";
+import { useRecentWithdrawls } from "@/web3/hooks/use-recent-withdrawls";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { Currency } from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
@@ -36,7 +36,7 @@ const mockWithdrawals = [
 ];
 
 export function WithdrawalHistoryCard() {
-  const { data: recentWithdrawals, isLoading } = useRecentWithdrawals();
+  const { data: recentWithdrawls, isLoading } = useRecentWithdrawls();
   const { connection } = useConnection();
   const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
 
@@ -80,13 +80,13 @@ export function WithdrawalHistoryCard() {
     }
   };
 
-  const formatWithdrawals = recentWithdrawals?.map((withdrawal) => ({
-    id: withdrawal.jar.toString(),
-    amount: withdrawal.amount,
+  const formatWithdrawls = recentWithdrawls?.map((withdrawl) => ({
+    id: withdrawl.jar.toString(),
+    amount: withdrawl.amount,
     currency: "SOL" as Currency, // Since we only support SOL withdrawals for now
-    timestamp: formatTimeAgo(withdrawal.createdAt),
+    timestamp: formatTimeAgo(withdrawl.createdAt),
     color: "purple" as const,
-    signature: withdrawal.jar.toString(),
+    signature: withdrawl.jar.toString(),
   }));
 
   const handleWithdrawalClick = async (withdrawal: any) => {
@@ -187,12 +187,12 @@ export function WithdrawalHistoryCard() {
                     <div className="h-4 w-16 bg-muted rounded" />
                   </div>
                 ))
-            : formatWithdrawals && formatWithdrawals.length > 0
-            ? renderWithdrawalsList(formatWithdrawals)
+            : formatWithdrawls && formatWithdrawls.length > 0
+            ? renderWithdrawalsList(formatWithdrawls)
             : null}
         </div>
 
-        {!formatWithdrawals || formatWithdrawals.length === 0 ? (
+        {!formatWithdrawls || formatWithdrawls.length === 0 ? (
           <>
             <div
               className="absolute -inset-px top-20 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3"

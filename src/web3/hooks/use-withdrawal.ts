@@ -4,6 +4,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useToast } from "@/hooks/use-toast";
 import { BN } from "@coral-xyz/anchor";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
 import { getTokenProgramId } from "../utils";
 
 export function useWithdrawal() {
@@ -24,34 +25,51 @@ export function useWithdrawal() {
       if (!program) throw new Error("Program not initialized");
 
       const bnAmount = new BN(amount * 1e9); // Convert to lamports/smallest unit
-
-      // Check if it's a SOL withdrawal (default PublicKey indicates SOL)
       const isSolWithdrawal = mint.equals(PublicKey.default);
 
       if (isSolWithdrawal) {
         // Handle SOL withdrawal
+        const [jarPda] = PublicKey.findProgramAddressSync(
+          [Buffer.from("jar"), publicKey.toBuffer()],
+          program.programId
+        );
+
         return await program.methods
           .createWithdrawl(mint, bnAmount)
-          .accounts({})
+          .accounts({
+            signer: publicKey,
+          })
           .rpc();
       } else {
+        // Handle SPL token withdrawal
+        const [jarPda] = PublicKey.findProgramAddressSync(
+          [Buffer.from("jar"), publicKey.toBuffer()],
+          program.programId
+        );
+
+        const [tokenAccountPda] = PublicKey.findProgramAddressSync(
+          [Buffer.from("token_account"), jarPda.toBuffer(), mint.toBuffer()],
+          program.programId
+        );
+
+        const associatedTokenAccount = getAssociatedTokenAddressSync(
+          mint,
+          publicKey
+        );
+
         const tokenProgramId = await getTokenProgramId(
           program.provider.connection,
           mint
         );
 
+        // Then withdraw the tokens
         return await program.methods
-          .createWithdrawl(mint, bnAmount)
-          .accounts({})
-          .postInstructions([
-            await program.methods
-              .withdrawTokens(bnAmount)
-              .accounts({
-                mint,
-                tokenProgram: tokenProgramId,
-              })
-              .instruction(),
-          ])
+          .withdrawSplTokens(bnAmount)
+          .accounts({
+            signer: publicKey,
+            mint,
+            tokenProgram: tokenProgramId,
+          })
           .rpc();
       }
     },

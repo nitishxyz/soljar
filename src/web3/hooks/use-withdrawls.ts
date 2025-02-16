@@ -1,95 +1,105 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
-import {
-  findWithdrawlIndexPDA,
-  findIndexPDA,
-  findJarPDA,
-  findUserPDA,
-} from "../pda-helper";
+import { findJarPDA, findWithdrawlPDA } from "../pda-helper";
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
+
+interface Withdrawal {
+  jar: PublicKey;
+  amount: number;
+  createdAt: number;
+  currency: string;
+}
+
+const ITEMS_PER_PAGE = 25;
 
 export function useWithdrawls(initialPage = 0) {
   const { program } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ["withdrawls", userPublicKey?.toString()],
-    queryFn: async ({ pageParam = initialPage }) => {
-      if (!program || !userPublicKey)
-        return { withdrawls: [], totalPages: 0, totalwithdrawls: 0 };
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!program || !userPublicKey) {
+        return {
+          withdrawls: [],
+          totalPages: 0,
+          totalWithdrawls: 0,
+          currentPage: pageParam,
+        };
+      }
 
-      // Get necessary PDAs
-      const userPda = findUserPDA(program, userPublicKey);
-      const jarPda = findJarPDA(program, userPda);
-      const indexPda = findIndexPDA(program, jarPda);
+      try {
+        const jarPda = findJarPDA(program, userPublicKey);
+        const jar = await program.account.jar.fetch(jarPda);
+        const totalWithdrawls = jar.withdrawlCount - 1; // Subtract initial value
 
-      // First fetch the index account
-      const index = await program.account.index.fetch(indexPda);
-      console.log(index);
-      const totalPages = Math.ceil(index.totalWithdrawls / 50);
+        if (totalWithdrawls <= 0) {
+          return {
+            withdrawls: [],
+            totalPages: 0,
+            totalWithdrawls: 0,
+            currentPage: pageParam,
+          };
+        }
 
-      // Calculate the page number from the end (reverse order)
-      const reversedPageParam = totalPages - 1 - pageParam;
+        const totalPages = Math.ceil(totalWithdrawls / ITEMS_PER_PAGE);
 
-      // Fetch withdrawl index for the requested page
-      const withdrawlIndexPda = findWithdrawlIndexPDA(
-        program,
-        indexPda,
-        reversedPageParam
-      );
-      const withdrawlIndex = await program.account.withdrawlIndex.fetch(
-        withdrawlIndexPda
-      );
+        // Calculate start and end indices for this page
+        const startIndex = Math.min(
+          totalWithdrawls - pageParam * ITEMS_PER_PAGE,
+          totalWithdrawls
+        );
+        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 1);
 
-      // Fetch all withdrawls from the current page
-      const withdrawlPromises = withdrawlIndex.withdrawls
-        .slice(0, withdrawlIndex.totalItems)
-        .reverse() // Reverse the array to get newest first
-        .map(async (pubkey: PublicKey) => {
-          const withdrawl = await program.account.withdrawl.fetch(pubkey);
-          return withdrawl;
-        });
+        const withdrawls: Withdrawal[] = [];
 
-      const withdrawls = await Promise.all(withdrawlPromises);
+        // Fetch withdrawals for this page
+        for (let i = startIndex; i >= endIndex; i--) {
+          try {
+            const withdrawlPda = findWithdrawlPDA(program, jarPda, i);
+            const withdrawl = await program.account.withdrawl.fetch(
+              withdrawlPda
+            );
+            withdrawls.push({
+              jar: withdrawl.jar,
+              amount: withdrawl.amount.toNumber() / 1e9,
+              createdAt: withdrawl.createdAt.toNumber(),
+              currency: withdrawl.currency || "SOL",
+            });
+          } catch (withdrawlError) {
+            console.warn(
+              `Skipping withdrawl ${i}: ${
+                withdrawlError instanceof Error
+                  ? withdrawlError.message
+                  : "Unknown error"
+              }`
+            );
+            continue;
+          }
+        }
 
-      // Format the withdrawl data
-      const formattedwithdrawls = withdrawls.map((withdrawl: any) => ({
-        signer: userPublicKey,
-        jar: withdrawl.jar,
-        currencyMint: withdrawl.currencyMint,
-        amount: withdrawl.amount.toNumber() / 1e9,
-        createdAt: withdrawl.createdAt.toNumber(),
-        transactionId: withdrawl.transactionId?.toString(),
-      }));
-
-      return {
-        withdrawls: formattedwithdrawls,
-        totalPages,
-        totalwithdrawls: index.totalWithdrawls,
-        currentPage: pageParam,
-      };
+        return {
+          withdrawls: withdrawls.sort((a, b) => b.createdAt - a.createdAt),
+          totalPages,
+          totalWithdrawls,
+          currentPage: pageParam,
+          hasMore: pageParam < totalPages - 1,
+        };
+      } catch (error) {
+        console.error("Error fetching withdrawls:", error);
+        return {
+          withdrawls: [],
+          totalPages: 0,
+          totalWithdrawls: 0,
+          currentPage: pageParam,
+          hasMore: false,
+        };
+      }
     },
     getNextPageParam: (lastPage) => {
-      if (
-        !lastPage?.currentPage ||
-        lastPage.currentPage >= lastPage.totalPages - 1
-      ) {
-        return undefined;
-      }
-      return lastPage.currentPage + 1;
+      return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
     },
-    initialPageParam: initialPage,
+    initialPageParam: 0,
   });
-
-  // Flatten the pages and maintain reverse chronological order
-  const withdrawls = data?.pages.flatMap((page) => page.withdrawls) ?? [];
-  const totalwithdrawls = data?.pages[0]?.totalwithdrawls ?? 0;
-
-  return {
-    data: { withdrawls, totalwithdrawls },
-    fetchNextPage,
-    hasNextPage: Boolean(hasNextPage),
-    isLoading,
-  };
 }

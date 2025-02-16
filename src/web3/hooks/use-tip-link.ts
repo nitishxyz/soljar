@@ -64,51 +64,32 @@ export function useTipLink(tipLinkId: string) {
       if (!tipLinkId) throw new Error("Tip link ID is required");
 
       const bnAmount = new BN(amount);
-
-      // Check if it's a SOL deposit (default PublicKey indicates SOL)
       const isSolDeposit = mint.equals(PublicKey.default);
 
-      const baseTransaction = program.methods
-        .createDeposit(tipLinkId, mint, referrer, memo, bnAmount)
-        .accounts({});
-
       if (isSolDeposit) {
-        // Handle SOL deposit
-        return await baseTransaction
-          .postInstructions([
-            await program.methods
-              .addSupporter(tipLinkId, mint, bnAmount)
-              .accounts({})
-              .instruction(),
-          ])
-          .signers([])
+        // Handle SOL deposit using create_deposit instruction
+        return await program.methods
+          .createDeposit(tipLinkId, referrer, memo, bnAmount)
+          .accounts({})
           .rpc();
       } else {
-        // Handle SPL token deposit
-        if (!sourceTokenAccount)
+        // Handle SPL token deposit using create_spl_deposit instruction
+        if (!sourceTokenAccount) {
           throw new Error("Source token account is required for SPL tokens");
+        }
 
         const tokenProgramId = await getTokenProgramId(
           program.provider.connection,
           mint
         );
 
-        return await baseTransaction
-          .postInstructions([
-            await program.methods
-              .addSupporter(tipLinkId, mint, bnAmount)
-              .accounts({})
-              .instruction(),
-            await program.methods
-              .transferTokens(tipLinkId, bnAmount)
-              .accounts({
-                mint,
-                sourceTokenAccount,
-                tokenProgram: tokenProgramId,
-              })
-              .instruction(),
-          ])
-          .signers([])
+        return await program.methods
+          .createSplDeposit(tipLinkId, referrer, memo, bnAmount)
+          .accounts({
+            mint,
+            sourceTokenAccount,
+            tokenProgram: tokenProgramId,
+          })
           .rpc();
       }
     },

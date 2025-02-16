@@ -121,11 +121,16 @@ export const fetchTransactionSignature = async (
   }
 };
 
-export const formatCurrencyAmount = (amount: number, currency: Currency) => {
-  const decimals = currency === "SOL" ? 9 : 6;
-  const maxFractionDigits = currency === "SOL" ? 4 : 2;
-
-  return (amount / Math.pow(10, decimals)).toLocaleString(undefined, {
-    maximumFractionDigits: maxFractionDigits,
+export function formatCurrencyAmount(amount: number, currency: string) {
+  if (currency === "SOL") {
+    return amount.toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 9,
+    });
+  }
+  // For other currencies like USDC, USDT
+  return amount.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
-};
+}

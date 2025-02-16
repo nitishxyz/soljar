@@ -2,10 +2,9 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Coins, ArrowDownToLine } from "lucide-react";
 
 import { HeartIcon } from "@heroicons/react/24/outline";
-import { useIndex } from "@/web3/hooks/use-index";
-
+import { useJar } from "@/web3/hooks/use-jar";
 export function TotalsCard() {
-  const { index, isIndexLoading } = useIndex();
+  const { jar, isJarLoading } = useJar();
 
   return (
     <Card className="group relative overflow-hidden">
@@ -29,7 +28,7 @@ export function TotalsCard() {
               <Coins className="w-8 h-8 text-accent-purple" />
             </div>
             <div className="text-3xl font-bold tracking-tight mb-1">
-              {isIndexLoading ? "..." : index?.totalDeposits ?? 0}
+              {isJarLoading ? "..." : jar?.totalDeposits ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
               Tips
@@ -42,7 +41,7 @@ export function TotalsCard() {
               <ArrowDownToLine className="w-8 h-8 text-green-500" />
             </div>
             <div className="text-3xl font-bold tracking-tight mb-1">
-              {isIndexLoading ? "..." : index?.totalWithdrawals ?? 0}
+              {isJarLoading ? "..." : jar?.totalWithdrawals ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
               Withdrawals
@@ -55,7 +54,7 @@ export function TotalsCard() {
               <HeartIcon className="w-8 h-8 text-red-500" />
             </div>
             <div className="text-3xl font-bold tracking-tight mb-1">
-              {isIndexLoading ? "..." : index?.totalSupporters ?? 0}
+              {isJarLoading ? "..." : jar?.totalSupporters ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
               Supporters

@@ -12,8 +12,7 @@ export const useBalances = () => {
   const { program, connection } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 
-  const userPda = findUserPDA(program, userPublicKey!);
-  const jarPda = findJarPDA(program, userPda);
+  const jarPda = findJarPDA(program, userPublicKey!);
 
   const { data: solBalance, isLoading: isSolLoading } = useQuery({
     queryKey: ["balance", "sol", jarPda?.toString()],

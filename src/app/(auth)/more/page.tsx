@@ -86,7 +86,7 @@ export default function MorePage() {
                 <Input
                   id="wallet"
                   type="text"
-                  value={user?.receiverWallet.toBase58()}
+                  value={user?.user.toBase58()}
                   readOnly
                   className="bg-purple-500/5 border-purple-500/20"
                 />

@@ -23,6 +23,8 @@ export default function SupportersPage() {
     }
   }, [inView, hasNextPage]);
 
+  console.log(data);
+
   if (isLoading && currentPage === 0) {
     return (
       <div className="container mx-auto p-8 space-y-4">

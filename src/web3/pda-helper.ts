@@ -19,14 +19,6 @@ export const findUserPDA = (program: Program, user: PublicKey) => {
   return pda;
 };
 
-export const findUserInfoPDA = (program: Program, userPDA: PublicKey) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("user_info"), userPDA.toBuffer()],
-    program.programId
-  );
-  return pda;
-};
-
 export const findUserNamePDA = (program: Program, username: string) => {
   const [pda] = PublicKey.findProgramAddressSync(
     [Buffer.from("username"), Buffer.from(username)],
@@ -34,64 +26,9 @@ export const findUserNamePDA = (program: Program, username: string) => {
   );
   return pda;
 };
-export const findJarPDA = (program: Program, userPDA: PublicKey) => {
+export const findJarPDA = (program: Program, publicKey: PublicKey) => {
   const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("jar"), userPDA.toBuffer()],
-    program.programId
-  );
-  return pda;
-};
-
-export const findIndexPDA = (program: Program, jarPDA: PublicKey) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("index"), jarPDA.toBuffer()],
-    program.programId
-  );
-  return pda;
-};
-export const findDepositIndexPDA = (
-  program: Program,
-  indexPDA: PublicKey,
-  page: number
-) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("deposit_index"),
-      indexPDA.toBuffer(),
-      Buffer.from(new Uint32Array([page]).buffer),
-    ],
-    program.programId
-  );
-  return pda;
-};
-
-export const findWithdrawlIndexPDA = (
-  program: Program,
-  indexPDA: PublicKey,
-  page: number
-) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("withdrawl_index"),
-      indexPDA.toBuffer(),
-      Buffer.from(new Uint32Array([page]).buffer),
-    ],
-    program.programId
-  );
-  return pda;
-};
-
-export const findSupporterIndexPDA = (
-  program: Program,
-  indexPDA: PublicKey,
-  page: number
-) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("supporter_index"),
-      indexPDA.toBuffer(),
-      Buffer.from(new Uint32Array([page]).buffer),
-    ],
+    [Buffer.from("jar"), publicKey.toBuffer()],
     program.programId
   );
   return pda;
@@ -105,24 +42,48 @@ export const findTipLinkPDA = (program: Program, id: string) => {
   return pda;
 };
 
-export const findMetaPDA = (program: Program, depositPDA: PublicKey) => {
-  const [pda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("meta"), depositPDA.toBuffer()],
-    program.programId
-  );
-  return pda;
-};
-
 export const findDepositPDA = (
   program: Program,
-  depositIndexPDA: PublicKey,
+  jarPDA: PublicKey,
   index: number
 ) => {
   const [pda] = PublicKey.findProgramAddressSync(
     [
       Buffer.from("deposit"),
-      depositIndexPDA.toBuffer(),
-      Buffer.from(new Uint8Array([index]).buffer),
+      jarPDA.toBuffer(),
+      Buffer.from(new Uint32Array([index]).buffer),
+    ],
+    program.programId
+  );
+  return pda;
+};
+
+export const findWithdrawlPDA = (
+  program: Program,
+  jarPDA: PublicKey,
+  index: number
+) => {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("withdrawl"),
+      jarPDA.toBuffer(),
+      Buffer.from(new Uint32Array([index]).buffer),
+    ],
+    program.programId
+  );
+  return pda;
+};
+
+export const findSupporterIndexPDA = (
+  program: Program,
+  jarPDA: PublicKey,
+  index: number
+) => {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("supporter_index"),
+      jarPDA.toBuffer(),
+      Buffer.from(new Uint32Array([index]).buffer),
     ],
     program.programId
   );
@@ -132,16 +93,10 @@ export const findDepositPDA = (
 export const findSupporterPDA = (
   program: Program,
   jarPDA: PublicKey,
-  signer: PublicKey,
-  mint: PublicKey
+  signer: PublicKey
 ) => {
   const [pda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("supporter"),
-      jarPDA.toBuffer(),
-      signer.toBuffer(),
-      mint.toBuffer(),
-    ],
+    [Buffer.from("supporter"), jarPDA.toBuffer(), signer.toBuffer()],
     program.programId
   );
   return pda;

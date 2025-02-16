@@ -1,18 +1,12 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
-import {
-  findDepositIndexPDA,
-  findIndexPDA,
-  findJarPDA,
-  findUserPDA,
-} from "../pda-helper";
+import { findDepositPDA, findJarPDA } from "../pda-helper";
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
-import { getCurrencyFromMint } from "../utils";
 
 interface Tip {
   signer: PublicKey;
-  tipLink: PublicKey;
+  tipLink: string;
   currency: string;
   amount: number;
   createdAt: number;
@@ -20,87 +14,96 @@ interface Tip {
   memo: string;
 }
 
+const ITEMS_PER_PAGE = 25;
+
 export function useTips(initialPage = 0) {
   const { program } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ["tips", userPublicKey?.toString()],
-    queryFn: async ({ pageParam = initialPage }) => {
-      if (!program || !userPublicKey)
-        return { tips: [], totalPages: 0, totalTips: 0 };
+    queryFn: async ({ pageParam = 0 }) => {
+      if (!program || !userPublicKey) {
+        return {
+          tips: [],
+          totalPages: 0,
+          totalTips: 0,
+          currentPage: pageParam,
+        };
+      }
 
-      // Get necessary PDAs
-      const userPda = findUserPDA(program, userPublicKey);
-      const jarPda = findJarPDA(program, userPda);
-      const indexPda = findIndexPDA(program, jarPda);
+      try {
+        const jarPda = findJarPDA(program, userPublicKey);
+        const jar = await program.account.jar.fetch(jarPda);
+        const totalTips = jar.depositCount - 1; // Subtract initial value
 
-      // Fetch the index account to get total deposits and current page
-      const index = await program.account.index.fetch(indexPda);
-      const totalPages = Math.ceil(index.totalDeposits / 50);
+        if (totalTips <= 0) {
+          return {
+            tips: [],
+            totalPages: 0,
+            totalTips: 0,
+            currentPage: pageParam,
+          };
+        }
 
-      // Calculate the page number from the end (reverse order)
-      const reversedPageParam = totalPages - 1 - pageParam;
+        const totalPages = Math.ceil(totalTips / ITEMS_PER_PAGE);
 
-      // Fetch deposit index for the requested page
-      const depositIndexPda = findDepositIndexPDA(
-        program,
-        indexPda,
-        reversedPageParam
-      );
-      const depositIndex = await program.account.depositIndex.fetch(
-        depositIndexPda
-      );
+        // Calculate start and end indices for this page
+        const startIndex = Math.min(
+          totalTips - pageParam * ITEMS_PER_PAGE,
+          totalTips
+        );
+        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 1);
 
-      // Fetch all deposits and their meta data from the current page
-      const tipPromises = depositIndex.deposits
-        .slice(0, depositIndex.totalItems)
-        .reverse() // Reverse the array to get newest first
-        .map(async (pubkey: PublicKey) => {
-          const deposit = await program.account.deposit.fetch(pubkey);
-          return { ...deposit };
-        });
+        const tips: Tip[] = [];
 
-      const tips = await Promise.all(tipPromises);
+        // Fetch deposits for this page
+        for (let i = startIndex; i >= endIndex; i--) {
+          try {
+            const depositPda = findDepositPDA(program, jarPda, i);
+            const deposit = await program.account.deposit.fetch(depositPda);
+            tips.push({
+              signer: deposit.signer,
+              tipLink: deposit.linkId,
+              currency: deposit.currency,
+              amount: deposit.amount.toNumber() / 1e9,
+              createdAt: deposit.createdAt.toNumber(),
+              referrer: deposit.referrer,
+              memo: deposit.memo,
+            });
+          } catch (depositError) {
+            console.warn(
+              `Skipping tip ${i}: ${
+                depositError instanceof Error
+                  ? depositError.message
+                  : "Unknown error"
+              }`
+            );
+            continue;
+          }
+        }
 
-      // Format the tip data
-      const formattedTips = tips.map((tip: any) => ({
-        signer: tip.signer,
-        tipLink: tip.tipLink,
-        currency: tip.currency,
-        amount: tip.amount.toNumber(),
-        createdAt: tip.createdAt.toNumber(),
-        referrer: tip.referrer,
-        memo: tip.memo,
-      }));
-
-      return {
-        tips: formattedTips,
-        totalPages,
-        totalTips: index.totalDeposits,
-        currentPage: pageParam,
-      };
+        return {
+          tips: tips.sort((a, b) => b.createdAt - a.createdAt),
+          totalPages,
+          totalTips,
+          currentPage: pageParam,
+          hasMore: pageParam < totalPages - 1,
+        };
+      } catch (error) {
+        console.error("Error fetching tips:", error);
+        return {
+          tips: [],
+          totalPages: 0,
+          totalTips: 0,
+          currentPage: pageParam,
+          hasMore: false,
+        };
+      }
     },
     getNextPageParam: (lastPage) => {
-      if (
-        !lastPage?.currentPage ||
-        lastPage.currentPage >= lastPage.totalPages - 1
-      ) {
-        return undefined;
-      }
-      return lastPage.currentPage + 1;
+      return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
     },
-    initialPageParam: initialPage,
+    initialPageParam: 0,
   });
-
-  // Flatten the pages and maintain reverse chronological order
-  const tips = data?.pages.flatMap((page) => page.tips) ?? [];
-  const totalTips = data?.pages[0]?.totalTips ?? 0;
-
-  return {
-    data: { tips, totalTips },
-    fetchNextPage,
-    hasNextPage: Boolean(hasNextPage),
-    isLoading,
-  };
 }
