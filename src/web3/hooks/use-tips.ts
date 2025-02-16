@@ -35,9 +35,9 @@ export function useTips(initialPage = 0) {
       try {
         const jarPda = findJarPDA(program, userPublicKey);
         const jar = await program.account.jar.fetch(jarPda);
-        const totalTips = jar.depositCount - 1; // Subtract initial value
+        const totalTips = jar.depositCount;
 
-        if (totalTips <= 0) {
+        if (totalTips === 0) {
           return {
             tips: [],
             totalPages: 0,
@@ -50,10 +50,10 @@ export function useTips(initialPage = 0) {
 
         // Calculate start and end indices for this page
         const startIndex = Math.min(
-          totalTips - pageParam * ITEMS_PER_PAGE,
-          totalTips
+          totalTips - 1 - pageParam * ITEMS_PER_PAGE,
+          totalTips - 1
         );
-        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 1);
+        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 0);
 
         const tips: Tip[] = [];
 

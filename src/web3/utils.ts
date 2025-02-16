@@ -123,14 +123,16 @@ export const fetchTransactionSignature = async (
 
 export function formatCurrencyAmount(amount: number, currency: string) {
   if (currency === "SOL") {
+    // For SOL, show up to 9 decimals if significant
     return amount.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
       maximumFractionDigits: 9,
     });
   }
-  // For other currencies like USDC, USDT
+
+  // For other currencies (USDC, USDT), show up to 3 decimals if significant
   return amount.toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 3,
   });
 }

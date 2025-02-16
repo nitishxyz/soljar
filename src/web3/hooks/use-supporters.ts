@@ -31,15 +31,15 @@ export function useSupporters(initialPage = 0) {
       // Get necessary PDAs
       const jarPda = findJarPDA(program, userPublicKey!);
 
-      // Fetch the index account to get total supporters and current page
+      // Fetch the jar account to get total supporters
       const jar = await program.account.jar.fetch(jarPda);
-      const totalPages = Math.max(0, jar.supporterIndex - 1); // Subtract 1 since index starts at 1
+      const totalPages = jar.supporterIndex + 1; // Add 1 since supporterIndex is zero-based
 
       // Calculate the page number from the end (reverse order)
-      const reversedPageParam = totalPages - pageParam;
+      const reversedPageParam = totalPages - pageParam - 1;
 
       // Skip if we're trying to fetch a non-existent page
-      if (reversedPageParam < 0) {
+      if (reversedPageParam < 0 || reversedPageParam >= totalPages) {
         return {
           supporters: [],
           totalPages,
@@ -52,7 +52,7 @@ export function useSupporters(initialPage = 0) {
       const supporterIndexPda = findSupporterIndexPDA(
         program,
         jarPda,
-        reversedPageParam + 1 // Add 1 back since PDA expects 1-based index
+        reversedPageParam
       );
       const supporterIndex = await program.account.supporterIndex.fetch(
         supporterIndexPda

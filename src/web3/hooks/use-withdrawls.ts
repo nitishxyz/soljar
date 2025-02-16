@@ -32,9 +32,9 @@ export function useWithdrawls(initialPage = 0) {
       try {
         const jarPda = findJarPDA(program, userPublicKey);
         const jar = await program.account.jar.fetch(jarPda);
-        const totalWithdrawls = jar.withdrawlCount - 1; // Subtract initial value
+        const totalWithdrawls = jar.withdrawlCount;
 
-        if (totalWithdrawls <= 0) {
+        if (totalWithdrawls === 0) {
           return {
             withdrawls: [],
             totalPages: 0,
@@ -47,10 +47,10 @@ export function useWithdrawls(initialPage = 0) {
 
         // Calculate start and end indices for this page
         const startIndex = Math.min(
-          totalWithdrawls - pageParam * ITEMS_PER_PAGE,
-          totalWithdrawls
+          totalWithdrawls - 1 - pageParam * ITEMS_PER_PAGE, // subtract 1 for zero-based index
+          totalWithdrawls - 1
         );
-        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 1);
+        const endIndex = Math.max(startIndex - ITEMS_PER_PAGE + 1, 0); // changed to 0 for zero-based
 
         const withdrawls: Withdrawal[] = [];
 
