@@ -14,6 +14,7 @@ import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
 import type { Supporter, TipInfo } from "@/web3/hooks/use-supporters";
 import { useJar } from "@/web3/hooks/use-jar";
+
 export default function SupportersPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, fetchNextPage, hasNextPage } =
@@ -21,15 +22,12 @@ export default function SupportersPage() {
   const { jar } = useJar();
   const { ref, inView } = useInView();
 
+  // Load more when the last element comes into view
   useEffect(() => {
     if (inView && hasNextPage) {
-      fetchNextPage();
+      setCurrentPage((p) => p + 1);
     }
-  }, [inView, hasNextPage, fetchNextPage]);
-
-  const supporters = data?.pages.flatMap((page) => page.supporters) ?? [];
-
-  console.log(data);
+  }, [inView, hasNextPage]);
 
   if (isLoading && currentPage === 0) {
     return (
@@ -67,7 +65,7 @@ export default function SupportersPage() {
         </div>
 
         <div className="space-y-3">
-          {supporters.map((supporter: Supporter, index: number) => (
+          {data?.supporters.map((supporter: Supporter, index: number) => (
             <motion.a
               href={`https://solscan.io/account/${supporter.signer.toString()}`}
               target="_blank"
@@ -75,7 +73,7 @@ export default function SupportersPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              key={`${supporter.signer.toString()}-${supporter.createdAt}`}
+              key={supporter.signer.toString()}
               className="group flex flex-col sm:flex-row sm:items-center justify-between py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:bg-accent-purple/5 transition-colors gap-2 sm:gap-4"
             >
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
@@ -91,15 +89,17 @@ export default function SupportersPage() {
                       {formatAddress(supporter.signer.toString())}
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
-                      <div className="flex flex-col items-end gap-1">
-                        {supporter.tips.map((tip: TipInfo) => (
-                          <span
-                            key={`${tip.currency}-${tip.amount}`}
-                            className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
-                          >
-                            {tip.amount} {getCurrencySymbol(tip.currency)}
-                          </span>
-                        ))}
+                      <div className="flex items-center gap-2">
+                        {supporter.tips
+                          .filter((tip) => tip.amount > 0)
+                          .map((tip: TipInfo) => (
+                            <span
+                              key={`${tip.currency}-${tip.amount}`}
+                              className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
+                            >
+                              {tip.amount} {getCurrencySymbol(tip.currency)}
+                            </span>
+                          ))}
                       </div>
                       <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
                     </div>
