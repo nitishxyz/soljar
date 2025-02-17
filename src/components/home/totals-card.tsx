@@ -41,7 +41,7 @@ export function TotalsCard() {
               <ArrowDownToLine className="w-8 h-8 text-green-500" />
             </div>
             <div className="text-3xl font-bold tracking-tight mb-1">
-              {isJarLoading ? "..." : jar?.totalWithdrawals ?? 0}
+              {isJarLoading ? "..." : jar?.totalWithdrawls ?? 0}
             </div>
             <div className="text-sm text-muted-foreground font-medium">
               Withdrawals
