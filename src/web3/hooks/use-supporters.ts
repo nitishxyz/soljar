@@ -1,11 +1,13 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useSoljarBase } from "../soljar-base-provider";
-import { findJarPDA, findSupporterIndexPDA, findUserPDA } from "../pda-helper";
+import { findJarPDA, findSupporterIndexPDA } from "../pda-helper";
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
+const ITEMS_PER_PAGE = 25;
+
 export interface TipInfo {
-  currency: string;
+  currency: number;
   amount: number;
 }
 
@@ -22,90 +24,102 @@ export function useSupporters(initialPage = 0) {
   const { program } = useSoljarBase();
   const { userPublicKey } = useSoljarAuth();
 
-  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: ["supporters", userPublicKey?.toString()],
     queryFn: async ({ pageParam = initialPage }) => {
-      if (!program || !userPublicKey)
-        return { supporters: [], totalPages: 0, totalSupporters: 0 };
-
-      // Get necessary PDAs
-      const jarPda = findJarPDA(program, userPublicKey!);
-
-      // Fetch the jar account to get total supporters
-      const jar = await program.account.jar.fetch(jarPda);
-      const totalPages = jar.supporterIndex + 1; // Add 1 since supporterIndex is zero-based
-
-      // Calculate the page number from the end (reverse order)
-      const reversedPageParam = totalPages - pageParam - 1;
-
-      // Skip if we're trying to fetch a non-existent page
-      if (reversedPageParam < 0 || reversedPageParam >= totalPages) {
+      if (!program || !userPublicKey) {
         return {
           supporters: [],
-          totalPages,
-          totalSupporters: jar.supporterCount,
+          totalPages: 0,
+          totalSupporters: 0,
           currentPage: pageParam,
         };
       }
 
-      // Fetch supporter index for the requested page
-      const supporterIndexPda = findSupporterIndexPDA(
-        program,
-        jarPda,
-        reversedPageParam
-      );
-      const supporterIndex = await program.account.supporterIndex.fetch(
-        supporterIndexPda
-      );
+      try {
+        const jarPda = findJarPDA(program, userPublicKey);
+        const jar = await program.account.jar.fetch(jarPda);
+        const totalSupporters = jar.supporterCount;
 
-      // Fetch all supporters from the current page
-      const supporterPromises = supporterIndex.supporters
-        .slice(0, supporterIndex.totalItems)
-        .reverse() // Reverse the array to get newest first
-        .map((pubkey: PublicKey) => program.account.supporter.fetch(pubkey));
+        if (totalSupporters === 0) {
+          return {
+            supporters: [],
+            totalPages: 0,
+            totalSupporters: 0,
+            currentPage: pageParam,
+          };
+        }
 
-      const supporters = await Promise.all(supporterPromises);
+        const totalPages = Math.ceil(jar.supporterIndex + 1);
 
-      // Format the supporter data
-      const formattedSupporters = supporters.map((supporter: any) => ({
-        signer: supporter.signer,
-        jar: supporter.jar,
-        tips: supporter.tips.map((tip: any) => ({
-          currency: tip.currency,
-          amount: tip.amount.toNumber() / 1e9, // Convert from lamports
-        })),
-        tipCount: supporter.tipCount,
-        createdAt: supporter.createdAt.toNumber(),
-        updatedAt: supporter.updatedAt.toNumber(),
-      }));
+        // Calculate start and end indices for this page
+        const startIndex = Math.min(totalPages - 1 - pageParam, totalPages - 1);
 
-      return {
-        supporters: formattedSupporters,
-        totalPages,
-        totalSupporters: jar.supporterCount,
-        currentPage: pageParam,
-      };
+        // Skip if we're trying to fetch a non-existent page
+        if (startIndex < 0) {
+          return {
+            supporters: [],
+            totalPages,
+            totalSupporters,
+            currentPage: pageParam,
+            hasMore: false,
+          };
+        }
+
+        // Fetch supporter index for the requested page
+        const supporterIndexPda = findSupporterIndexPDA(
+          program,
+          jarPda,
+          startIndex
+        );
+        const supporterIndex = await program.account.supporterIndex.fetch(
+          supporterIndexPda
+        );
+
+        // Fetch all supporters from the current page
+        const supporterPromises = supporterIndex.supporters
+          .slice(0, supporterIndex.totalItems)
+          .reverse() // Reverse the array to get newest first
+          .map((pubkey: PublicKey) => program.account.supporter.fetch(pubkey));
+
+        const supporters = await Promise.all(supporterPromises);
+
+        // Format the supporter data
+        const formattedSupporters = supporters.map((supporter: any) => ({
+          signer: supporter.signer,
+          jar: supporter.jar,
+          tips: supporter.tips
+            .filter((tip: any) => !tip.amount.isZero())
+            .map((tip: any) => ({
+              currency: tip.currency,
+              amount: tip.amount.toNumber() / 1e9,
+            })),
+          tipCount: supporter.tipCount,
+          createdAt: supporter.createdAt.toNumber(),
+          updatedAt: supporter.updatedAt.toNumber(),
+        }));
+
+        return {
+          supporters: formattedSupporters,
+          totalPages,
+          totalSupporters,
+          currentPage: pageParam,
+          hasMore: pageParam < totalPages - 1,
+        };
+      } catch (error) {
+        console.error("Error fetching supporters:", error);
+        return {
+          supporters: [],
+          totalPages: 0,
+          totalSupporters: 0,
+          currentPage: pageParam,
+          hasMore: false,
+        };
+      }
     },
     getNextPageParam: (lastPage) => {
-      if (
-        !lastPage?.currentPage ||
-        lastPage.currentPage >= Math.max(0, lastPage.totalPages - 1)
-      ) {
-        return undefined;
-      }
-      return lastPage.currentPage + 1;
+      return lastPage.hasMore ? lastPage.currentPage + 1 : undefined;
     },
     initialPageParam: initialPage,
   });
-
-  // Flatten the pages and maintain reverse chronological order
-  const supporters = data?.pages.flatMap((page) => page.supporters) ?? [];
-  const totalSupporters = data?.pages[0]?.totalSupporters ?? 0;
-
-  return {
-    data: { supporters, totalSupporters },
-    fetchNextPage,
-    hasNextPage: Boolean(hasNextPage),
-    isLoading,
-  };
 }

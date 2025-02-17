@@ -6,7 +6,7 @@ import { useSoljarAuth } from "../soljar-auth-provider";
 interface Deposit {
   signer: PublicKey;
   tipLink: PublicKey;
-  currency: string;
+  currency: number;
   amount: number;
   createdAt: number;
   updatedAt: number;

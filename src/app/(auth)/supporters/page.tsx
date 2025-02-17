@@ -2,26 +2,32 @@
 import { useSupporters } from "@/web3/hooks/use-supporters";
 import { useState, useEffect } from "react";
 import { formatDistance } from "date-fns";
-import { formatAddress, getCurrencyFromMint } from "@/web3/utils";
+import {
+  formatAddress,
+  getCurrencyFromMint,
+  getCurrencySymbol,
+} from "@/web3/utils";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
 import type { Supporter, TipInfo } from "@/web3/hooks/use-supporters";
-
+import { useJar } from "@/web3/hooks/use-jar";
 export default function SupportersPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, fetchNextPage, hasNextPage } =
     useSupporters(currentPage);
+  const { jar } = useJar();
   const { ref, inView } = useInView();
 
-  // Load more when the last element comes into view
   useEffect(() => {
     if (inView && hasNextPage) {
-      setCurrentPage((p) => p + 1);
+      fetchNextPage();
     }
-  }, [inView, hasNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
+
+  const supporters = data?.pages.flatMap((page) => page.supporters) ?? [];
 
   console.log(data);
 
@@ -57,11 +63,11 @@ export default function SupportersPage() {
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <HeartIcon className="w-7 h-7 text-accent-purple" />
-          Supporters ({data?.totalSupporters || 0})
+          Supporters ({jar?.totalSupporters || 0})
         </div>
 
         <div className="space-y-3">
-          {data?.supporters.map((supporter: Supporter, index: number) => (
+          {supporters.map((supporter: Supporter, index: number) => (
             <motion.a
               href={`https://solscan.io/account/${supporter.signer.toString()}`}
               target="_blank"
@@ -69,15 +75,13 @@ export default function SupportersPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              key={supporter.signer.toString()}
+              key={`${supporter.signer.toString()}-${supporter.createdAt}`}
               className="group flex flex-col sm:flex-row sm:items-center justify-between py-3 sm:py-4 px-4 sm:px-6 rounded-lg hover:bg-accent-purple/5 transition-colors gap-2 sm:gap-4"
             >
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
-                    currency={
-                      supporter.tips[0].currency as "SOL" | "USDC" | "USDT"
-                    }
+                    currency={getCurrencySymbol(supporter.tips[0].currency)}
                     className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
@@ -90,10 +94,10 @@ export default function SupportersPage() {
                       <div className="flex flex-col items-end gap-1">
                         {supporter.tips.map((tip: TipInfo) => (
                           <span
-                            key={tip.currency}
+                            key={`${tip.currency}-${tip.amount}`}
                             className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
                           >
-                            {tip.amount} {tip.currency}
+                            {tip.amount} {getCurrencySymbol(tip.currency)}
                           </span>
                         ))}
                       </div>

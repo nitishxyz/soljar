@@ -8,7 +8,7 @@ interface Withdrawal {
   jar: PublicKey;
   amount: number;
   createdAt: number;
-  currency: string;
+  currency: number;
 }
 
 const ITEMS_PER_PAGE = 25;
@@ -65,7 +65,7 @@ export function useWithdrawls(initialPage = 0) {
               jar: withdrawl.jar,
               amount: withdrawl.amount.toNumber() / 1e9,
               createdAt: withdrawl.createdAt.toNumber(),
-              currency: withdrawl.currency || "SOL",
+              currency: withdrawl.currency,
             });
           } catch (withdrawlError) {
             console.warn(

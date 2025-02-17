@@ -18,9 +18,9 @@ export const useJar = () => {
         const jar = await program.account.jar.fetch(jarPDA);
 
         return {
-          totalDeposits: jar.depositCount - 1,
-          totalWithdrawals: jar.withdrawlCount - 1,
-          totalSupporters: jar.supporterCount - 1,
+          totalDeposits: jar.depositCount,
+          totalWithdrawls: jar.withdrawlCount,
+          totalSupporters: jar.supporterCount,
         };
       } catch (error) {
         console.error("Error fetching jar:", error);

@@ -9,6 +9,7 @@ export interface Withdrawl {
   amount: number;
   createdAt: number;
   updatedAt: number;
+  currency: number;
 }
 
 export function useRecentWithdrawls(limit = 5) {
@@ -45,6 +46,7 @@ export function useRecentWithdrawls(limit = 5) {
               ...withdrawl,
               amount: withdrawl.amount.toNumber() / 1e9,
               createdAt: withdrawl.createdAt.toNumber(),
+              currency: withdrawl.currency,
             });
           } catch (withdrawlError) {
             console.warn(

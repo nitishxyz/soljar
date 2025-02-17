@@ -7,7 +7,7 @@ import { useSoljarAuth } from "../soljar-auth-provider";
 interface Tip {
   signer: PublicKey;
   tipLink: string;
-  currency: string;
+  currency: number;
   amount: number;
   createdAt: number;
   referrer: string;

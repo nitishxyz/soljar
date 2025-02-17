@@ -3,17 +3,17 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useRecentDeposits } from "@/web3/hooks/use-recent-deposits";
-import { Currency } from "@/web3/utils";
 import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
 import { useTokenPrices } from "@/web3/hooks/use-token-prices";
+import { getCurrencySymbol } from "@/web3/utils";
 
 const mockRecentTips = [
   {
     id: "mock1",
     amount: 0.5,
-    currency: "SOL",
+    currency: 0, // SOL = 0
     usdPrice: 98.45,
     from: "wallet.sol",
     timestamp: "2h ago",
@@ -23,7 +23,7 @@ const mockRecentTips = [
   {
     id: "mock2",
     amount: 0.3,
-    currency: "SOL",
+    currency: 0, // SOL = 0
     usdPrice: 98.45,
     from: "user.sol",
     timestamp: "5h ago",
@@ -81,8 +81,8 @@ export function TipHistoryCard() {
   const formatDeposits = recentDeposits?.map((deposit: any) => ({
     id: `${deposit.signer.toString()}-${deposit.createdAt}`,
     amount: deposit.amount,
-    currency: "SOL" as Currency, // Since currencyMint is SOL's native mint
-    usdPrice: prices?.SOL ?? 0, // Use real-time price
+    currency: deposit.currency, // Now using number-based currency
+    usdPrice: prices?.[getCurrencySymbol(deposit.currency)] ?? 0,
     from:
       deposit.signer.toString().slice(0, 4) +
       "..." +
@@ -113,6 +113,8 @@ export function TipHistoryCard() {
   const renderTipsList = (tips: typeof mockRecentTips, isBlurred = false) => {
     return tips.map((tip, index) => {
       const colors = getColorClasses(tip.color);
+      const currencySymbol = getCurrencySymbol(tip.currency);
+
       return (
         <motion.div
           onClick={() => !isBlurred && handleTipClick(tip)}
@@ -130,10 +132,7 @@ export function TipHistoryCard() {
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center ${colors.iconBg}`}
             >
-              <CurrencyIcon
-                currency={tip.currency as Currency}
-                className="w-5 h-5"
-              />
+              <CurrencyIcon currency={currencySymbol} className="w-5 h-5" />
             </div>
             <div>
               <p className="font-medium text-sm">{tip.from}</p>
@@ -145,7 +144,7 @@ export function TipHistoryCard() {
               <p
                 className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
               >
-                +{tip.amount} {tip.currency}
+                +{tip.amount} {currencySymbol}
               </p>
               <span className="text-xs text-muted-foreground">
                 (≈${(tip.amount * tip.usdPrice).toFixed(2)})

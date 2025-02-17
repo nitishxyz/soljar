@@ -136,3 +136,23 @@ export function formatCurrencyAmount(amount: number, currency: string) {
     maximumFractionDigits: 3,
   });
 }
+
+export const CURRENCY_MAP = {
+  0: "SOL",
+  1: "USDC",
+  2: "USDT",
+} as const;
+
+export type CurrencyCode = keyof typeof CURRENCY_MAP;
+export type CurrencySymbol = (typeof CURRENCY_MAP)[CurrencyCode];
+
+export function getCurrencySymbol(code: number): CurrencySymbol {
+  return CURRENCY_MAP[code as CurrencyCode] || "SOL";
+}
+
+export function getCurrencyCode(mint: PublicKey): number {
+  if (mint.equals(PublicKey.default)) return 0; // SOL
+  if (mint.equals(USDC_MINT)) return 1; // USDC
+  if (mint.equals(USDT_MINT)) return 2; // USDT
+  return 0; // Default to SOL
+}

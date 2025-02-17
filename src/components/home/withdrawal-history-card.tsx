@@ -3,16 +3,16 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { useRecentWithdrawls } from "@/web3/hooks/use-recent-withdrawls";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
-import { Currency } from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
 import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
+import { getCurrencySymbol } from "@/web3/utils";
 
 const mockWithdrawals = [
   {
     id: "1",
     amount: 1.2,
-    currency: "SOL",
+    currency: 0, // SOL = 0
     timestamp: "2h ago",
     color: "purple" as const,
     signature: "1234567890",
@@ -20,7 +20,7 @@ const mockWithdrawals = [
   {
     id: "2",
     amount: 50,
-    currency: "USDC",
+    currency: 1, // USDC = 1
     timestamp: "1d ago",
     color: "blue" as const,
     signature: "1234567890",
@@ -28,7 +28,7 @@ const mockWithdrawals = [
   {
     id: "3",
     amount: 25,
-    currency: "USDT",
+    currency: 2, // USDT = 2
     timestamp: "3d ago",
     color: "green" as const,
     signature: "1234567890",
@@ -83,7 +83,7 @@ export function WithdrawalHistoryCard() {
   const formatWithdrawls = recentWithdrawls?.map((withdrawl) => ({
     id: withdrawl.jar.toString(),
     amount: withdrawl.amount,
-    currency: "SOL" as Currency, // Since we only support SOL withdrawals for now
+    currency: withdrawl.currency, // Now using number-based currency
     timestamp: formatTimeAgo(withdrawl.createdAt),
     color: "purple" as const,
     signature: withdrawl.jar.toString(),
@@ -113,6 +113,8 @@ export function WithdrawalHistoryCard() {
   ) => {
     return withdrawals.map((withdrawal, index) => {
       const colors = getColorClasses(withdrawal.color);
+      const currencySymbol = getCurrencySymbol(withdrawal.currency);
+
       return (
         <motion.div
           onClick={() => !isBlurred && handleWithdrawalClick(withdrawal)}
@@ -130,15 +132,12 @@ export function WithdrawalHistoryCard() {
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center ${colors.iconBg}`}
             >
-              <CurrencyIcon
-                currency={withdrawal.currency as Currency}
-                className="w-5 h-5"
-              />
+              <CurrencyIcon currency={currencySymbol} className="w-5 h-5" />
             </div>
             <div
               className={`text-sm font-medium ${colors.text} ${colors.hover} transition-colors`}
             >
-              -{withdrawal.amount} {withdrawal.currency}
+              -{withdrawal.amount} {currencySymbol}
             </div>
           </div>
           <div className="flex items-center gap-2">

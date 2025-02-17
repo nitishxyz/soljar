@@ -7,6 +7,7 @@ import {
   fetchTransactionSignature,
   SOLANA_CLUSTER,
   formatCurrencyAmount,
+  getCurrencySymbol,
 } from "@/web3/utils";
 import { GiftIcon } from "@heroicons/react/24/solid";
 import { ExternalLink } from "lucide-react";
@@ -14,10 +15,12 @@ import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
 import { useConnection } from "@solana/wallet-adapter-react";
+import { useJar } from "@/web3/hooks/use-jar";
 
 export default function TipsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, fetchNextPage, hasNextPage } = useTips(currentPage);
+  const { jar } = useJar();
   const { ref, inView } = useInView();
   const { connection } = useConnection();
   const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
@@ -30,7 +33,6 @@ export default function TipsPage() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const tips = data?.pages.flatMap((page) => page.tips) ?? [];
-  const totalTips = data?.pages[0]?.totalTips ?? 0;
 
   const handleTipClick = async (tip: any) => {
     try {
@@ -83,7 +85,7 @@ export default function TipsPage() {
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <GiftIcon className="w-7 h-7 text-accent-purple" />
-          Tips ({totalTips})
+          Tips ({jar?.totalDeposits || 0})
         </div>
 
         <div className="space-y-3">
@@ -96,7 +98,7 @@ export default function TipsPage() {
               <div className="flex-1 flex items-start gap-3 sm:gap-6">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-accent-purple/10 flex items-center justify-center shrink-0">
                   <CurrencyIcon
-                    currency={tip.currency as "SOL" | "USDC" | "USDT"}
+                    currency={getCurrencySymbol(tip.currency)}
                     className="w-6 h-6 sm:w-7 sm:h-7"
                   />
                 </div>
@@ -107,8 +109,11 @@ export default function TipsPage() {
                     </p>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="font-medium text-base sm:text-lg text-accent-purple whitespace-nowrap">
-                        {formatCurrencyAmount(tip.amount, tip.currency)}{" "}
-                        {tip.currency}
+                        {formatCurrencyAmount(
+                          tip.amount,
+                          getCurrencySymbol(tip.currency)
+                        )}{" "}
+                        {getCurrencySymbol(tip.currency)}
                       </span>
                       <div className="relative w-4 h-4 shrink-0">
                         {loadingSignature === tip.signer.toString() ? (

@@ -96,7 +96,7 @@ export function useSoljarUser() {
         .createUser(username)
         .postInstructions([
           await program.methods
-            .createSupporterIndex(1)
+            .createSupporterIndex(0)
             .accounts({})
             .instruction(),
         ])

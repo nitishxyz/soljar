@@ -14,11 +14,14 @@ import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
 import { useConnection } from "@solana/wallet-adapter-react";
+import { getCurrencySymbol } from "@/web3/utils";
+import { useJar } from "@/web3/hooks/use-jar";
 
 export default function WithdrawlsPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, fetchNextPage, hasNextPage } =
     useWithdrawls(currentPage);
+  const { jar } = useJar();
   const { ref, inView } = useInView();
   const { connection } = useConnection();
   const [loadingSignature, setLoadingSignature] = useState<string | null>(null);
@@ -30,7 +33,6 @@ export default function WithdrawlsPage() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const withdrawls = data?.pages.flatMap((page) => page.withdrawls) ?? [];
-  const totalWithdrawls = data?.pages[0]?.totalWithdrawls ?? 0;
 
   const handleWithdrawalClick = async (withdrawl: any) => {
     try {
@@ -55,7 +57,7 @@ export default function WithdrawlsPage() {
       <div className="container mx-auto p-8 px-4 sm:px-6 space-y-4">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <BanknotesIcon className="w-7 h-7 text-accent-purple animate-pulse" />
-          Withdrawals
+          Withdrawls
         </div>
 
         {[1, 2, 3].map((i) => (
@@ -82,7 +84,7 @@ export default function WithdrawlsPage() {
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
           <BanknotesIcon className="w-7 h-7 text-accent-purple" />
-          Withdrawals ({totalWithdrawls})
+          Withdrawls ({jar?.totalWithdrawls || 0})
         </div>
 
         <div className="space-y-3">
@@ -95,7 +97,7 @@ export default function WithdrawlsPage() {
               <div className="flex items-center gap-6">
                 <div className="w-12 h-12 rounded-full bg-accent-purple/10 flex items-center justify-center">
                   <CurrencyIcon
-                    currency={withdrawl.currency as "SOL" | "USDC" | "USDT"}
+                    currency={getCurrencySymbol(withdrawl.currency)}
                     className="w-7 h-7"
                   />
                 </div>
@@ -116,8 +118,11 @@ export default function WithdrawlsPage() {
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-medium text-lg text-accent-purple">
-                  {formatCurrencyAmount(withdrawl.amount, withdrawl.currency)}{" "}
-                  {withdrawl.currency}
+                  {formatCurrencyAmount(
+                    withdrawl.amount,
+                    getCurrencySymbol(withdrawl.currency)
+                  )}{" "}
+                  {getCurrencySymbol(withdrawl.currency)}
                 </span>
                 <div className="relative w-4 h-4 shrink-0">
                   {loadingSignature === withdrawl.jar.toString() ? (
