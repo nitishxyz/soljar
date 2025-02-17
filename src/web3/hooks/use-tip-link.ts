@@ -66,31 +66,39 @@ export function useTipLink(tipLinkId: string) {
       const bnAmount = new BN(amount);
       const isSolDeposit = mint.equals(PublicKey.default);
 
-      if (isSolDeposit) {
-        // Handle SOL deposit using create_deposit instruction
-        return await program.methods
-          .createDeposit(tipLinkId, referrer, memo, bnAmount)
-          .accounts({})
-          .rpc();
-      } else {
-        // Handle SPL token deposit using create_spl_deposit instruction
-        if (!sourceTokenAccount) {
-          throw new Error("Source token account is required for SPL tokens");
+      try {
+        if (isSolDeposit) {
+          return await program.methods
+            .createDeposit(tipLinkId, referrer, memo, bnAmount)
+            .accounts({})
+            .rpc();
+        } else {
+          if (!sourceTokenAccount) {
+            throw new Error("Source token account is required for SPL tokens");
+          }
+
+          const tokenProgramId = await getTokenProgramId(
+            program.provider.connection,
+            mint
+          );
+
+          return await program.methods
+            .createSplDeposit(tipLinkId, referrer, memo, bnAmount)
+            .accounts({
+              mint,
+              sourceTokenAccount,
+              tokenProgram: tokenProgramId,
+            })
+            .rpc();
         }
-
-        const tokenProgramId = await getTokenProgramId(
-          program.provider.connection,
-          mint
-        );
-
-        return await program.methods
-          .createSplDeposit(tipLinkId, referrer, memo, bnAmount)
-          .accounts({
-            mint,
-            sourceTokenAccount,
-            tokenProgram: tokenProgramId,
-          })
-          .rpc();
+      } catch (error: any) {
+        // Check if the error message indicates the transaction was already processed
+        if (error.message?.includes("already been processed")) {
+          // Transaction was successful despite the simulation error
+          return true;
+        }
+        // Re-throw other errors
+        throw error;
       }
     },
   });

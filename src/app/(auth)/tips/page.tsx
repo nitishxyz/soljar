@@ -134,12 +134,6 @@ export default function TipsPage() {
                         }
                       )}
                     </span>
-                    {tip.referrer && (
-                      <>
-                        <span>•</span>
-                        <span>via {tip.referrer}</span>
-                      </>
-                    )}
                   </div>
                   {tip.memo && (
                     <span className="block text-xs sm:text-sm text-muted-foreground mt-1">

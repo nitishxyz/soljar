@@ -10,7 +10,6 @@ interface Tip {
   currency: number;
   amount: number;
   createdAt: number;
-  referrer: string;
   memo: string;
 }
 
@@ -68,7 +67,6 @@ export function useTips(initialPage = 0) {
               currency: deposit.currency,
               amount: deposit.amount.toNumber() / 1e9,
               createdAt: deposit.createdAt.toNumber(),
-              referrer: deposit.referrer,
               memo: deposit.memo,
             });
           } catch (depositError) {

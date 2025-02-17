@@ -27,50 +27,59 @@ export function useWithdrawal() {
       const bnAmount = new BN(amount * 1e9); // Convert to lamports/smallest unit
       const isSolWithdrawal = mint.equals(PublicKey.default);
 
-      if (isSolWithdrawal) {
-        // Handle SOL withdrawal
-        const [jarPda] = PublicKey.findProgramAddressSync(
-          [Buffer.from("jar"), publicKey.toBuffer()],
-          program.programId
-        );
+      try {
+        if (isSolWithdrawal) {
+          // Handle SOL withdrawal
+          const [jarPda] = PublicKey.findProgramAddressSync(
+            [Buffer.from("jar"), publicKey.toBuffer()],
+            program.programId
+          );
 
-        return await program.methods
-          .createWithdrawl(mint, bnAmount)
-          .accounts({
-            signer: publicKey,
-          })
-          .rpc();
-      } else {
-        // Handle SPL token withdrawal
-        const [jarPda] = PublicKey.findProgramAddressSync(
-          [Buffer.from("jar"), publicKey.toBuffer()],
-          program.programId
-        );
+          return await program.methods
+            .createWithdrawl(mint, bnAmount)
+            .accounts({
+              signer: publicKey,
+            })
+            .rpc();
+        } else {
+          // Handle SPL token withdrawal
+          const [jarPda] = PublicKey.findProgramAddressSync(
+            [Buffer.from("jar"), publicKey.toBuffer()],
+            program.programId
+          );
 
-        const [tokenAccountPda] = PublicKey.findProgramAddressSync(
-          [Buffer.from("token_account"), jarPda.toBuffer(), mint.toBuffer()],
-          program.programId
-        );
+          const [tokenAccountPda] = PublicKey.findProgramAddressSync(
+            [Buffer.from("token_account"), jarPda.toBuffer(), mint.toBuffer()],
+            program.programId
+          );
 
-        const associatedTokenAccount = getAssociatedTokenAddressSync(
-          mint,
-          publicKey
-        );
-
-        const tokenProgramId = await getTokenProgramId(
-          program.provider.connection,
-          mint
-        );
-
-        // Then withdraw the tokens
-        return await program.methods
-          .withdrawSplTokens(bnAmount)
-          .accounts({
-            signer: publicKey,
+          const associatedTokenAccount = getAssociatedTokenAddressSync(
             mint,
-            tokenProgram: tokenProgramId,
-          })
-          .rpc();
+            publicKey
+          );
+
+          const tokenProgramId = await getTokenProgramId(
+            program.provider.connection,
+            mint
+          );
+
+          return await program.methods
+            .withdrawSplTokens(bnAmount)
+            .accounts({
+              signer: publicKey,
+              mint,
+              tokenProgram: tokenProgramId,
+            })
+            .rpc();
+        }
+      } catch (error: any) {
+        // Check if the error message indicates the transaction was already processed
+        if (error.message?.includes("already been processed")) {
+          // Transaction was successful despite the simulation error
+          return true;
+        }
+        // Re-throw other errors
+        throw error;
       }
     },
     onSuccess: () => {
