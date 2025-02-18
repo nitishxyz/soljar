@@ -24,7 +24,10 @@ export function useWithdrawal() {
       if (!publicKey) throw new Error("Wallet not connected");
       if (!program) throw new Error("Program not initialized");
 
-      const bnAmount = new BN(amount * 1e9); // Convert to lamports/smallest unit
+      // Handle decimals based on token type
+      const decimals = mint.equals(PublicKey.default) ? 9 : 6; // SOL has 9 decimals, USDC has 6
+      const bnAmount = new BN(amount * Math.pow(10, decimals));
+
       const isSolWithdrawal = mint.equals(PublicKey.default);
 
       try {
@@ -66,7 +69,6 @@ export function useWithdrawal() {
           return await program.methods
             .withdrawSplTokens(bnAmount)
             .accounts({
-              signer: publicKey,
               mint,
               tokenProgram: tokenProgramId,
             })
