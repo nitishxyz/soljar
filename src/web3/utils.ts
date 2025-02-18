@@ -1,7 +1,7 @@
 import { PublicKey, Connection } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from "@solana/spl-token";
 
-export const SOLANA_CLUSTER = "devnet";
+export const SOLANA_CLUSTER = "";
 
 export type Currency = "SOL" | "USDC" | "USDT";
 
