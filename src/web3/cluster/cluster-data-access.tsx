@@ -8,9 +8,9 @@ import toast from "react-hot-toast";
 
 const MAINNET_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || "";
 
-if (!MAINNET_ENDPOINT) {
-  throw new Error("NEXT_PUBLIC_RPC_ENDPOINT is not set");
-}
+// if (!MAINNET_ENDPOINT) {
+//   throw new Error("NEXT_PUBLIC_RPC_ENDPOINT is not set");
+// }
 
 export interface Cluster {
   name: string;
