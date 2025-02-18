@@ -6,6 +6,7 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { PreviewAnimation } from "./animations/preview-animation";
 import { Logo } from "@/components/ui/logo";
+import { CTAButton } from "./cta-button";
 
 export function Hero() {
   const router = useRouter();
@@ -53,14 +54,7 @@ export function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-8">
-              <Button
-                size="lg"
-                className="h-14 text-lg bg-accent-purple hover:bg-accent-purple/90 w-full sm:w-auto"
-                onClick={() => router.push("/start")}
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <CTAButton />
               <Button
                 variant="outline"
                 size="lg"
