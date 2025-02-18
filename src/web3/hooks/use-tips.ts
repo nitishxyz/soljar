@@ -65,7 +65,7 @@ export function useTips(initialPage = 0) {
               signer: deposit.signer,
               tipLink: deposit.linkId,
               currency: deposit.currency,
-              amount: deposit.amount.toNumber() / 1e9,
+              amount: deposit.amount.toNumber(),
               createdAt: deposit.createdAt.toNumber(),
               memo: deposit.memo,
             });

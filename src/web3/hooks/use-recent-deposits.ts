@@ -39,7 +39,7 @@ export function useRecentDeposits(limit = 5) {
             const deposit = await program.account.deposit.fetch(depositPda);
             deposits.push({
               ...deposit,
-              amount: deposit.amount.toNumber() / 1e9,
+              amount: deposit.amount.toNumber(),
               createdAt: deposit.createdAt.toNumber(),
             });
           } catch (depositError) {

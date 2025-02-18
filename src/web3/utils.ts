@@ -121,21 +121,19 @@ export const fetchTransactionSignature = async (
   }
 };
 
-export function formatCurrencyAmount(amount: number, currency: string) {
-  if (currency === "SOL") {
-    // For SOL, show up to 9 decimals if significant
-    return amount.toLocaleString(undefined, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 9,
-    });
-  }
+export const formatCurrencyAmount = (amount: number, currency: string) => {
+  // Convert from smallest units back to standard units
+  const decimals = currency === "SOL" ? 9 : 6;
+  const standardAmount = amount / Math.pow(10, decimals);
 
-  // For other currencies (USDC, USDT), show up to 3 decimals if significant
-  return amount.toLocaleString(undefined, {
+  // Format with appropriate decimal places, but trim trailing zeros
+  const formattedAmount = standardAmount.toLocaleString(undefined, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 3,
+    maximumFractionDigits: currency === "SOL" ? 4 : 2,
   });
-}
+
+  return formattedAmount;
+};
 
 export const CURRENCY_MAP = {
   0: "SOL",

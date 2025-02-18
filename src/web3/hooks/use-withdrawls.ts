@@ -63,7 +63,7 @@ export function useWithdrawls(initialPage = 0) {
             );
             withdrawls.push({
               jar: withdrawl.jar,
-              amount: withdrawl.amount.toNumber() / 1e9,
+              amount: withdrawl.amount.toNumber(),
               createdAt: withdrawl.createdAt.toNumber(),
               currency: withdrawl.currency,
             });

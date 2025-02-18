@@ -64,7 +64,7 @@ export function useSupporters(initialPage = 0) {
             jar: supporter.jar,
             tips: supporter.tips.map((tip: any) => ({
               currency: tip.currency,
-              amount: tip.amount.toNumber() / 1e9,
+              amount: tip.amount.toNumber(),
             })),
             tipCount: supporter.tipCount,
             createdAt: supporter.createdAt.toNumber(),

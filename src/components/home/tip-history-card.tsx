@@ -3,7 +3,11 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useRecentDeposits } from "@/web3/hooks/use-recent-deposits";
-import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
+import {
+  fetchTransactionSignature,
+  formatCurrencyAmount,
+  SOLANA_CLUSTER,
+} from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
 import { useTokenPrices } from "@/web3/hooks/use-token-prices";
@@ -144,7 +148,8 @@ export function TipHistoryCard() {
               <p
                 className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
               >
-                +{tip.amount} {currencySymbol}
+                +{formatCurrencyAmount(tip.amount, currencySymbol)}{" "}
+                {currencySymbol}
               </p>
               <span className="text-xs text-muted-foreground">
                 (≈${(tip.amount * tip.usdPrice).toFixed(2)})

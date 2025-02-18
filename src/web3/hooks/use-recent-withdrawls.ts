@@ -44,7 +44,7 @@ export function useRecentWithdrawls(limit = 5) {
             );
             withdrawls.push({
               ...withdrawl,
-              amount: withdrawl.amount.toNumber() / 1e9,
+              amount: withdrawl.amount.toNumber(),
               createdAt: withdrawl.createdAt.toNumber(),
               currency: withdrawl.currency,
             });

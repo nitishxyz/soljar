@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { formatDistance } from "date-fns";
 import {
   formatAddress,
+  formatCurrencyAmount,
   getCurrencyFromMint,
   getCurrencySymbol,
 } from "@/web3/utils";
@@ -14,6 +15,20 @@ import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
 import type { Supporter, TipInfo } from "@/web3/hooks/use-supporters";
 import { useJar } from "@/web3/hooks/use-jar";
+
+// Add this function before the SupportersPage component
+const getCurrencyColor = (currency: string) => {
+  switch (currency) {
+    case "SOL":
+      return "text-accent-purple";
+    case "USDC":
+      return "text-accent-blue";
+    case "USDT":
+      return "text-accent-green";
+    default:
+      return "text-accent-purple";
+  }
+};
 
 export default function SupportersPage() {
   const [currentPage, setCurrentPage] = useState(0);
@@ -95,9 +110,15 @@ export default function SupportersPage() {
                           .map((tip: TipInfo) => (
                             <span
                               key={`${tip.currency}-${tip.amount}`}
-                              className="font-medium text-sm sm:text-base text-accent-purple whitespace-nowrap"
+                              className={`font-medium text-sm sm:text-base ${getCurrencyColor(
+                                getCurrencySymbol(tip.currency)
+                              )} whitespace-nowrap`}
                             >
-                              {tip.amount} {getCurrencySymbol(tip.currency)}
+                              {formatCurrencyAmount(
+                                tip.amount,
+                                getCurrencySymbol(tip.currency)
+                              )}{" "}
+                              {getCurrencySymbol(tip.currency)}
                             </span>
                           ))}
                       </div>

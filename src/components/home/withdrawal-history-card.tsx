@@ -5,7 +5,11 @@ import { useRecentWithdrawls } from "@/web3/hooks/use-recent-withdrawls";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { useState } from "react";
-import { fetchTransactionSignature, SOLANA_CLUSTER } from "@/web3/utils";
+import {
+  fetchTransactionSignature,
+  formatCurrencyAmount,
+  SOLANA_CLUSTER,
+} from "@/web3/utils";
 import { getCurrencySymbol } from "@/web3/utils";
 
 const mockWithdrawals = [
@@ -137,7 +141,8 @@ export function WithdrawalHistoryCard() {
             <div
               className={`text-sm font-medium ${colors.text} ${colors.hover} transition-colors`}
             >
-              -{withdrawal.amount} {currencySymbol}
+              -{formatCurrencyAmount(withdrawal.amount, currencySymbol)}{" "}
+              {currencySymbol}
             </div>
           </div>
           <div className="flex items-center gap-2">
