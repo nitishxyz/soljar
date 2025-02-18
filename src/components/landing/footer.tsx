@@ -1,5 +1,7 @@
+"use client";
 import { motion } from "framer-motion";
-import { Github, X } from "lucide-react";
+import { Github } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
 import Link from "next/link";
 import { Logo } from "../ui/logo";
 
@@ -9,6 +11,7 @@ const footerLinks = [
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
+      { label: "Security Policy", href: "/security-policy" },
     ],
   },
 ];
@@ -20,9 +23,9 @@ const socialLinks = [
     icon: Github,
   },
   {
-    label: "Twitter",
-    href: "https://x.com/soljarxyz",
-    icon: X,
+    label: "X",
+    href: "https://x.com/soljar_xyz",
+    icon: FaXTwitter,
   },
 ];
 
