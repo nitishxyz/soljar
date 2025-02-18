@@ -6,6 +6,12 @@ import { atomWithStorage } from "jotai/utils";
 import { createContext, ReactNode, useContext } from "react";
 import toast from "react-hot-toast";
 
+const MAINNET_ENDPOINT = process.env.NEXT_PUBLIC_RPC_ENDPOINT || "";
+
+if (!MAINNET_ENDPOINT) {
+  throw new Error("NEXT_PUBLIC_RPC_ENDPOINT is not set");
+}
+
 export interface Cluster {
   name: string;
   endpoint: string;
@@ -24,6 +30,11 @@ export enum ClusterNetwork {
 // The endpoint provided by clusterApiUrl('mainnet-beta') does not allow access from the browser due to CORS restrictions
 // To use the mainnet-beta cluster, provide a custom endpoint
 export const defaultClusters: Cluster[] = [
+  {
+    name: "mainnet",
+    endpoint: MAINNET_ENDPOINT,
+    network: ClusterNetwork.Mainnet,
+  },
   {
     name: "devnet",
     endpoint: clusterApiUrl("devnet"),

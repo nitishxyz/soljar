@@ -89,6 +89,12 @@ export function useTipLink(tipLinkId: string) {
               sourceTokenAccount,
               tokenProgram: tokenProgramId,
             })
+            .postInstructions([
+              await program.methods
+                .addSupporter(tipLinkId, mint, bnAmount)
+                .accounts({})
+                .instruction(),
+            ])
             .rpc();
         }
       } catch (error: any) {
