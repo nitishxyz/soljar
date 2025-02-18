@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { SoljarBaseProvider } from "@/web3/soljar-base-provider";
 import { LoadingProvider } from "@/providers/loading-provider";
 import { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -116,6 +117,7 @@ export default function RootLayout({
           </LoadingProvider>
         </ThemeProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
