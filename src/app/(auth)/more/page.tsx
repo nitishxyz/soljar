@@ -505,10 +505,10 @@ export default function MorePage() {
                       variant="link"
                       className="text-blue-500 hover:text-blue-600 p-0 h-auto font-normal"
                       onClick={() =>
-                        window.open("https://twitter.com/soljarxyz", "_blank")
+                        window.open("https://x.com/soljar_xyz", "_blank")
                       }
                     >
-                      @soljarxyz
+                      @soljar_xyz
                     </Button>
                   </p>
                 </div>
