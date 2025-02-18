@@ -6,6 +6,7 @@ import { useRecentDeposits } from "@/web3/hooks/use-recent-deposits";
 import {
   fetchTransactionSignature,
   formatCurrencyAmount,
+  normalizeCurrencyAmount,
   SOLANA_CLUSTER,
 } from "@/web3/utils";
 import { useConnection } from "@solana/wallet-adapter-react";
@@ -118,6 +119,10 @@ export function TipHistoryCard() {
     return tips.map((tip, index) => {
       const colors = getColorClasses(tip.color);
       const currencySymbol = getCurrencySymbol(tip.currency);
+      const normalizedAmount = normalizeCurrencyAmount(
+        tip.amount,
+        currencySymbol
+      );
 
       return (
         <motion.div
@@ -152,7 +157,7 @@ export function TipHistoryCard() {
                 {currencySymbol}
               </p>
               <span className="text-xs text-muted-foreground">
-                (≈${(tip.amount * tip.usdPrice).toFixed(2)})
+                (≈${(normalizedAmount * tip.usdPrice).toFixed(2)})
               </span>
             </div>
             {loadingSignature === tip.signature ? (

@@ -121,6 +121,11 @@ export const fetchTransactionSignature = async (
   }
 };
 
+export const normalizeCurrencyAmount = (amount: number, currency: string) => {
+  const decimals = currency === "SOL" ? 9 : 6;
+  return amount / Math.pow(10, decimals);
+};
+
 export const formatCurrencyAmount = (amount: number, currency: string) => {
   // Convert from smallest units back to standard units
   const decimals = currency === "SOL" ? 9 : 6;
