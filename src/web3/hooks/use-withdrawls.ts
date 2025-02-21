@@ -5,6 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
 interface Withdrawal {
+  id: string;
   jar: PublicKey;
   amount: number;
   createdAt: number;
@@ -62,6 +63,7 @@ export function useWithdrawls(initialPage = 0) {
               withdrawlPda
             );
             withdrawls.push({
+              id: withdrawlPda.toBase58(),
               jar: withdrawl.jar,
               amount: withdrawl.amount.toNumber(),
               createdAt: withdrawl.createdAt.toNumber(),

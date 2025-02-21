@@ -36,10 +36,10 @@ export default function WithdrawlsPage() {
 
   const handleWithdrawalClick = async (withdrawl: any) => {
     try {
-      setLoadingSignature(withdrawl.jar.toString());
+      setLoadingSignature(withdrawl.id);
       const signature = await fetchTransactionSignature(
         connection,
-        withdrawl.jar.toString()
+        withdrawl.id
       );
       if (signature) {
         window.open(
@@ -125,7 +125,7 @@ export default function WithdrawlsPage() {
                   {getCurrencySymbol(withdrawl.currency)}
                 </span>
                 <div className="relative w-4 h-4 shrink-0">
-                  {loadingSignature === withdrawl.jar.toString() ? (
+                  {loadingSignature === withdrawl.id ? (
                     <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
                   ) : (
                     <ExternalLink className="absolute inset-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />

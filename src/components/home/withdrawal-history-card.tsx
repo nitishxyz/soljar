@@ -19,7 +19,6 @@ const mockWithdrawals = [
     currency: 0, // SOL = 0
     timestamp: "2h ago",
     color: "purple" as const,
-    signature: "1234567890",
   },
   {
     id: "2",
@@ -27,7 +26,6 @@ const mockWithdrawals = [
     currency: 1, // USDC = 1
     timestamp: "1d ago",
     color: "blue" as const,
-    signature: "1234567890",
   },
   {
     id: "3",
@@ -35,7 +33,6 @@ const mockWithdrawals = [
     currency: 2, // USDT = 2
     timestamp: "3d ago",
     color: "green" as const,
-    signature: "1234567890",
   },
 ];
 
@@ -85,20 +82,19 @@ export function WithdrawalHistoryCard() {
   };
 
   const formatWithdrawls = recentWithdrawls?.map((withdrawl) => ({
-    id: withdrawl.jar.toString(),
+    id: withdrawl.id,
     amount: withdrawl.amount,
     currency: withdrawl.currency, // Now using number-based currency
     timestamp: formatTimeAgo(withdrawl.createdAt),
     color: "purple" as const,
-    signature: withdrawl.jar.toString(),
   }));
 
-  const handleWithdrawalClick = async (withdrawal: any) => {
+  const handleWithdrawlClick = async (withdrawl: any) => {
     try {
-      setLoadingSignature(withdrawal.signature);
+      setLoadingSignature(withdrawl.id);
       const signature = await fetchTransactionSignature(
         connection,
-        withdrawal.signature
+        withdrawl.id
       );
       if (signature) {
         window.open(
@@ -112,20 +108,20 @@ export function WithdrawalHistoryCard() {
   };
 
   const renderWithdrawalsList = (
-    withdrawals: typeof mockWithdrawals,
+    withdrawls: typeof mockWithdrawals,
     isBlurred = false
   ) => {
-    return withdrawals.map((withdrawal, index) => {
-      const colors = getColorClasses(withdrawal.color);
-      const currencySymbol = getCurrencySymbol(withdrawal.currency);
+    return withdrawls.map((withdrawl, index) => {
+      const colors = getColorClasses(withdrawl.color);
+      const currencySymbol = getCurrencySymbol(withdrawl.currency);
 
       return (
         <motion.div
-          onClick={() => !isBlurred && handleWithdrawalClick(withdrawal)}
+          onClick={() => !isBlurred && handleWithdrawlClick(withdrawl)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          key={`${withdrawal.id}-${index}`}
+          key={`${withdrawl.id}-${index}`}
           className={`group relative flex items-center justify-between p-3 rounded-lg ${
             colors.bg
           } transition-colors ${
@@ -141,15 +137,15 @@ export function WithdrawalHistoryCard() {
             <div
               className={`text-sm font-medium ${colors.text} ${colors.hover} transition-colors`}
             >
-              -{formatCurrencyAmount(withdrawal.amount, currencySymbol)}{" "}
+              -{formatCurrencyAmount(withdrawl.amount, currencySymbol)}{" "}
               {currencySymbol}
             </div>
           </div>
           <div className="flex items-center gap-2">
             <div className="text-xs text-muted-foreground">
-              {withdrawal.timestamp}
+              {withdrawl.timestamp}
             </div>
-            {loadingSignature === withdrawal.signature ? (
+            {loadingSignature === withdrawl.id ? (
               <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
             ) : (
               <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />

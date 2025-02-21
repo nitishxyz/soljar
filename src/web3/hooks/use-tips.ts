@@ -5,6 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
 interface Tip {
+  id: string;
   signer: PublicKey;
   tipLink: string;
   currency: number;
@@ -62,6 +63,7 @@ export function useTips(initialPage = 0) {
             const depositPda = findDepositPDA(program, jarPda, i);
             const deposit = await program.account.deposit.fetch(depositPda);
             tips.push({
+              id: depositPda.toBase58(),
               signer: deposit.signer,
               tipLink: deposit.linkId,
               currency: deposit.currency,

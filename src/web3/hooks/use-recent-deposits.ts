@@ -4,6 +4,7 @@ import { findDepositPDA, findJarPDA, findUserPDA } from "@/web3/pda-helper";
 import { PublicKey } from "@solana/web3.js";
 import { useSoljarAuth } from "../soljar-auth-provider";
 interface Deposit {
+  id: string;
   signer: PublicKey;
   tipLink: PublicKey;
   currency: number;
@@ -39,6 +40,7 @@ export function useRecentDeposits(limit = 5) {
             const deposit = await program.account.deposit.fetch(depositPda);
             deposits.push({
               ...deposit,
+              id: depositPda.toBase58(),
               amount: deposit.amount.toNumber(),
               createdAt: deposit.createdAt.toNumber(),
             });

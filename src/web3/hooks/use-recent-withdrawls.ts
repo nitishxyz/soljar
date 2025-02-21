@@ -5,6 +5,7 @@ import { useSoljarBase } from "../soljar-base-provider";
 import { useSoljarAuth } from "../soljar-auth-provider";
 
 export interface Withdrawl {
+  id: string;
   jar: PublicKey;
   amount: number;
   createdAt: number;
@@ -44,6 +45,7 @@ export function useRecentWithdrawls(limit = 5) {
             );
             withdrawls.push({
               ...withdrawl,
+              id: withdrawlPda.toBase58(),
               amount: withdrawl.amount.toNumber(),
               createdAt: withdrawl.createdAt.toNumber(),
               currency: withdrawl.currency,

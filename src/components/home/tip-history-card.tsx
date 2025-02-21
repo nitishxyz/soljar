@@ -23,7 +23,6 @@ const mockRecentTips = [
     from: "wallet.sol",
     timestamp: "2h ago",
     color: "purple" as const,
-    signature: "mock1",
   },
   {
     id: "mock2",
@@ -33,7 +32,6 @@ const mockRecentTips = [
     from: "user.sol",
     timestamp: "5h ago",
     color: "purple" as const,
-    signature: "mock2",
   },
 ];
 
@@ -84,7 +82,7 @@ export function TipHistoryCard() {
   };
 
   const formatDeposits = recentDeposits?.map((deposit: any) => ({
-    id: `${deposit.signer.toString()}-${deposit.createdAt}`,
+    id: deposit.id,
     amount: deposit.amount,
     currency: deposit.currency, // Now using number-based currency
     usdPrice: prices?.[getCurrencySymbol(deposit.currency)] ?? 0,
@@ -94,16 +92,12 @@ export function TipHistoryCard() {
       deposit.signer.toString().slice(-4),
     timestamp: formatTimeAgo(deposit.createdAt),
     color: "purple" as const,
-    signature: deposit.signer.toString(),
   }));
 
   const handleTipClick = async (tip: any) => {
     try {
-      setLoadingSignature(tip.signature);
-      const signature = await fetchTransactionSignature(
-        connection,
-        tip.signature
-      );
+      setLoadingSignature(tip.id);
+      const signature = await fetchTransactionSignature(connection, tip.id);
       if (signature) {
         window.open(
           `https://solscan.io/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
@@ -160,7 +154,7 @@ export function TipHistoryCard() {
                 (≈${(normalizedAmount * tip.usdPrice).toFixed(2)})
               </span>
             </div>
-            {loadingSignature === tip.signature ? (
+            {loadingSignature === tip.id ? (
               <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
             ) : (
               <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />

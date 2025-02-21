@@ -36,11 +36,8 @@ export default function TipsPage() {
 
   const handleTipClick = async (tip: any) => {
     try {
-      setLoadingSignature(tip.signer.toString());
-      const signature = await fetchTransactionSignature(
-        connection,
-        tip.signer.toString()
-      );
+      setLoadingSignature(tip.id);
+      const signature = await fetchTransactionSignature(connection, tip.id);
       if (signature) {
         window.open(
           `https://solscan.io/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
@@ -116,7 +113,7 @@ export default function TipsPage() {
                         {getCurrencySymbol(tip.currency)}
                       </span>
                       <div className="relative w-4 h-4 shrink-0">
-                        {loadingSignature === tip.signer.toString() ? (
+                        {loadingSignature === tip.id ? (
                           <div className="absolute inset-0 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
                         ) : (
                           <ExternalLink className="absolute inset-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
