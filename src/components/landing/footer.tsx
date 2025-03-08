@@ -1,9 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import { Github } from "lucide-react";
+import { Github, ExternalLink } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
 import Link from "next/link";
 import { Logo } from "../ui/logo";
+
+const PROGRAM_ADDRESS = "JARSq9S9RgyynuAwcdWh2yEG6MbhfntWq7zjXjAo87uQ";
 
 const footerLinks = [
   {
@@ -26,6 +28,11 @@ const socialLinks = [
     label: "X",
     href: "https://x.com/soljar_xyz",
     icon: FaXTwitter,
+  },
+  {
+    label: "Solscan",
+    href: `https://solscan.io/account/${PROGRAM_ADDRESS}`,
+    icon: ExternalLink,
   },
 ];
 
@@ -51,6 +58,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1 }}
                   className="p-2 rounded-lg bg-accent-purple/10 hover:bg-accent-purple/20 transition-colors"
+                  title={social.label}
                 >
                   <social.icon className="w-5 h-5 text-accent-purple" />
                 </motion.a>
@@ -84,16 +92,31 @@ export function Footer() {
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} Soljar. All rights reserved.
             </p>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Built on</span>
-              <Link
-                href="https://solana.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-accent-purple hover:text-accent-purple/80 transition-colors"
-              >
-                Solana
-              </Link>
+            <div className="flex flex-col md:flex-row items-center gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Built on</span>
+                <Link
+                  href="https://solana.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-accent-purple hover:text-accent-purple/80 transition-colors"
+                >
+                  Solana
+                </Link>
+              </div>
+              <div className="flex items-center gap-2 md:ml-4">
+                <span className="text-sm text-muted-foreground">
+                  Program ID:
+                </span>
+                <Link
+                  href={`https://solscan.io/account/${PROGRAM_ADDRESS}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-accent-purple hover:text-accent-purple/80 transition-colors font-mono"
+                >
+                  {PROGRAM_ADDRESS}
+                </Link>
+              </div>
             </div>
           </div>
         </div>
