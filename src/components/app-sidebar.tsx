@@ -5,9 +5,11 @@ import {
   GiftIcon,
   ArrowDownToLine,
   Settings,
+  Banknote,
 } from "lucide-react";
 
 import { HeartIcon } from "@heroicons/react/24/outline";
+
 import {
   Sidebar,
   SidebarContent,
@@ -33,14 +35,19 @@ const menuItems = [
     href: "/supporters",
   },
   {
-    title: "Tips",
+    title: "Payments",
     icon: GiftIcon,
-    href: "/tips",
+    href: "/payments",
   },
   {
     title: "Withdrawls",
     icon: ArrowDownToLine,
     href: "/withdrawls",
+  },
+  {
+    title: "Off-Ramp",
+    icon: Banknote,
+    href: "/off-ramp",
   },
   {
     title: "More",

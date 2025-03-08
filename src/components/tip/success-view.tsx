@@ -43,10 +43,10 @@ export function SuccessView({ successData, onReset }: SuccessViewProps) {
           </svg>
         </motion.div>
         <h2 className="text-2xl font-bold text-foreground">
-          Tip Sent Successfully!
+          Payment Sent Successfully!
         </h2>
         <p className="text-muted-foreground">
-          Your tip has been sent and received
+          Your payment has been sent and received
         </p>
       </div>
 
@@ -73,7 +73,7 @@ export function SuccessView({ successData, onReset }: SuccessViewProps) {
           className="w-full h-16 text-lg font-medium bg-accent-purple hover:bg-accent-purple/90 transition-colors duration-200"
           onClick={onReset}
         >
-          Send Another Tip
+          Send Another Payment
         </Button>
       </motion.div>
     </motion.div>

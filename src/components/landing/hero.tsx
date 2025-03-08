@@ -39,18 +39,16 @@ export function Hero() {
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold break-words">
               <span className="bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
-                Crypto Tips &
+                Solana Payments,
               </span>
               <br />
               <span className="bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
-                Sponsorships,
+                Made Simple.
               </span>
-              <br />
-              Made Simple.
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground">
-              Accept SOL & USDC instantly. No signups. Just a link.
+              Accept crypto payments instantly. For businesses, creators, and everyone.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-8">
@@ -69,8 +67,7 @@ export function Hero() {
             <div className="flex items-center justify-center lg:justify-start gap-2 text-muted-foreground pt-4">
               <Sparkles className="w-4 h-4 text-accent-purple" />
               <span>
-                Generate a button or link, share it, and start receiving tips
-                today.
+                Generate payment links, invoices, or tip jars in seconds.
               </span>
             </div>
           </motion.div>

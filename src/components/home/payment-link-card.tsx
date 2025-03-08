@@ -6,16 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-interface TipLinkCardProps {
+interface PaymentLinkCardProps {
   username?: string;
 }
 
-export function TipLinkCard({ username }: TipLinkCardProps) {
+export function PaymentLinkCard({ username }: PaymentLinkCardProps) {
   const [copied, setCopied] = useState(false);
-  const tipLink = `https://soljar.xyz/${username}`;
+  const paymentLink = `https://soljar.xyz/${username}`;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(tipLink);
+    await navigator.clipboard.writeText(paymentLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -34,7 +34,7 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
             <div className="h-2 w-2 rounded-full bg-accent-purple animate-pulse" />
             <div className="absolute inset-0 h-2 w-2 rounded-full bg-accent-purple animate-ping opacity-25" />
           </div>
-          Your TipLink
+          Your Payment Link
         </CardTitle>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
@@ -62,12 +62,12 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
         <div className="relative group/input">
           <Input
             type="text"
-            value={tipLink}
+            value={paymentLink}
             readOnly
             className="font-mono text-sm pr-8 bg-accent-purple/5 border-accent-purple/20 focus:border-accent-purple focus:ring-accent-purple/20 overflow-x-auto"
           />
           <a
-            href={tipLink}
+            href={paymentLink}
             target="_blank"
             rel="noopener noreferrer"
             className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-accent-purple transition-colors bg-background/80 p-1"
@@ -77,7 +77,7 @@ export function TipLinkCard({ username }: TipLinkCardProps) {
         </div>
 
         <p className="text-sm text-muted-foreground min-h-[2.5rem]">
-          Share this link with your supporters to receive tips in SOL, USDC, or
+          Share this link to receive payments, tips, or donations in SOL, USDC, or
           USDT.
         </p>
       </CardContent>

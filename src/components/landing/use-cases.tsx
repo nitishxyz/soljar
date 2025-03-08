@@ -22,51 +22,51 @@ import { cn } from "@/lib/utils";
 const useCases = [
   {
     icon: Globe,
-    title: "Content Creators & Streamers",
+    title: "E-Commerce Businesses",
     description:
-      "Accept instant tips during streams and monetize your content seamlessly.",
+      "Process payments, invoices, and subscriptions with minimal fees.",
     features: [
-      "Supporter tracking",
-      "Multiple currency support",
-      "Customizable tip buttons",
-      "Stream overlay integration",
+      "Payment buttons & links",
+      "Invoicing system",
+      "Subscription management",
+      "Customer analytics",
     ],
-    gradient: "from-purple-500 to-pink-500",
+    gradient: "from-blue-500 to-cyan-500",
   },
   {
     icon: Code2,
-    title: "Open Source Developers",
+    title: "Software & SaaS Companies",
     description:
-      "Add sustainable funding to your GitHub repositories and track sponsors.",
+      "Accept recurring payments and manage customer subscriptions efficiently.",
     features: [
-      "README.md integration",
-      "Sponsor tracking",
-      "Automated distributions",
-      "Transparent funding",
+      "API integration",
+      "Subscription management",
+      "Payment analytics",
+      "Client portals",
     ],
     gradient: "from-github to-github/60",
   },
   {
     icon: Palette,
-    title: "Digital Artists & NFT Creators",
+    title: "Content Creators & Artists",
     description:
-      "Accept commissions and project funding in multiple currencies.",
+      "Monetize your work with tips, memberships, and content sales.",
     features: [
       "Customizable tip buttons",
-      "Project funding",
-      "Gallery tip buttons",
-      "Royalty tracking",
+      "Membership/subscription options",
+      "Content monetization",
+      "Fan engagement tools",
     ],
-    gradient: "from-indigo-500 to-blue-500",
+    gradient: "from-purple-500 to-pink-500",
   },
   {
     icon: Users,
-    title: "Community Projects",
-    description: "Manage community funding with complete transparency.",
+    title: "Community Projects & DAOs",
+    description: "Manage treasury funds and process member payments transparently.",
     features: [
       "Treasury management",
-      "Transparent funding",
-      "Contributor list",
+      "Transparent accounting",
+      "Funds tracking",
       "Community analytics",
     ],
     gradient: "from-red-500 to-orange-500",
@@ -74,26 +74,26 @@ const useCases = [
   {
     icon: Heart,
     title: "Non-Profit Organizations",
-    description: "Manage donations and track supporter contributions.",
+    description: "Accept donations and manage supporter contributions with low fees.",
     features: [
-      "Donation tracking",
-      "Supporter list",
-      "Easy fundraising",
-      "Customizable tip buttons",
+      "Donation processing",
+      "Supporter tracking",
+      "Fundraising campaigns",
+      "Financial reporting",
     ],
     gradient: "from-emerald-500 to-green-500",
   },
   {
     icon: GraduationCap,
-    title: "Web3 Educators",
-    description: "Process payments for courses and workshops with ease.",
+    title: "Freelancers & Professionals",
+    description: "Send invoices and receive payments from global clients instantly.",
     features: [
-      "Course payments",
-      "Workshop funding",
-      "Resource monetization",
-      "Student support",
+      "Professional invoicing",
+      "Payment tracking",
+      "International payments",
+      "Client management",
     ],
-    gradient: "from-cyan-500 to-blue-500",
+    gradient: "from-indigo-500 to-violet-500",
   },
 ];
 
@@ -192,7 +192,7 @@ export function UseCases() {
             Who Uses Soljar?
           </h2>
           <p className="text-xl text-muted-foreground">
-            Discover how different creators monetize their work
+            A payment solution for every type of business and creator
           </p>
         </motion.div>
 

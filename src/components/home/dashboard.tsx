@@ -1,10 +1,10 @@
 "use client";
 import { useSoljarUser } from "@/web3/hooks/use-soljar-user";
 import { BalanceCards } from "./balance-cards";
-import { TipLinkCard } from "./tip-link-card";
+import { PaymentLinkCard } from "./payment-link-card";
 import { TotalsCard } from "./totals-card";
 import { WithdrawalHistoryCard } from "./withdrawal-history-card";
-import { TipHistoryCard } from "./tip-history-card";
+import { PaymentHistoryCard } from "./payment-history-card";
 export default function Dashboard() {
   const { getUser } = useSoljarUser();
   const { data: user, isLoading } = getUser;
@@ -21,12 +21,12 @@ export default function Dashboard() {
         <BalanceCards />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TipLinkCard username={user?.username} />
+          <PaymentLinkCard username={user?.username} />
           <TotalsCard />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TipHistoryCard />
+          <PaymentHistoryCard />
           <WithdrawalHistoryCard />
         </div>
       </div>

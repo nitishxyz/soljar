@@ -14,7 +14,7 @@ import { useState } from "react";
 import { useTokenPrices } from "@/web3/hooks/use-token-prices";
 import { getCurrencySymbol } from "@/web3/utils";
 
-const mockRecentTips = [
+const mockRecentPayments = [
   {
     id: "mock1",
     amount: 0.5,
@@ -35,7 +35,7 @@ const mockRecentTips = [
   },
 ];
 
-export function TipHistoryCard() {
+export function PaymentHistoryCard() {
   const { data: recentDeposits, isLoading } = useRecentDeposits();
   const { data: prices } = useTokenPrices();
   const { connection } = useConnection();
@@ -94,10 +94,10 @@ export function TipHistoryCard() {
     color: "purple" as const,
   }));
 
-  const handleTipClick = async (tip: any) => {
+  const handlePaymentClick = async (payment: any) => {
     try {
-      setLoadingSignature(tip.id);
-      const signature = await fetchTransactionSignature(connection, tip.id);
+      setLoadingSignature(payment.id);
+      const signature = await fetchTransactionSignature(connection, payment.id);
       if (signature) {
         window.open(
           `https://solscan.io/tx/${signature}?cluster=${SOLANA_CLUSTER}`,
@@ -109,22 +109,22 @@ export function TipHistoryCard() {
     }
   };
 
-  const renderTipsList = (tips: typeof mockRecentTips, isBlurred = false) => {
-    return tips.map((tip, index) => {
-      const colors = getColorClasses(tip.color);
-      const currencySymbol = getCurrencySymbol(tip.currency);
+  const renderPaymentsList = (payments: typeof mockRecentPayments, isBlurred = false) => {
+    return payments.map((payment, index) => {
+      const colors = getColorClasses(payment.color);
+      const currencySymbol = getCurrencySymbol(payment.currency);
       const normalizedAmount = normalizeCurrencyAmount(
-        tip.amount,
+        payment.amount,
         currencySymbol
       );
 
       return (
         <motion.div
-          onClick={() => !isBlurred && handleTipClick(tip)}
+          onClick={() => !isBlurred && handlePaymentClick(payment)}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1 }}
-          key={tip.id}
+          key={payment.id}
           className={`group relative flex items-center justify-between py-3 px-4 rounded-lg ${
             colors.bg
           } transition-colors ${
@@ -138,8 +138,8 @@ export function TipHistoryCard() {
               <CurrencyIcon currency={currencySymbol} className="w-5 h-5" />
             </div>
             <div>
-              <p className="font-medium text-sm">{tip.from}</p>
-              <p className="text-xs text-muted-foreground">{tip.timestamp}</p>
+              <p className="font-medium text-sm">{payment.from}</p>
+              <p className="text-xs text-muted-foreground">{payment.timestamp}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -147,14 +147,14 @@ export function TipHistoryCard() {
               <p
                 className={`font-medium text-sm ${colors.text} ${colors.hover} transition-colors`}
               >
-                +{formatCurrencyAmount(tip.amount, currencySymbol)}{" "}
+                +{formatCurrencyAmount(payment.amount, currencySymbol)}{" "}
                 {currencySymbol}
               </p>
               <span className="text-xs text-muted-foreground">
-                (≈${(normalizedAmount * tip.usdPrice).toFixed(2)})
+                (≈${(normalizedAmount * payment.usdPrice).toFixed(2)})
               </span>
             </div>
-            {loadingSignature === tip.id ? (
+            {loadingSignature === payment.id ? (
               <div className="w-4 h-4 border-2 border-accent-purple border-t-transparent rounded-full animate-spin" />
             ) : (
               <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -173,7 +173,7 @@ export function TipHistoryCard() {
             <div className="h-2 w-2 rounded-full bg-accent-purple animate-pulse" />
             <div className="absolute inset-0 h-2 w-2 rounded-full bg-accent-purple animate-ping opacity-25" />
           </div>
-          Recent Tips
+          Recent Payments
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -198,19 +198,19 @@ export function TipHistoryCard() {
                   </div>
                 ))
             : formatDeposits && formatDeposits.length > 0
-            ? renderTipsList(formatDeposits)
+            ? renderPaymentsList(formatDeposits)
             : null}
         </div>
       </CardContent>
       {!formatDeposits || formatDeposits.length === 0 ? (
         <>
           <div className="absolute -inset-px top-20 left-0 right-0 -bottom-5 bg-gradient-to-t from-background via-background/95 to-background/50 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center gap-3">
-            <p className="text-sm text-muted-foreground">No tips yet</p>
+            <p className="text-sm text-muted-foreground">No payments yet</p>
             <p className="text-xs text-muted-foreground">
-              Share your link to start receiving tips!
+              Share your link to start receiving payments!
             </p>
           </div>
-          {renderTipsList(mockRecentTips, true)}
+          {renderPaymentsList(mockRecentPayments, true)}
         </>
       ) : null}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-purple/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10" />

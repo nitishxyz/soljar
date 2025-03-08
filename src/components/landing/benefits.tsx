@@ -18,14 +18,14 @@ const benefits = [
   },
   {
     icon: Wallet,
-    title: "Easy Withdrawals",
-    description: "Withdraw to your wallet anytime, instantly and securely.",
+    title: "Business Ready",
+    description: "From simple tips to invoicing, subscriptions and more.",
     gradient: "from-green-500 to-emerald-500",
   },
   {
     icon: BarChart3,
-    title: "Track Everything",
-    description: "See where your tips come from and analyze trends.",
+    title: "Powerful Analytics",
+    description: "Track payments, analyze trends, and understand your revenue.",
     gradient: "from-orange-500 to-amber-500",
   },
   {
@@ -37,7 +37,7 @@ const benefits = [
   {
     icon: Users,
     title: "For Everyone",
-    description: "Perfect for developers, creators, and organizations.",
+    description: "From individual creators to established businesses.",
     gradient: "from-pink-500 to-purple-500",
   },
 ];
@@ -84,7 +84,7 @@ export function Benefits() {
             </h2>
           </motion.div>
           <p className="text-xl text-muted-foreground">
-            Built for the web3 era, designed for simplicity
+            A complete payment solution built for the web3 era
           </p>
 
           {/* Decorative elements */}

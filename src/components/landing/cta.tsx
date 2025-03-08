@@ -23,12 +23,12 @@ export function CTA() {
             className="space-y-8"
           >
             <h2 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent pb-[5px]">
-              Start Accepting Tips Today
+              Start Accepting Payments Today
             </h2>
 
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Join the future of digital payments. Create your Soljar in seconds
-              and start receiving tips in SOL, USDC, and USDT.
+              Join the future of digital finance. Create your Soljar in seconds
+              and start processing payments in SOL, USDC, and USDT.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">

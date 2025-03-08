@@ -56,7 +56,7 @@ export function QRCodeSection({ url }: QRCodeSectionProps) {
             <Smartphone className="w-5 h-5 text-accent-purple" />
           </div>
         </div>
-        <h2 className="text-xl font-semibold">Tip via Phantom</h2>
+        <h2 className="text-xl font-semibold">Pay via Phantom</h2>
         <p className="text-sm text-muted-foreground">
           Scan with your phone&apos;s camera to open in Phantom wallet
         </p>

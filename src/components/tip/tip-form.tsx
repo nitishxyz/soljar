@@ -66,9 +66,9 @@ export function TipForm({
             <Coins className="w-10 h-10 text-accent-purple/80" />
           </div>
         </motion.div>
-        <h1 className="text-4xl font-bold text-foreground/90">Send a Tip</h1>
+        <h1 className="text-4xl font-bold text-foreground/90">Make a Payment</h1>
         <p className="text-muted-foreground text-lg">
-          Support {username ? username : "this creator"} with crypto
+          Pay {username ? username : "this recipient"} with crypto
         </p>
       </motion.div>
 
@@ -174,7 +174,7 @@ export function TipForm({
                     Sending...
                   </span>
                 ) : (
-                  "Send Tip"
+                  "Send Payment"
                 )}
               </Button>
             </motion.div>

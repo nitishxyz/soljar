@@ -6,12 +6,12 @@ const faqs = [
   {
     question: "How does Soljar work?",
     answer:
-      "Soljar creates an on-chain treasury linked to your Solana wallet. Share your unique tipping link anywhere, and supporters can send SOL, USDC, or USDT directly to your treasury. Access and withdraw your funds anytime with the wallet that created the treasury.",
+      "Soljar creates an on-chain treasury linked to your Solana wallet. Share your unique payment link anywhere, and customers or supporters can send SOL, USDC, or USDT directly to your treasury. Access and withdraw your funds anytime with the wallet that created the treasury.",
   },
   {
     question: "What are the fees?",
     answer:
-      "Soljar itself is free to use. Users only pay standard Solana network fees for creating the on-chain treasury account and transactions. These are one-time fees for account creation and minimal transaction fees (typically < $0.01).",
+      "Soljar itself is free to use. Users only pay standard Solana network fees for creating the on-chain treasury account and transactions. These are one-time fees for account creation and minimal transaction fees (typically < $0.01), far lower than traditional payment processors.",
   },
   {
     question: "Is it secure?",
@@ -24,14 +24,19 @@ const faqs = [
       "Soljar works with all major Solana wallets including Phantom, Solflare, and Glow. Connect your preferred wallet to create your treasury and manage your funds.",
   },
   {
-    question: "How do withdrawals work?",
+    question: "What can I use Soljar for?",
     answer:
-      "Your funds are stored in an on-chain treasury that only your wallet can access. You can withdraw your funds anytime to the wallet that created the treasury. The withdrawal process is instant and secure.",
+      "Soljar can be used for a wide range of payment scenarios: online businesses accepting crypto payments, freelancers receiving compensation, content creators collecting tips, non-profits processing donations, and more. Our flexible platform adapts to various payment needs.",
+  },
+  {
+    question: "Can I convert my crypto to USD?",
+    answer:
+      "We're working on an off-ramp feature that will allow direct conversion of USDC and USDT to your bank account. This feature is expected to launch in Q2 2025. This will make it even easier for businesses and creators to manage their earnings.",
   },
   {
     question: "What currencies are supported?",
     answer:
-      "Soljar supports SOL, USDC, and USDT. All funds are stored securely in your on-chain treasury until you withdraw them.",
+      "Soljar currently supports SOL, USDC, and USDT. All funds are stored securely in your on-chain treasury until you withdraw them. We're planning to add support for more SPL tokens in the future.",
   },
 ];
 
