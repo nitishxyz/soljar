@@ -44,9 +44,6 @@ export default function SecurityPolicyPage() {
             </p>
             <ul className="text-xl list-disc list-inside text-muted-foreground space-y-2 ml-4">
               <li>Smart contract code on the Solana blockchain</li>
-              <li>Frontend application code on GitHub</li>
-              <li>Technical documentation and specifications</li>
-              <li>Audit reports and security assessments</li>
             </ul>
           </section>
 
