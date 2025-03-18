@@ -21,3 +21,5 @@
 - Use Tailwind with clsx/cva for styling components
 - Prefer functional components with explicit type annotations
 - Solana PDAs should use helper functions in pda-helper.ts
+- Tests follow Jest patterns with describe/it blocks
+- Web3 interactions are abstracted into custom hooks with clear naming

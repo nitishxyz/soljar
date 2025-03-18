@@ -62,11 +62,10 @@ export default function OffRampPage() {
 
                 <div className="pt-4">
                   <p className="text-muted-foreground">
-                    We&apos;re working hard to bring you this feature. Sign up
-                    to be notified when it launches.
+                    We&apos;re working hard to bring you this feature.
                   </p>
 
-                  <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                  {/* <div className="mt-6 flex flex-col sm:flex-row gap-4">
                     <Button
                       className="bg-blue-500 hover:bg-blue-600 text-white"
                       onClick={() =>
@@ -83,7 +82,7 @@ export default function OffRampPage() {
                       <CalendarCheck className="mr-2 h-4 w-4" />
                       Get Updates
                     </Button>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </CardContent>

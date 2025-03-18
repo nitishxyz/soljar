@@ -1,15 +1,14 @@
 "use client";
 import { useSupporters } from "@/web3/hooks/use-supporters";
 import { useState, useEffect } from "react";
-import { formatDistance } from "date-fns";
+
 import {
   formatAddress,
   formatCurrencyAmount,
-  getCurrencyFromMint,
   getCurrencySymbol,
 } from "@/web3/utils";
 import { HeartIcon } from "@heroicons/react/24/solid";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { CurrencyIcon } from "@/components/ui/currency-icon";
 import { useInView } from "react-intersection-observer";
@@ -30,7 +29,7 @@ const getCurrencyColor = (currency: string) => {
   }
 };
 
-export default function SupportersPage() {
+export default function PeoplePage() {
   const [currentPage, setCurrentPage] = useState(0);
   const { data, isLoading, fetchNextPage, hasNextPage } =
     useSupporters(currentPage);
@@ -48,8 +47,8 @@ export default function SupportersPage() {
     return (
       <div className="container mx-auto p-8 space-y-4">
         <div className="flex items-center gap-3 text-2xl font-medium">
-          <HeartIcon className="w-7 h-7 text-accent-purple animate-pulse" />
-          Supporters
+          <Users className="w-7 h-7 text-accent-purple animate-pulse" />
+          People
         </div>
 
         {[1, 2, 3].map((i) => (
@@ -75,8 +74,8 @@ export default function SupportersPage() {
     <div className="container mx-auto p-8 px-4 sm:px-6">
       <div className="space-y-8">
         <div className="flex items-center gap-3 text-2xl font-medium">
-          <HeartIcon className="w-7 h-7 text-accent-purple" />
-          Supporters ({jar?.totalSupporters || 0})
+          <Users className="w-7 h-7 text-accent-purple" />
+          People ({jar?.totalSupporters || 0})
         </div>
 
         <div className="space-y-3">

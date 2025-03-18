@@ -6,9 +6,8 @@ import {
   ArrowDownToLine,
   Settings,
   Banknote,
+  Users,
 } from "lucide-react";
-
-import { HeartIcon } from "@heroicons/react/24/outline";
 
 import {
   Sidebar,
@@ -30,9 +29,9 @@ const menuItems = [
     href: "/dashboard",
   },
   {
-    title: "Supporters",
-    icon: HeartIcon,
-    href: "/supporters",
+    title: "People",
+    icon: Users,
+    href: "/people",
   },
   {
     title: "Payments",

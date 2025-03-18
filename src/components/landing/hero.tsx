@@ -39,16 +39,17 @@ export function Hero() {
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold break-words">
               <span className="bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
-                Solana Payments,
+                Seamless Crypto
               </span>
               <br />
               <span className="bg-gradient-to-r from-accent-purple to-blue-500 bg-clip-text text-transparent">
-                Made Simple.
+                Payments on Solana.
               </span>
             </h1>
 
             <p className="text-xl md:text-2xl text-muted-foreground">
-              Accept crypto payments instantly. For businesses, creators, and everyone.
+              Accept crypto payments instantly. For businesses, creators, and
+              everyone.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-8">
