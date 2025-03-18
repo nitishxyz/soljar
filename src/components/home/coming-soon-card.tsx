@@ -1,7 +1,7 @@
 "use client";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bank, ArrowRight } from "lucide-react";
+import { ArrowRight, Banknote } from "lucide-react";
 import { motion } from "framer-motion";
 
 export function ComingSoonCard() {
@@ -20,7 +20,10 @@ export function ComingSoonCard() {
             <div className="absolute inset-0 h-2 w-2 rounded-full bg-blue-500 animate-ping opacity-25" />
           </div>
           <span>Coming Soon</span>
-          <Badge variant="outline" className="ml-2 bg-blue-500/10 text-blue-500 border-blue-500/20">
+          <Badge
+            variant="outline"
+            className="ml-2 bg-blue-500/10 text-blue-500 border-blue-500/20"
+          >
             Q2 2025
           </Badge>
         </CardTitle>
@@ -29,17 +32,18 @@ export function ComingSoonCard() {
       <CardContent className="flex flex-col space-y-4 relative p-6">
         <div className="flex items-start space-x-4">
           <div className="bg-blue-500/10 p-3 rounded-lg">
-            <Bank className="w-6 h-6 text-blue-500" />
+            <Banknote className="w-6 h-6 text-blue-500" />
           </div>
           <div className="space-y-2">
             <h3 className="text-lg font-medium">USD Off-Ramps</h3>
             <p className="text-sm text-muted-foreground">
-              Direct USDC/USDT to bank account transfers. Convert your stablecoins to USD and withdraw directly to your bank account.
+              Direct USDC/USDT to bank account transfers. Convert your
+              stablecoins to USD and withdraw directly to your bank account.
             </p>
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           className="absolute bottom-6 right-6 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           whileHover={{ x: 5 }}
           transition={{ duration: 0.2 }}
