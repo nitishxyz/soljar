@@ -40,7 +40,6 @@ export function SolanaProvider({ children }: { children: ReactNode }) {
 
   const wallets = useMemo(
     () => [
-      new UnsafeBurnerWalletAdapter(),
       new LedgerWalletAdapter(),
       new SafePalWalletAdapter(),
       new TrezorWalletAdapter(),
