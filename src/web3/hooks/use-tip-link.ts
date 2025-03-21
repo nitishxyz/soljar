@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { findTipLinkPDA } from "../pda-helper";
+import { findJarPDA, findTipLinkPDA } from "../pda-helper";
 import { BN } from "@coral-xyz/anchor";
 import { getTokenProgramId } from "../utils";
 import { useSoljarBase } from "../soljar-base-provider";
@@ -82,6 +82,9 @@ export function useTipLink(tipLinkId: string) {
             mint
           );
 
+          const jarPda = findJarPDA(program, publicKey);
+          const jar = await program.account.jar.fetch(jarPda);
+
           return await program.methods
             .createSplDeposit(tipLinkId, referrer, memo, bnAmount)
             .accounts({
@@ -91,7 +94,7 @@ export function useTipLink(tipLinkId: string) {
             })
             .postInstructions([
               await program.methods
-                .addSupporter(tipLinkId, mint, bnAmount)
+                .addSupporter(tipLinkId, mint, jar.depositCount, bnAmount)
                 .accounts({})
                 .instruction(),
             ])
