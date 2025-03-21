@@ -82,8 +82,12 @@ export function useTipLink(tipLinkId: string) {
             mint
           );
 
-          const jarPda = findJarPDA(program, publicKey);
-          const jar = await program.account.jar.fetch(jarPda);
+          const tipLinkPDA = findTipLinkPDA(program, tipLinkId);
+          const tipLink = await program.account.tipLink.fetch(tipLinkPDA);
+
+          const jar = await program.account.jar.fetch(tipLink.jar);
+
+          console.log("jar", jar.depositCount);
 
           return await program.methods
             .createSplDeposit(tipLinkId, referrer, memo, bnAmount)
