@@ -25,6 +25,7 @@ jobs:
       - name: Install solana tools
         run: |
           curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | bash
+          source ~/.bashrc
 
       - name: Generate new keypair
         run: solana-keygen new --no-bip39-passphrase
