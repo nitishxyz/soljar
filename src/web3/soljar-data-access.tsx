@@ -42,10 +42,7 @@ export function SoljarProvider({ children }: { children: ReactNode }) {
     () => getSoljarProgramId(cluster.network as Cluster),
     [cluster]
   );
-  const program = useMemo(
-    () => getSoljarProgram(provider, programId),
-    [provider, programId]
-  );
+  const program = useMemo(() => getSoljarProgram(provider), [provider]);
 
   useEffect(() => {
     const initializeUser = async () => {

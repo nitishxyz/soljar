@@ -1,8 +1,7 @@
 import { Metadata } from "next";
-import { Program } from "@coral-xyz/anchor";
 import { findTipLinkPDA } from "@/web3/pda-helper";
-import { getSoljarProgram, getSoljarProgramId } from "@project/anchor";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { getSoljarProgram } from "@project/anchor";
+import { Connection } from "@solana/web3.js";
 
 export async function generateMetadata({
   params,
@@ -13,8 +12,7 @@ export async function generateMetadata({
 
   // Initialize connection and program
   const connection = new Connection("https://api.mainnet-beta.solana.com");
-  const programId = getSoljarProgramId("mainnet" as any);
-  const program = getSoljarProgram({ connection } as any, programId);
+  const program = getSoljarProgram({ connection } as any);
 
   try {
     // Check if tip link exists
