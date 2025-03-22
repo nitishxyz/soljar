@@ -96,12 +96,6 @@ export function useTipLink(tipLinkId: string) {
               sourceTokenAccount,
               tokenProgram: tokenProgramId,
             })
-            .postInstructions([
-              await program.methods
-                .addSupporter(tipLinkId, mint, jar.depositCount, bnAmount)
-                .accounts({})
-                .instruction(),
-            ])
             .rpc();
         }
       } catch (error: any) {
