@@ -22,10 +22,21 @@ jobs:
       - name: Install dependencies
         run: npm install --frozen-lockfile
 
+      - name: Cache Solana CLI tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/solana/
+            ~/.local/share/solana/
+          key: solana-cli-${{ runner.os }}-build-2.x.x
+
       - name: Install solana tools
         run: |
           curl --proto '=https' --tlsv1.2 -sSfL https://solana-install.solana.workers.dev | bash
-          source ~/.bashrc
+
+      - name: Update PATH
+        run: echo "/home/runner/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+        shell: bash
 
       - name: Generate new keypair
         run: solana-keygen new --no-bip39-passphrase
