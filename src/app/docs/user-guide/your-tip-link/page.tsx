@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Your Tip Link - Soljar User Guide",
+  description:
+    "Learn about your unique Soljar tip link (e.g., soljar.xyz/username), how to find it, and share it to receive tips.",
+};
+
 export default function YourTipLinkPage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">

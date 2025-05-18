@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Withdrawing Funds - Soljar User Guide",
+  description:
+    "Learn how to withdraw your accumulated SOL and SPL token tips from your Soljar account to your connected Solana wallet.",
+};
+
 export default function WithdrawingFundsPage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">

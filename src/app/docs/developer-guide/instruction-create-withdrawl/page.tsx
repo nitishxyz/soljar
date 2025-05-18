@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instruction: createWithdrawl (SOL) - Soljar Developer Guide",
+  description:
+    "Technical documentation for the createWithdrawl instruction. Learn how to withdraw SOL from a Soljar account.",
+};
+
 export default function InstructionCreateWithdrawlPage() {
   const createWithdrawlAccounts = `
 #[derive(Accounts)]

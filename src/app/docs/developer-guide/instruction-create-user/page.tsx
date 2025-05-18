@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instruction: createUser - Soljar Developer Guide",
+  description:
+    "Technical documentation for the createUser instruction in the Soljar program. Learn how new user accounts are initialized.",
+};
+
 export default function InstructionCreateUserPage() {
   const createUserAccounts = `
 #[derive(Accounts)]

@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Developer Guide Introduction - Soljar Docs",
+  description:
+    "Introduction to the Soljar Developer Guide. Understand the program architecture, instructions, and how to integrate with Soljar.",
+};
+
 export default function DeveloperGuidePage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">

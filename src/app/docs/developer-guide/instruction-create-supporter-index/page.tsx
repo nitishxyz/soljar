@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instruction: createSupporterIndex - Soljar Developer Guide",
+  description:
+    "Technical documentation for the createSupporterIndex instruction. Learn how supporter index accounts are initialized for pagination.",
+};
+
 export default function InstructionCreateSupporterIndexPage() {
   const createSupporterIndexAccounts = `
 #[derive(Accounts)]

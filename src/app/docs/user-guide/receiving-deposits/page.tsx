@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Receiving Deposits - Soljar User Guide",
+  description:
+    "Understand how you receive SOL and SPL token deposits to your Soljar account and view your transaction history.",
+};
+
 export default function ReceivingDepositsPage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">

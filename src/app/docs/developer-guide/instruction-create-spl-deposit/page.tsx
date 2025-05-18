@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instruction: createSplDeposit (SPL) - Soljar Developer Guide",
+  description:
+    "Technical documentation for the createSplDeposit instruction. Learn how to deposit SPL tokens to a Soljar account.",
+};
+
 export default function InstructionCreateSplDepositPage() {
   const createSplDepositAccounts = `
 #[derive(Accounts)]

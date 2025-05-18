@@ -1,4 +1,11 @@
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Docs Overview - Soljar",
+  description:
+    "Find all documentation for Soljar, including user guides and developer resources.",
+};
 
 export default function DocsPage() {
   return (

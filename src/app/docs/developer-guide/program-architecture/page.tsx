@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Program Architecture - Soljar Developer Guide",
+  description:
+    "Explore the on-chain program architecture of Soljar, including key accounts, PDAs, and how instructions interact.",
+};
+
 export default function ProgramArchitecturePage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">

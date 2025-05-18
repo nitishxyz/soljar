@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Instruction: withdrawSplTokens (SPL) - Soljar Developer Guide",
+  description:
+    "Technical documentation for the withdrawSplTokens instruction. Learn how to withdraw SPL tokens from a Soljar account.",
+};
+
 export default function InstructionWithdrawSplTokensPage() {
   const withdrawSplTokensAccounts = `
 #[derive(Accounts)]

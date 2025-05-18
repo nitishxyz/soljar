@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "User Guide Introduction - Soljar Docs",
+  description:
+    "Introduction to the Soljar User Guide. Learn how to get started with Soljar, the Solana tip jar platform.",
+};
+
 export default function UserGuidePage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">
