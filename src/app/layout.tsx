@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     site: "@soljar_xyz",
-    creator: "@nitishxyz",
+    creator: "@thebatdev",
     title: "Soljar - Web3 Tipping & Sponsorship Platform",
     description:
       "Connect your Solana wallet and start accepting SOL, USDC, and other tokens instantly. The easiest way to receive crypto tips and sponsorships on Solana.",

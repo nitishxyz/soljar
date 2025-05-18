@@ -144,9 +144,7 @@ export function TipView({ tipLinkId, isDemo = false }: TipViewProps) {
               <div className={`hidden lg:block lg:w-[320px]`}>
                 <QRCodeSection
                   url={
-                    isDemo
-                      ? "https://soljar.xyz/nitishxyz"
-                      : window.location.href
+                    isDemo ? "https://soljar.xyz/soljar" : window.location.href
                   }
                 />
               </div>
@@ -187,9 +185,7 @@ export function TipView({ tipLinkId, isDemo = false }: TipViewProps) {
                 <div className="h-px w-full bg-accent-purple/10 mb-6" />
                 <QRCodeSection
                   url={
-                    isDemo
-                      ? "https://soljar.xyz/nitishxyz"
-                      : window.location.href
+                    isDemo ? "https://soljar.xyz/soljar" : window.location.href
                   }
                 />
               </div>
