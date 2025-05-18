@@ -1,3 +1,11 @@
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account Setup - Soljar Docs",
+  description:
+    "Learn how to set up your Soljar account by connecting your Solana wallet and choosing a unique username to receive tips.",
+};
+
 export default function AccountSetupPage() {
   return (
     <article className="prose prose-zinc dark:prose-invert max-w-none">
