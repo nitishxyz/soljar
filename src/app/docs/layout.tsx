@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Import usePathname
+import { Logo } from "@/components/ui/logo";
 
 // Define a type for navigation items
 interface NavItem {
@@ -140,11 +141,7 @@ export default function DocsLayout({
         {/* Sidebar Header (Logo/Title) */}
         <div className="flex h-16 items-center border-b border-border px-4 sm:px-6">
           <Link href="/" className="flex items-center space-x-2">
-            <img
-              src="/meta/logo_wordmark.svg"
-              alt="Soljar Logo"
-              className="h-8 w-auto"
-            />{" "}
+            <Logo />
             {/* Logo added */}
           </Link>
         </div>
@@ -166,11 +163,7 @@ export default function DocsLayout({
         {/* Mobile Header */}
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
           <Link href="/" className="flex items-center space-x-2">
-            <img
-              src="/meta/logo_wordmark.svg"
-              alt="Soljar Logo"
-              className="h-7 w-auto"
-            />{" "}
+            <Logo />
             {/* Logo added to mobile header */}
           </Link>
           {/* Mobile Nav Toggle Button - Functionality to be added */}
