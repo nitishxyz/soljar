@@ -22,6 +22,10 @@ const footerLinks = [
       { label: "Security Policy", href: "/security-policy" },
     ],
   },
+  {
+    title: "Resources",
+    links: [{ label: "Documentation", href: "/docs" }],
+  },
 ];
 
 const socialLinks = [
