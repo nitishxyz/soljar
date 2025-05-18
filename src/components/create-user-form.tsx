@@ -113,22 +113,24 @@ export function CreateUserForm() {
 
   return (
     <>
-      <div className="relative">
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-500">
-          soljar.xyz/
+      <div className="space-y-2 mb-4">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-500">
+            soljar.xyz/
+          </div>
+          <Input
+            placeholder="username"
+            className="pl-24 text-lg h-12"
+            value={username}
+            onChange={(e) => setUsername(e.target.value.toLowerCase())}
+          />
         </div>
-        <Input
-          placeholder="username"
-          className="pl-24 text-lg h-12"
-          value={username}
-          onChange={(e) => setUsername(e.target.value.toLowerCase())}
-        />
         {validationError && (
-          <p className="mt-1 text-sm text-red-500">{validationError}</p>
+          <p className="text-sm text-red-500 pl-1">{validationError}</p>
         )}
       </div>
       <Button
-        className="w-full mt-4 h-12 text-lg"
+        className="w-full h-12 text-lg"
         onClick={handleCreateUser}
         disabled={isChecking || !username || !!validationError}
       >
