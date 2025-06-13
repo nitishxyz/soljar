@@ -180,7 +180,7 @@ const roadmapData = {
       },
     ],
   },
-};
+} as const;
 
 export function Roadmap() {
   return (

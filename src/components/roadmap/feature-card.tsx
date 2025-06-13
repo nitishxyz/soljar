@@ -4,11 +4,11 @@ import { CheckCircle2, Clock, Zap, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
 type RoadmapItem = {
-  title: string;
-  description: string;
-  icon: any;
-  status: "completed" | "in-progress" | "planned" | "future";
-  details?: string[];
+  readonly title: string;
+  readonly description: string;
+  readonly icon: any;
+  readonly status: "completed" | "in-progress" | "planned" | "future";
+  readonly details?: readonly string[];
 };
 
 type FeatureCardProps = {
