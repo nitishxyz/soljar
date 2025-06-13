@@ -7,11 +7,16 @@ import { Logo } from "../ui/logo";
 import { useState } from "react";
 
 const PROGRAM_ADDRESS = "JARSq9S9RgyynuAwcdWh2yEG6MbhfntWq7zjXjAo87uQ";
-// Shortened version for mobile display
+const CONTRACT_ADDRESS = "2AFzzF7EKDygNJ2VthGWNSftCthpSkTmqSg9p8bFsend";
+// Shortened versions for mobile display
 const SHORT_PROGRAM_ADDRESS = `${PROGRAM_ADDRESS.slice(
   0,
   6
 )}...${PROGRAM_ADDRESS.slice(-6)}`;
+const SHORT_CONTRACT_ADDRESS = `${CONTRACT_ADDRESS.slice(
+  0,
+  6
+)}...${CONTRACT_ADDRESS.slice(-6)}`;
 
 const footerLinks = [
   {
@@ -47,12 +52,19 @@ const socialLinks = [
 ];
 
 export function Footer() {
-  const [copied, setCopied] = useState(false);
+  const [copiedProgram, setCopiedProgram] = useState(false);
+  const [copiedContract, setCopiedContract] = useState(false);
 
-  const copyToClipboard = () => {
+  const copyProgramToClipboard = () => {
     navigator.clipboard.writeText(PROGRAM_ADDRESS);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedProgram(true);
+    setTimeout(() => setCopiedProgram(false), 2000);
+  };
+
+  const copyContractToClipboard = () => {
+    navigator.clipboard.writeText(CONTRACT_ADDRESS);
+    setCopiedContract(true);
+    setTimeout(() => setCopiedContract(false), 2000);
   };
 
   return (
@@ -111,8 +123,8 @@ export function Footer() {
               © {new Date().getFullYear()} Soljar. All rights reserved.
             </p>
 
-            {/* Program ID section - optimized for mobile */}
-            <div className="flex flex-col items-center md:items-end gap-2 w-full md:w-auto">
+            {/* Addresses section - optimized for mobile */}
+            <div className="flex flex-col items-center md:items-end gap-3 w-full md:w-auto">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Built on</span>
                 <Link
@@ -125,6 +137,7 @@ export function Footer() {
                 </Link>
               </div>
 
+              {/* Program ID */}
               <div className="flex items-center gap-2 flex-wrap justify-center md:justify-end">
                 <span className="text-sm text-muted-foreground">
                   Program ID:
@@ -142,14 +155,44 @@ export function Footer() {
                     </span>
                   </Link>
                   <button
-                    onClick={copyToClipboard}
+                    onClick={copyProgramToClipboard}
                     className="ml-2 p-1 rounded-md hover:bg-accent-purple/10 transition-colors"
                     title="Copy program address"
                   >
                     <Copy className="w-3.5 h-3.5 text-accent-purple" />
                   </button>
                 </div>
-                {copied && (
+                {copiedProgram && (
+                  <span className="text-xs text-green-500 animate-fade-out">
+                    Copied!
+                  </span>
+                )}
+              </div>
+
+              {/* Contract Address */}
+              <div className="flex items-center gap-2 flex-wrap justify-center md:justify-end">
+                <span className="text-sm text-muted-foreground">Contract:</span>
+                <div className="flex items-center">
+                  <Link
+                    href={`https://solscan.io/account/${CONTRACT_ADDRESS}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-accent-purple hover:text-accent-purple/80 transition-colors font-mono"
+                  >
+                    <span className="hidden md:inline">{CONTRACT_ADDRESS}</span>
+                    <span className="inline md:hidden">
+                      {SHORT_CONTRACT_ADDRESS}
+                    </span>
+                  </Link>
+                  <button
+                    onClick={copyContractToClipboard}
+                    className="ml-2 p-1 rounded-md hover:bg-accent-purple/10 transition-colors"
+                    title="Copy contract address"
+                  >
+                    <Copy className="w-3.5 h-3.5 text-accent-purple" />
+                  </button>
+                </div>
+                {copiedContract && (
                   <span className="text-xs text-green-500 animate-fade-out">
                     Copied!
                   </span>

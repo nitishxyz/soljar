@@ -64,6 +64,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
     "/", // Home page
     "/start", // Onboarding page (from docs)
+    "/roadmap", // Product roadmap page
     // Add other top-level static pages if any
   ];
 
