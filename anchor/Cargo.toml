@@ -1,8 +1,16 @@
 [workspace]
-members = [
-    "programs/*"
-]
+members = ["programs/*"]
 resolver = "2"
+
+[workspace.lints.rust.unexpected_cfgs]
+level = "warn"
+check-cfg = [
+    'cfg(target_os, values("solana"))',
+    'cfg(feature, values("frozen-abi", "no-entrypoint", "custom-heap", "custom-panic"))',
+]
+
+[workspace.metadata.cli]
+solana = "2.2.0"
 
 [profile.release]
 overflow-checks = true

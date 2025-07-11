@@ -82,4 +82,28 @@ pub enum SoljarError {
     SupporterAccountNotInitialized,
     #[msg("Deposit already has a signer")]
     DepositAlreadyHasSigner,
+    
+    // V2 Specific Errors
+    #[msg("Jar count overflow")]
+    JarCountOverflow,
+    #[msg("Withdrawal count overflow")]
+    WithdrawalCountOverflow,
+    #[msg("Invoice count overflow")]
+    InvoiceCountOverflow,
+    #[msg("Jar ID already exists")]
+    JarIdAlreadyExists,
+    #[msg("Invoice already paid")]
+    InvoiceAlreadyPaid,
+    #[msg("Invoice expired")]
+    InvoiceExpired,
+    #[msg("Invalid jar ID format")]
+    InvalidJarIdFormat,
+    #[msg("Jar not found")]
+    JarNotFound,
+    #[msg("Invoice not found")]
+    InvoiceNotFound,
+    #[msg("Jar is inactive")]
+    JarInactive,
+    #[msg("Currency not supported by vault")]
+    CurrencyNotSupported,
 }

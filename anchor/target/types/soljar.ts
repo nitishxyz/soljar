@@ -690,6 +690,77 @@ export type Soljar = {
       ]
     },
     {
+      "name": "executeTransaction",
+      "discriminator": [
+        231,
+        173,
+        49,
+        91,
+        235,
+        24,
+        68,
+        19
+      ],
+      "accounts": [
+        {
+          "name": "account",
+          "docs": [
+            "The account that will sign the transaction"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account.owner",
+                "account": "accountV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "docs": [
+            "The owner of the account (must be signer)"
+          ],
+          "signer": true
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System program for CPI calls"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "instructions",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "transactionInstruction"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "withdrawSplTokens",
       "discriminator": [
         30,
@@ -873,6 +944,19 @@ export type Soljar = {
     }
   ],
   "accounts": [
+    {
+      "name": "accountV2",
+      "discriminator": [
+        81,
+        219,
+        132,
+        77,
+        5,
+        44,
+        24,
+        91
+      ]
+    },
     {
       "name": "deposit",
       "discriminator": [
@@ -1178,9 +1262,100 @@ export type Soljar = {
       "code": 6039,
       "name": "depositAlreadyHasSigner",
       "msg": "Deposit already has a signer"
+    },
+    {
+      "code": 6040,
+      "name": "jarCountOverflow",
+      "msg": "Jar count overflow"
+    },
+    {
+      "code": 6041,
+      "name": "withdrawalCountOverflow",
+      "msg": "Withdrawal count overflow"
+    },
+    {
+      "code": 6042,
+      "name": "invoiceCountOverflow",
+      "msg": "Invoice count overflow"
+    },
+    {
+      "code": 6043,
+      "name": "jarIdAlreadyExists",
+      "msg": "Jar ID already exists"
+    },
+    {
+      "code": 6044,
+      "name": "invoiceAlreadyPaid",
+      "msg": "Invoice already paid"
+    },
+    {
+      "code": 6045,
+      "name": "invoiceExpired",
+      "msg": "Invoice expired"
+    },
+    {
+      "code": 6046,
+      "name": "invalidJarIdFormat",
+      "msg": "Invalid jar ID format"
+    },
+    {
+      "code": 6047,
+      "name": "jarNotFound",
+      "msg": "Jar not found"
+    },
+    {
+      "code": 6048,
+      "name": "invoiceNotFound",
+      "msg": "Invoice not found"
+    },
+    {
+      "code": 6049,
+      "name": "jarInactive",
+      "msg": "Jar is inactive"
+    },
+    {
+      "code": 6050,
+      "name": "currencyNotSupported",
+      "msg": "Currency not supported by vault"
     }
   ],
   "types": [
+    {
+      "name": "accountV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "defaultJarNumber",
+            "type": "u8"
+          },
+          {
+            "name": "defaultCurrencyId",
+            "type": "u8"
+          },
+          {
+            "name": "jarCount",
+            "type": "u32"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "updatedAt",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "deposit",
       "type": {
@@ -1340,6 +1515,32 @@ export type Soljar = {
           {
             "name": "jar",
             "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "transactionInstruction",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "programId",
+            "type": "pubkey"
+          },
+          {
+            "name": "data",
+            "type": "bytes"
+          },
+          {
+            "name": "accountIndices",
+            "type": "bytes"
+          },
+          {
+            "name": "accountWriteFlags",
+            "type": {
+              "vec": "bool"
+            }
           }
         ]
       }

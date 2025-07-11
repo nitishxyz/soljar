@@ -684,6 +684,77 @@
       ]
     },
     {
+      "name": "execute_transaction",
+      "discriminator": [
+        231,
+        173,
+        49,
+        91,
+        235,
+        24,
+        68,
+        19
+      ],
+      "accounts": [
+        {
+          "name": "account",
+          "docs": [
+            "The account that will sign the transaction"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account.owner",
+                "account": "AccountV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "docs": [
+            "The owner of the account (must be signer)"
+          ],
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System program for CPI calls"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "instructions",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "TransactionInstruction"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "withdraw_spl_tokens",
       "discriminator": [
         30,
@@ -867,6 +938,19 @@
     }
   ],
   "accounts": [
+    {
+      "name": "AccountV2",
+      "discriminator": [
+        81,
+        219,
+        132,
+        77,
+        5,
+        44,
+        24,
+        91
+      ]
+    },
     {
       "name": "Deposit",
       "discriminator": [
@@ -1172,9 +1256,100 @@
       "code": 6039,
       "name": "DepositAlreadyHasSigner",
       "msg": "Deposit already has a signer"
+    },
+    {
+      "code": 6040,
+      "name": "JarCountOverflow",
+      "msg": "Jar count overflow"
+    },
+    {
+      "code": 6041,
+      "name": "WithdrawalCountOverflow",
+      "msg": "Withdrawal count overflow"
+    },
+    {
+      "code": 6042,
+      "name": "InvoiceCountOverflow",
+      "msg": "Invoice count overflow"
+    },
+    {
+      "code": 6043,
+      "name": "JarIdAlreadyExists",
+      "msg": "Jar ID already exists"
+    },
+    {
+      "code": 6044,
+      "name": "InvoiceAlreadyPaid",
+      "msg": "Invoice already paid"
+    },
+    {
+      "code": 6045,
+      "name": "InvoiceExpired",
+      "msg": "Invoice expired"
+    },
+    {
+      "code": 6046,
+      "name": "InvalidJarIdFormat",
+      "msg": "Invalid jar ID format"
+    },
+    {
+      "code": 6047,
+      "name": "JarNotFound",
+      "msg": "Jar not found"
+    },
+    {
+      "code": 6048,
+      "name": "InvoiceNotFound",
+      "msg": "Invoice not found"
+    },
+    {
+      "code": 6049,
+      "name": "JarInactive",
+      "msg": "Jar is inactive"
+    },
+    {
+      "code": 6050,
+      "name": "CurrencyNotSupported",
+      "msg": "Currency not supported by vault"
     }
   ],
   "types": [
+    {
+      "name": "AccountV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "default_jar_number",
+            "type": "u8"
+          },
+          {
+            "name": "default_currency_id",
+            "type": "u8"
+          },
+          {
+            "name": "jar_count",
+            "type": "u32"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
     {
       "name": "Deposit",
       "type": {
@@ -1334,6 +1509,32 @@
           {
             "name": "jar",
             "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransactionInstruction",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "program_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "data",
+            "type": "bytes"
+          },
+          {
+            "name": "account_indices",
+            "type": "bytes"
+          },
+          {
+            "name": "account_write_flags",
+            "type": {
+              "vec": "bool"
+            }
           }
         ]
       }

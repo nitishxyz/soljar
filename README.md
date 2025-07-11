@@ -1,4 +1,61 @@
-# soljar
+# SolJar - Comprehensive Crypto Payment Platform
+
+SolJar is a versatile payment platform built on Solana that makes accepting cryptocurrency payments as simple as sharing a link. What started as a tipping platform has evolved into a complete suite of payment solutions for individuals, creators, and businesses.
+
+## Why SolJar?
+
+Traditional payment processors charge 3-5% fees, take days to settle, and exclude millions globally. Crypto payments should be instant and cheap, but most solutions are too complex for everyday use.
+
+SolJar solves this by leveraging Solana's speed and low fees to create an intuitive payment experience that works for everyone.
+
+## Core Features
+
+### For Everyone
+- **Personal Payment Links**: Create custom payment links (soljar.xyz/username) for receiving funds
+- **QR Code Payments**: Generate QR codes for in-person transactions
+- **Multi-Currency Support**: Accept SOL, USDC, USDT with more tokens coming
+- **Near-Instant Settlement**: Transactions complete in seconds, not days
+- **Minimal Fees**: Under $0.01 transaction costs vs 3-5% traditional processors
+
+### For Creators
+- **Tip Jars**: Customizable tip collection with supporter recognition
+- **Content Monetization**: Gate content behind one-time or recurring payments
+- **Subscription Management**: Create recurring payment options for premium content
+- **Supporter Analytics**: Track and acknowledge your community with leaderboards and badges
+
+### For Businesses
+- **Payment Processing**: Accept crypto payments for products and services
+- **Professional Invoicing**: Create and track invoices with payment links
+- **E-commerce Integration**: Embeddable payment buttons and checkout experiences
+- **Business Analytics**: Track payment flows, customer insights, and revenue streams
+- **Batch Payments**: Process multiple payments efficiently
+- **Split Payments**: Automatically divide payments between multiple recipients
+
+## Technical Architecture
+
+- **Backend**: Rust-based Solana program using Anchor framework for secure, trustless transactions
+- **Frontend**: Next.js React application with Tailwind CSS and Framer Motion animations
+- **Authentication**: Non-custodial wallet-based authentication (users control their keys)
+- **State Management**: React Query for efficient data fetching and caching
+- **Security**: All transactions signed through connected wallets with no private key exposure
+
+## Use Cases
+
+- **E-commerce stores** processing crypto payments with minimal fees
+- **Content creators** monetizing with tip jars and subscriptions
+- **Freelancers** sending invoices globally without banking restrictions
+- **Friends** splitting bills and expenses
+- **Event organizers** collecting payments and donations
+- **Software companies** accepting recurring SaaS payments
+
+## Roadmap
+
+### Coming Soon
+- USD off-ramps (direct USDC/USDT to bank account transfers)
+- Mobile application for on-the-go payments
+- Advanced escrow services
+- Cross-chain bridge integration
+- Enterprise-grade compliance features
 
 ## Getting Started
 

@@ -1,3 +1,4 @@
+// V1 State Modules
 pub mod user;
 pub mod jar;
 pub mod deposit;
@@ -8,8 +9,7 @@ pub mod treasury;
 pub mod supporter;
 pub mod supporter_index;
 
-
-
+// V1 Exports
 pub use user::*;
 pub use jar::*;
 pub use deposit::*;
