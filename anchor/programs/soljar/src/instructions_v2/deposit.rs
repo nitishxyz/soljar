@@ -148,7 +148,7 @@ pub struct Deposit<'info> {
     /// Vault's USDC token account (created during setup)
     #[account(
         mut,
-        associated_token::mint = mint,
+        associated_token::mint = CurrencyId::Usdc.to_mint(),
         associated_token::authority = vault
     )]
     pub vault_token_account: Account<'info, TokenAccount>,

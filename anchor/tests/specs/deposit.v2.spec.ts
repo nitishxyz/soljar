@@ -95,61 +95,40 @@ describe("V2 Deposit Tests", () => {
       );
     });
 
-    // it("should fail V2 deposit with zero amount", async () => {
-    //   const { program, creator } = getTestContext();
-    //   const jarId = "v2testjar";
-    //   const amount = new BN(0); // Zero amount
+    it("should fail V2 deposit with zero amount", async () => {
+      const { program, creator, creatorUsdcAccount } = getTestContext();
+      const jarId = "satoshi_v2";
+      const amount = new BN(0); // Zero amount
 
-    //   const depositorTokenAccount = getAssociatedTokenAddressSync(
-    //     USDC_MINT,
-    //     creator.publicKey,
-    //   );
+      await expect(
+        program.methods
+          .deposit(jarId, amount, null)
+          .accounts({
+            depositor: creator.publicKey,
+            mint: USDC_MINT,
+            depositorTokenAccount: creatorUsdcAccount,
+          })
+          .signers([creator])
+          .rpc()
+      ).rejects.toThrow("InvalidAmount");
+    });
 
-    //   await expect(
-    //     program.methods
-    //       .deposit(jarId, amount, null)
-    //       .accounts({
-    //         depositor: creator.publicKey,
-    //         mint: USDC_MINT,
-    //         depositorTokenAccount: depositorTokenAccount,
-    //       })
-    //       .signers([creator])
-    //       .rpc(),
-    //   ).rejects.toThrow("InvalidAmount");
-    // });
+    it("should fail V2 deposit with non-USDC mint", async () => {
+      const { program, creator, mint, creatorTokenAccount } = getTestContext();
+      const jarId = "satoshi_v2";
+      const amount = new BN(1_000_000);
 
-    // it("should fail V2 deposit with non-USDC mint", async () => {
-    //   const { program, creator, mint } = getTestContext();
-    //   const jarId = "v2testjar";
-    //   const amount = new BN(1_000_000);
-
-    //   const depositorTokenAccount = getAssociatedTokenAddressSync(
-    //     mint,
-    //     creator.publicKey,
-    //   );
-
-    //   await expect(
-    //     program.methods
-    //       .deposit(jarId, amount, null)
-    //       .accounts({
-    //         depositor: creator.publicKey,
-    //         mint: mint, // Wrong mint (not USDC)
-    //         depositorTokenAccount: depositorTokenAccount,
-    //       })
-    //       .signers([creator])
-    //       .rpc(),
-    //   ).rejects.toThrow("InvalidCurrencyMint");
-    // });
-
-    // it("should fail V2 deposit to non-existent jar", async () => {
-    //   const { program } = getTestContext();
-    //   const jarId = "nonexistentjar";
-
-    //   const jarByIdPDA = findJarByIdV2PDA(jarId, program.programId);
-
-    //   await expect(
-    //     program.account.jarByIdV2.fetch(jarByIdPDA),
-    //   ).rejects.toThrow(); // Should fail because jar doesn't exist
-    // });
+      await expect(
+        program.methods
+          .deposit(jarId, amount, null)
+          .accounts({
+            depositor: creator.publicKey,
+            mint: mint, // Wrong mint (not USDC)
+            depositorTokenAccount: creatorTokenAccount,
+          })
+          .signers([creator])
+          .rpc()
+      ).rejects.toThrow("InvalidCurrencyMint");
+    });
   });
 });
