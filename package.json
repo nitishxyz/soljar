@@ -7,6 +7,8 @@
     "anchor-build": "cd anchor && anchor build",
     "anchor-localnet": "cd anchor && anchor localnet",
     "anchor-test": "cd anchor && anchor test",
+    "anchor-test-v2": "cd anchor && bun test tests-v2/soljar-v2.test.ts",
+    "test-v2": "bun test anchor/tests-v2/soljar-v2.test.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -63,6 +65,7 @@
   },
   "devDependencies": {
     "@types/bn.js": "^5.1.0",
+    "@types/bun": "^1.2.18",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.23",
     "@types/react": "^18",

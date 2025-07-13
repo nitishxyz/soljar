@@ -705,7 +705,7 @@ export type Soljar = {
         {
           "name": "account",
           "docs": [
-            "The account that will sign the transaction"
+            "The account that owns the vault"
           ],
           "pda": {
             "seeds": [
@@ -728,6 +728,34 @@ export type Soljar = {
                 "kind": "account",
                 "path": "account.owner",
                 "account": "accountV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "docs": [
+            "The vault PDA that acts as the smart wallet signer for transactions"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
               }
             ]
           }

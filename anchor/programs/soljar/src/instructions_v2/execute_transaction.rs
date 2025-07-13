@@ -38,6 +38,7 @@ pub fn execute_transaction<'info>(
     }
     
     let account = &ctx.accounts.account;
+    let vault = &ctx.accounts.vault;
     let remaining_accounts = ctx.remaining_accounts;
 
     // Basic validation of account count
@@ -55,12 +56,12 @@ pub fn execute_transaction<'info>(
         }
     }
 
-    // Create PDA seeds for signing
-    let owner_bytes = account.owner.to_bytes();
+    // Create vault PDA seeds for signing (vault acts as smart wallet)
+    let account_key_bytes = account.key().to_bytes();
     let signer_seeds: &[&[&[u8]]] = &[&[
-        b"account_v2",
-        &owner_bytes,
-        &[account.bump],
+        b"vault_v2",
+        &account_key_bytes,
+        &[ctx.bumps.vault],
     ]];
 
     // Execute each instruction sequentially
@@ -107,7 +108,7 @@ pub fn execute_transaction<'info>(
         
         for (i, &account_index) in tx_instruction.account_indices.iter().enumerate() {
             let acc = &remaining_accounts[account_index as usize];
-            let is_signer = acc.is_signer || acc.key() == account.key();
+            let is_signer = acc.is_signer || acc.key() == vault.key();
             let is_writable = tx_instruction.account_write_flags[i];
             
             // Validate that account is actually writable if needed
@@ -133,7 +134,7 @@ pub fn execute_transaction<'info>(
         let account_infos: Vec<AccountInfo<'info>> = tx_instruction.account_indices.iter()
             .map(|&index| {
                 let mut acc = remaining_accounts[index as usize].clone();
-                if acc.key() == account.key() {
+                if acc.key() == vault.key() {
                     acc.is_signer = true;
                 }
                 acc
@@ -155,12 +156,21 @@ pub fn execute_transaction<'info>(
 
 #[derive(Accounts)]
 pub struct ExecuteTransaction<'info> {
-    /// The account that will sign the transaction
+    /// The account that owns the vault
     #[account(
         seeds = [b"account_v2", account.owner.as_ref()],
         bump = account.bump
     )]
     pub account: Account<'info, AccountV2>,
+    
+    /// The vault PDA that acts as the smart wallet signer for transactions
+    /// CHECK: This is a PDA used as a vault for signing transactions
+    #[account(
+        mut,
+        seeds = [b"vault_v2", account.key().as_ref()],
+        bump
+    )]
+    pub vault: SystemAccount<'info>,
     
     /// The owner of the account (must be signer)
     #[account(constraint = owner.key() == account.owner)]
