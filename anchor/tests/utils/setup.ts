@@ -14,6 +14,7 @@ export interface TestContext {
   creator: Keypair;
   newMember: Keypair;
   mint: PublicKey;
+  usdcMint: PublicKey;
   creatorTokenAccount: PublicKey;
   newMemberTokenAccount: PublicKey;
   members: Keypair[];

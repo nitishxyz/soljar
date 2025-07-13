@@ -3,12 +3,9 @@ import { Program } from "@coral-xyz/anchor";
 import {
   Keypair,
   PublicKey,
-  sendAndConfirmTransaction,
-  SystemProgram,
-  Transaction,
 } from "@solana/web3.js";
 import { Soljar } from "../../target/types/soljar";
-import { BanksClient, ProgramTestContext, startAnchor } from "solana-bankrun";
+import { startAnchor } from "solana-bankrun";
 import { BankrunProvider } from "anchor-bankrun";
 import IDL from "../../target/idl/soljar.json";
 import { SYSTEM_PROGRAM_ID } from "@coral-xyz/anchor/dist/cjs/native/system";
@@ -24,7 +21,40 @@ import {
   getAssociatedTokenAddressSync,
   TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
-import NodeWallet from "@coral-xyz/anchor/dist/cjs/nodewallet";
+
+import { USDC_MINT, fetchUsdcMintFromMainnet } from "./usdc-cache";
+
+async function setupUsdcTokenAccount(owner: PublicKey, balance: bigint = BigInt(1_000_000_000_000)) {
+  const ata = getAssociatedTokenAddressSync(USDC_MINT, owner, true);
+  const tokenAccData = Buffer.alloc(ACCOUNT_SIZE);
+  
+  AccountLayout.encode(
+    {
+      mint: USDC_MINT,
+      owner,
+      amount: balance,
+      delegateOption: 0,
+      delegate: PublicKey.default,
+      delegatedAmount: BigInt(0),
+      state: 1,
+      isNativeOption: 0,
+      isNative: BigInt(0),
+      closeAuthorityOption: 0,
+      closeAuthority: PublicKey.default,
+    },
+    tokenAccData,
+  );
+
+  return {
+    address: ata,
+    info: {
+      lamports: 1_000_000_000,
+      data: tokenAccData,
+      owner: TOKEN_PROGRAM_ID,
+      executable: false,
+    },
+  };
+}
 
 export async function initializeTestContext(): Promise<TestContext> {
   const newMember = new anchor.web3.Keypair();
@@ -38,31 +68,14 @@ export async function initializeTestContext(): Promise<TestContext> {
 
   const usdcOwner = new anchor.web3.Keypair();
 
-  const usdcMint = new PublicKey(
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
-  );
-  const ata = getAssociatedTokenAddressSync(
-    usdcMint,
-    usdcOwner.publicKey,
-    true
-  );
-  const usdcToOwn = BigInt(1_000_000_000_000);
-  const tokenAccData = Buffer.alloc(ACCOUNT_SIZE);
-  AccountLayout.encode(
-    {
-      mint: usdcMint,
-      owner: usdcOwner.publicKey,
-      amount: usdcToOwn,
-      delegateOption: 0,
-      delegate: PublicKey.default,
-      delegatedAmount: BigInt(0),
-      state: 1,
-      isNativeOption: 0,
-      isNative: BigInt(0),
-      closeAuthorityOption: 0,
-      closeAuthority: PublicKey.default,
-    },
-    tokenAccData
+  // Fetch real USDC mint data from mainnet
+  const usdcMintAccount = await fetchUsdcMintFromMainnet();
+  
+  // Setup USDC token accounts for creator, newMember, and all members
+  const creatorUsdcAccount = await setupUsdcTokenAccount(usdcOwner.publicKey);
+  const newMemberUsdcAccount = await setupUsdcTokenAccount(newMember.publicKey);
+  const memberUsdcAccounts = await Promise.all(
+    members.map(member => setupUsdcTokenAccount(member.publicKey))
   );
 
   const context = await startAnchor(
@@ -74,15 +87,12 @@ export async function initializeTestContext(): Promise<TestContext> {
       },
     ],
     [
-      {
-        address: ata,
-        info: {
-          lamports: 1_000_000_000,
-          data: tokenAccData,
-          owner: TOKEN_PROGRAM_ID,
-          executable: false,
-        },
-      },
+      // Add real USDC mint account
+      usdcMintAccount,
+      // Add USDC token accounts with balances
+      creatorUsdcAccount,
+      newMemberUsdcAccount,
+      ...memberUsdcAccounts,
       {
         address: usdcOwner.publicKey,
         info: {
@@ -121,31 +131,8 @@ export async function initializeTestContext(): Promise<TestContext> {
   const banksClient = context.banksClient;
   const creator = provider.wallet.payer;
 
-  const usdcToSend = usdcToOwn - BigInt(1000000000);
-  // send USDC to creator
-  const transaction = new Transaction();
-  transaction.add(
-    SystemProgram.transfer({
-      fromPubkey: usdcOwner.publicKey,
-      toPubkey: creator.publicKey,
-      lamports: usdcToSend,
-    })
-  );
-
-  // Get recent blockhash from the banks client
-  const blockhash = await banksClient.getLatestBlockhash();
-  transaction.recentBlockhash = blockhash?.[0];
-  transaction.feePayer = usdcOwner.publicKey;
-
-  console.log("transaction", transaction);
-
-  // Sign and send the transaction
-  transaction.sign(usdcOwner);
-  await banksClient.sendTransaction(transaction);
-
-  // fetch USDC balance of creator
-  const creatorUsdcBalance = await banksClient.getBalance(creator.publicKey);
-  console.log("creatorUsdcBalance", creatorUsdcBalance);
+  // Use real USDC mint (already added to context)
+  const usdcMint = USDC_MINT;
 
   // @ts-expect-error - Type mismatch in spl-token-bankrun and solana banks client
   mint = await createMint(banksClient, creator, creator.publicKey, null, 2);
@@ -221,6 +208,7 @@ export async function initializeTestContext(): Promise<TestContext> {
     newMember,
     creator,
     mint,
+    usdcMint,
     creatorTokenAccount,
     newMemberTokenAccount,
     members,

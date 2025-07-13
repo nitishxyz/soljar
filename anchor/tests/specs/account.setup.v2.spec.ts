@@ -12,7 +12,7 @@ import {
 
 describe("V2 - Enhanced Account Creation", () => {
   it("should create a new v2 account with setup_account instruction", async () => {
-    const { program, creator } = getTestContext();
+    const { program, creator, usdcMint } = getTestContext();
     const jarId = "satoshi_v2";
 
     // Calculate V2 PDAs
@@ -22,10 +22,11 @@ describe("V2 - Enhanced Account Creation", () => {
 
     // Create v2 account using setup_account instruction
     await program.methods
-      .setupAccount(jarId, 1) // jarId, default_currency_id (1 = USDC)
+      .setupAccount(jarId, null) // jarId, default_currency_id (null = default to USDC)
       .accounts({
         owner: creator.publicKey,
         paymaster: creator.publicKey,
+        usdcMint: usdcMint,
       })
       .signers([creator])
       .rpc();
@@ -55,7 +56,7 @@ describe("V2 - Enhanced Account Creation", () => {
   });
 
   it("should handle v2 jar id validation with enhanced rules", async () => {
-    const { context, newMember } = getTestContext();
+    const { context, newMember, usdcMint } = getTestContext();
 
     const newMemberProvider = new BankrunProvider(context);
     newMemberProvider.wallet = new NodeWallet(newMember);
@@ -67,19 +68,14 @@ describe("V2 - Enhanced Account Creation", () => {
 
     const jarId = "v2_jar_with_very_long_name_exceeds"; // 33 chars, exceeds 32 limit
 
-    // Calculate V2 PDAs
-    const accountV2PDA = findAccountV2PDA(
-      newMember.publicKey,
-      newMemberProgram.programId,
-    );
-
     // Test v2 specific jar id rules - longer jar ids should fail
     await expect(
       newMemberProgram.methods
-        .setupAccount(jarId, 1)
+        .setupAccount(jarId, null)
         .accounts({
           owner: newMember.publicKey,
           paymaster: newMember.publicKey,
+          usdcMint: usdcMint,
         })
         .signers([newMember])
         .rpc(),
@@ -89,7 +85,7 @@ describe("V2 - Enhanced Account Creation", () => {
   });
 
   it("should support v2 enhanced account features and metadata", async () => {
-    const { context, members } = getTestContext();
+    const { context, members, usdcMint } = getTestContext();
     const member = members[0];
     const jarId = "v2_enhanced_jar";
 
@@ -109,12 +105,13 @@ describe("V2 - Enhanced Account Creation", () => {
 
     const jarV2PDA = findJarV2PDA(accountV2PDA, 0, memberProgram.programId);
 
-    // Create account with v2 features
+    // Create account with v2 features (only USDC supported now)
     await memberProgram.methods
-      .setupAccount(jarId, 2) // Using USDT as default currency
+      .setupAccount(jarId, null) // Only USDC supported
       .accounts({
         owner: member.publicKey,
         paymaster: member.publicKey,
+        usdcMint: usdcMint,
       })
       .signers([member])
       .rpc();
@@ -123,7 +120,7 @@ describe("V2 - Enhanced Account Creation", () => {
 
     // Verify v2 enhanced features
     expect(accountV2.owner.equals(member.publicKey)).toBe(true);
-    expect(accountV2.defaultCurrencyId).toBe(2); // USDT
+    expect(accountV2.defaultCurrencyId).toBe(1); // USDC (only supported currency)
     expect(accountV2.jarCount).toBe(1);
 
     // Verify jar has proper v2 initialization
@@ -135,7 +132,7 @@ describe("V2 - Enhanced Account Creation", () => {
   });
 
   it("should handle v2 concurrent account creation scenarios", async () => {
-    const { context, members } = getTestContext();
+    const { context, members, usdcMint } = getTestContext();
     const member1 = members[1];
     const member2 = members[2];
     const baseJarId = "concurrent_v2_jar";
@@ -162,10 +159,11 @@ describe("V2 - Enhanced Account Creation", () => {
     );
 
     await member1Program.methods
-      .setupAccount(jarId1, 1)
+      .setupAccount(jarId1, null)
       .accounts({
         owner: member1.publicKey,
         paymaster: member1.publicKey,
+        usdcMint: usdcMint,
       })
       .signers([member1])
       .rpc();
@@ -178,10 +176,11 @@ describe("V2 - Enhanced Account Creation", () => {
     );
 
     await member2Program.methods
-      .setupAccount(jarId2, 1)
+      .setupAccount(jarId2, null)
       .accounts({
         owner: member2.publicKey,
         paymaster: member2.publicKey,
+        usdcMint: usdcMint,
       })
       .signers([member2])
       .rpc();
@@ -197,10 +196,11 @@ describe("V2 - Enhanced Account Creation", () => {
 
     await expect(
       member2Program.methods
-        .setupAccount(jarId1, 1) // Try to use member1's jar id
+        .setupAccount(jarId1, null) // Try to use member1's jar id
         .accounts({
           owner: member2.publicKey,
           paymaster: member2.publicKey,
+          usdcMint: usdcMint,
         })
         .signers([member2])
         .rpc(),

@@ -7,6 +7,7 @@ use instructions::create_supporter_index::*;
 use instructions::create_user::*;
 use instructions::create_withdrawl::*;
 use instructions::withdraw_spl_tokens::*;
+use instructions_v2::deposit::*;
 use instructions_v2::execute_transaction::*;
 use instructions_v2::setup_account::*;
 declare_id!("JARSq9S9RgyynuAwcdWh2yEG6MbhfntWq7zjXjAo87uQ");
@@ -101,5 +102,14 @@ pub mod soljar {
         default_currency_id: Option<u8>,
     ) -> Result<()> {
         instructions_v2::setup_account::setup_account(ctx, jar_id, default_currency_id)
+    }
+
+    pub fn deposit(
+        ctx: Context<Deposit>,
+        jar_id: String,
+        amount: u64,
+        invoice_id: Option<u32>,
+    ) -> Result<()> {
+        instructions_v2::deposit::deposit(ctx, jar_id, amount, invoice_id)
     }
 }

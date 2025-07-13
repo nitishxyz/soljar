@@ -1,8 +1,10 @@
 use anchor_lang::prelude::*;
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::{Mint, Token, TokenAccount};
 
 use crate::currency::CurrencyId;
 use crate::error::SoljarError;
-use crate::state_v2::{AccountV2, JarV2, JarByIdV2};
+use crate::state_v2::{AccountV2, JarByIdV2, JarV2};
 
 pub fn setup_account(
     ctx: Context<SetupAccount>,
@@ -11,19 +13,21 @@ pub fn setup_account(
 ) -> Result<()> {
     // Validate jar_id
     JarByIdV2::validate_jar_id(&jar_id)?;
-    
+
     let clock = Clock::get()?;
     let owner = ctx.accounts.owner.key();
-    
-    // Set default currency (default to USDC if not provided)
-    let currency_id = default_currency_id.unwrap_or(CurrencyId::Usdc as u8);
-    
-    // Validate currency ID is supported
-    let currency = CurrencyId::from(currency_id);
-    require!(
-        matches!(currency, CurrencyId::Sol | CurrencyId::Usdc | CurrencyId::Usdt),
-        SoljarError::InvalidAmount
-    );
+
+    // Only USDC is supported for now
+    let currency_id = CurrencyId::Usdc as u8;
+    let currency = CurrencyId::Usdc;
+
+    // Validate that provided currency is USDC (if any was provided)
+    if let Some(provided_currency_id) = default_currency_id {
+        require!(
+            provided_currency_id == currency_id,
+            SoljarError::CurrencyNotSupported
+        );
+    }
 
     // Initialize AccountV2
     let account = &mut ctx.accounts.account;
@@ -54,6 +58,7 @@ pub fn setup_account(
     msg!("Account setup completed for owner: {}", owner);
     msg!("First jar created with ID: {}", jar_id);
     msg!("Default currency: {}", currency.symbol());
+    msg!("USDC vault token account created");
 
     Ok(())
 }
@@ -112,6 +117,25 @@ pub struct SetupAccount<'info> {
     )]
     pub vault: SystemAccount<'info>,
 
+    /// USDC mint account
+    #[account(
+        constraint = usdc_mint.key() == CurrencyId::Usdc.to_mint() @ SoljarError::InvalidCurrencyMint
+    )]
+    pub usdc_mint: Account<'info, Mint>,
+
+    /// Vault's USDC token account (created during setup)
+    #[account(
+        init,
+        payer = paymaster,
+        associated_token::mint = usdc_mint,
+        associated_token::authority = vault
+    )]
+    pub vault_usdc_account: Account<'info, TokenAccount>,
+
     /// System program for account creation
     pub system_program: Program<'info, System>,
+    /// Token program for token operations
+    pub token_program: Program<'info, Token>,
+    /// Associated token program for creating token accounts
+    pub associated_token_program: Program<'info, AssociatedToken>,
 }

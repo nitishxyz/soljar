@@ -690,6 +690,328 @@ export type Soljar = {
       ]
     },
     {
+      "name": "deposit",
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ],
+      "accounts": [
+        {
+          "name": "depositor",
+          "docs": [
+            "The depositor making the payment"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "jarById",
+          "docs": [
+            "The jar_by_id mapping to find the jar"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  98,
+                  121,
+                  95,
+                  105,
+                  100,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "jarId"
+              }
+            ]
+          }
+        },
+        {
+          "name": "account",
+          "docs": [
+            "The account that owns the jar"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "jar_by_id.account",
+                "account": "jarByIdV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "jar",
+          "docs": [
+            "The jar receiving the deposit"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "jar_by_id.account",
+                "account": "jarByIdV2"
+              },
+              {
+                "kind": "account",
+                "path": "jar_by_id.jar_number",
+                "account": "jarByIdV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "deposit",
+          "docs": [
+            "The deposit record"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  112,
+                  111,
+                  115,
+                  105,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "jar"
+              },
+              {
+                "kind": "account",
+                "path": "jar.deposit_count",
+                "account": "jarV2"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "docs": [
+            "The vault for holding funds"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mint",
+          "docs": [
+            "USDC mint account"
+          ]
+        },
+        {
+          "name": "depositorTokenAccount",
+          "docs": [
+            "Depositor's USDC token account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "vaultTokenAccount",
+          "docs": [
+            "Vault's USDC token account (created during setup)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System program"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Token program"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Associated token program"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "jarId",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "invoiceId",
+          "type": {
+            "option": "u32"
+          }
+        }
+      ]
+    },
+    {
       "name": "executeTransaction",
       "discriminator": [
         231,
@@ -940,11 +1262,124 @@ export type Soljar = {
           }
         },
         {
+          "name": "usdcMint",
+          "docs": [
+            "USDC mint account"
+          ]
+        },
+        {
+          "name": "vaultUsdcAccount",
+          "docs": [
+            "Vault's USDC token account (created during setup)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "usdcMint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
           "name": "systemProgram",
           "docs": [
             "System program for account creation"
           ],
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "Token program for token operations"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "docs": [
+            "Associated token program for creating token accounts"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
       "args": [
@@ -1168,6 +1603,19 @@ export type Soljar = {
         173,
         21,
         227
+      ]
+    },
+    {
+      "name": "depositV2",
+      "discriminator": [
+        113,
+        199,
+        120,
+        239,
+        17,
+        187,
+        28,
+        196
       ]
     },
     {
@@ -1610,6 +2058,40 @@ export type Soljar = {
           {
             "name": "memo",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "depositV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "depositor",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "currencyMint",
+            "type": "pubkey"
+          },
+          {
+            "name": "invoiceId",
+            "type": {
+              "option": "u32"
+            }
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
