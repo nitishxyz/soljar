@@ -1,9 +1,6 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import {
-  Keypair,
-  PublicKey,
-} from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import { Soljar } from "../../target/types/soljar";
 import { startAnchor } from "solana-bankrun";
 import { BankrunProvider } from "anchor-bankrun";
@@ -24,10 +21,13 @@ import {
 
 import { USDC_MINT, fetchUsdcMintFromMainnet } from "./usdc-cache";
 
-async function setupUsdcTokenAccount(owner: PublicKey, balance: bigint = BigInt(1_000_000_000_000)) {
+async function setupUsdcTokenAccount(
+  owner: PublicKey,
+  balance: bigint = BigInt(1_000_000_000_000)
+) {
   const ata = getAssociatedTokenAddressSync(USDC_MINT, owner, true);
   const tokenAccData = Buffer.alloc(ACCOUNT_SIZE);
-  
+
   AccountLayout.encode(
     {
       mint: USDC_MINT,
@@ -42,7 +42,7 @@ async function setupUsdcTokenAccount(owner: PublicKey, balance: bigint = BigInt(
       closeAuthorityOption: 0,
       closeAuthority: PublicKey.default,
     },
-    tokenAccData,
+    tokenAccData
   );
 
   return {
@@ -66,17 +66,19 @@ export async function initializeTestContext(): Promise<TestContext> {
   let memberTokenAccounts: PublicKey[] = [];
   let mint: PublicKey;
 
-  const usdcOwner = new anchor.web3.Keypair();
+  const creator = new anchor.web3.Keypair();
 
   // Fetch real USDC mint data from mainnet
   const usdcMintAccount = await fetchUsdcMintFromMainnet();
-  
+
   // Setup USDC token accounts for creator, newMember, and all members
-  const creatorUsdcAccount = await setupUsdcTokenAccount(usdcOwner.publicKey);
+  const creatorUsdcAccount = await setupUsdcTokenAccount(creator.publicKey);
   const newMemberUsdcAccount = await setupUsdcTokenAccount(newMember.publicKey);
   const memberUsdcAccounts = await Promise.all(
-    members.map(member => setupUsdcTokenAccount(member.publicKey))
+    members.map((member) => setupUsdcTokenAccount(member.publicKey))
   );
+
+  const creatorWallet = new anchor.Wallet(creator);
 
   const context = await startAnchor(
     "",
@@ -94,9 +96,9 @@ export async function initializeTestContext(): Promise<TestContext> {
       newMemberUsdcAccount,
       ...memberUsdcAccounts,
       {
-        address: usdcOwner.publicKey,
+        address: creator.publicKey,
         info: {
-          lamports: 10_000_000_000,
+          lamports: 1000_000_000_000,
           data: Buffer.alloc(0),
           executable: false,
           owner: SYSTEM_PROGRAM_ID,
@@ -124,12 +126,12 @@ export async function initializeTestContext(): Promise<TestContext> {
     ]
   );
 
-  const provider = new BankrunProvider(context);
+  const provider = new BankrunProvider(context, creatorWallet);
   anchor.setProvider(provider);
 
   const program = new Program<Soljar>(IDL as Soljar, provider);
   const banksClient = context.banksClient;
-  const creator = provider.wallet.payer;
+  // const creator = provider.wallet.payer;
 
   // Use real USDC mint (already added to context)
   const usdcMint = USDC_MINT;
@@ -213,5 +215,7 @@ export async function initializeTestContext(): Promise<TestContext> {
     newMemberTokenAccount,
     members,
     memberTokenAccounts,
+    creatorUsdcAccount: creatorUsdcAccount.address,
+    newMemberUsdcAccount: newMemberUsdcAccount.address,
   };
 }

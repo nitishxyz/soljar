@@ -87,15 +87,13 @@ pub struct Deposit<'info> {
     /// The jar_by_id mapping to find the jar
     #[account(
         seeds = [JarByIdV2::SEED_PREFIX, jar_id.as_bytes()],
-        bump
+        bump,
+        has_one = account
     )]
     pub jar_by_id: Account<'info, JarByIdV2>,
 
     /// The account that owns the jar
-    #[account(
-        seeds = [AccountV2::SEED_PREFIX, jar_by_id.account.as_ref()],
-        bump
-    )]
+    #[account()]
     pub account: Account<'info, AccountV2>,
 
     /// The jar receiving the deposit

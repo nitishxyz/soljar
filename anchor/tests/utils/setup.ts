@@ -19,6 +19,9 @@ export interface TestContext {
   newMemberTokenAccount: PublicKey;
   members: Keypair[];
   memberTokenAccounts: PublicKey[];
+
+  creatorUsdcAccount: PublicKey;
+  newMemberUsdcAccount: PublicKey;
 }
 
 let globalTestContext: TestContext;

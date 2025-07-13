@@ -15,4 +15,5 @@ describe("Soljar Program Tests", () => {
   // require("./specs/stress.spec");
 
   require("./specs/account.setup.v2.spec");
+  require("./specs/deposit.v2.spec");
 });

@@ -746,30 +746,9 @@ export type Soljar = {
           "docs": [
             "The account that owns the jar"
           ],
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  97,
-                  99,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                  95,
-                  118,
-                  50
-                ]
-              },
-              {
-                "kind": "account",
-                "path": "jar_by_id.account",
-                "account": "jarByIdV2"
-              }
-            ]
-          }
+          "relations": [
+            "jarById"
+          ]
         },
         {
           "name": "jar",

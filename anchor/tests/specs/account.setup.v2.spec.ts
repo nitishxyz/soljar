@@ -8,7 +8,10 @@ import {
   findAccountV2PDA,
   findJarByIdV2PDA,
   findJarV2PDA,
+  findVaultV2PDA,
 } from "../utils/helpers_v2";
+import { getAssociatedTokenAddressSync } from "@solana/spl-token";
+import { getAccount } from "spl-token-bankrun";
 
 describe("V2 - Enhanced Account Creation", () => {
   it("should create a new v2 account with setup_account instruction", async () => {
@@ -52,7 +55,32 @@ describe("V2 - Enhanced Account Creation", () => {
     expect(jarByIdV2.account.equals(accountV2PDA)).toBe(true);
     expect(jarByIdV2.jarNumber).toBe(0);
 
+    // Verify the USDC token account for the vault
+    const { banksClient } = getTestContext();
+    const vaultV2PDA = findVaultV2PDA(accountV2PDA, program.programId);
+    const vaultUsdcTokenAccount = getAssociatedTokenAddressSync(
+      usdcMint,
+      vaultV2PDA,
+      true, // allowOwnerOffCurve
+    );
+
+    // Fetch and verify the vault's USDC token account was created
+    const vaultTokenAccountInfo = await getAccount(
+      // @ts-ignore
+      banksClient,
+      vaultUsdcTokenAccount,
+    );
+
+    // Verify the token account properties
+    expect(vaultTokenAccountInfo.mint.toString()).toBe(usdcMint.toString());
+    expect(vaultTokenAccountInfo.owner.toString()).toBe(vaultV2PDA.toString());
+    expect(vaultTokenAccountInfo.amount.toString()).toBe("0"); // Should start with 0 balance
+
     console.log("V2 Account created successfully with jar ID:", jarId);
+    console.log(
+      "Vault USDC token account verified at:",
+      vaultUsdcTokenAccount.toString(),
+    );
   });
 
   it("should handle v2 jar id validation with enhanced rules", async () => {
@@ -205,5 +233,7 @@ describe("V2 - Enhanced Account Creation", () => {
         .signers([member2])
         .rpc(),
     ).rejects.toThrow(); // Should fail because jar_by_id PDA already exists
+
+    console.log("=====SETUP ACCOUNTS TESTS DONE======");
   });
 });
