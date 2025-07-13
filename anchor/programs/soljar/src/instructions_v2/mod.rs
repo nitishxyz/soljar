@@ -1,2 +1,6 @@
 // V2 Instructions
-// execute_transaction moved to main instructions module for Anchor compatibility
+pub mod execute_transaction;
+pub mod setup_account;
+
+pub use execute_transaction::*;
+pub use setup_account::*;

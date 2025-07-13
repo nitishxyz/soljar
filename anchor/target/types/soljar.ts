@@ -761,6 +761,178 @@ export type Soljar = {
       ]
     },
     {
+      "name": "setupAccount",
+      "discriminator": [
+        252,
+        180,
+        230,
+        167,
+        170,
+        17,
+        238,
+        56
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "docs": [
+            "The owner/creator of the account (must be signer)"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "paymaster",
+          "docs": [
+            "The paymaster for account creation (can be same as owner)"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "account",
+          "docs": [
+            "The main AccountV2 PDA"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "jar",
+          "docs": [
+            "The first jar (jar number 0)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "jarById",
+          "docs": [
+            "The jar_by_id mapping for global uniqueness"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  98,
+                  121,
+                  95,
+                  105,
+                  100,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "jarId"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "docs": [
+            "The vault PDA for holding funds (derived but not initialized as an account)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System program for account creation"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "jarId",
+          "type": "string"
+        },
+        {
+          "name": "defaultCurrencyId",
+          "type": {
+            "option": "u8"
+          }
+        }
+      ]
+    },
+    {
       "name": "withdrawSplTokens",
       "discriminator": [
         30,
@@ -981,6 +1153,32 @@ export type Soljar = {
         216,
         114,
         137
+      ]
+    },
+    {
+      "name": "jarByIdV2",
+      "discriminator": [
+        73,
+        52,
+        33,
+        54,
+        103,
+        70,
+        116,
+        77
+      ]
+    },
+    {
+      "name": "jarV2",
+      "discriminator": [
+        28,
+        84,
+        83,
+        157,
+        82,
+        124,
+        249,
+        63
       ]
     },
     {
@@ -1424,6 +1622,62 @@ export type Soljar = {
           {
             "name": "id",
             "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "jarByIdV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "jarIdTaken",
+            "type": "bool"
+          },
+          {
+            "name": "account",
+            "type": "pubkey"
+          },
+          {
+            "name": "jarNumber",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "jarV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "jarNumber",
+            "type": "u8"
+          },
+          {
+            "name": "jarId",
+            "type": "string"
+          },
+          {
+            "name": "depositCount",
+            "type": "u32"
+          },
+          {
+            "name": "invoiceCount",
+            "type": "u32"
+          },
+          {
+            "name": "createdAt",
+            "type": "i64"
           },
           {
             "name": "bump",

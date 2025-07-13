@@ -7,7 +7,8 @@ use instructions::create_supporter_index::*;
 use instructions::create_user::*;
 use instructions::create_withdrawl::*;
 use instructions::withdraw_spl_tokens::*;
-use instructions::execute_transaction::*;
+use instructions_v2::execute_transaction::*;
+use instructions_v2::setup_account::*;
 declare_id!("JARSq9S9RgyynuAwcdWh2yEG6MbhfntWq7zjXjAo87uQ");
 
 pub mod constants;
@@ -18,8 +19,6 @@ pub mod instructions_v2;
 pub mod state;
 pub mod state_v2;
 pub mod utils;
-
-
 
 #[cfg(not(feature = "no-entrypoint"))]
 use solana_security_txt::security_txt;
@@ -93,6 +92,14 @@ pub mod soljar {
         ctx: Context<'_, '_, '_, 'info, ExecuteTransaction<'info>>,
         instructions: Vec<TransactionInstruction>,
     ) -> Result<()> {
-        instructions::execute_transaction::execute_transaction(ctx, instructions)
+        instructions_v2::execute_transaction::execute_transaction(ctx, instructions)
+    }
+
+    pub fn setup_account(
+        ctx: Context<SetupAccount>,
+        jar_id: String,
+        default_currency_id: Option<u8>,
+    ) -> Result<()> {
+        instructions_v2::setup_account::setup_account(ctx, jar_id, default_currency_id)
     }
 }

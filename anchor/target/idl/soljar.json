@@ -755,6 +755,178 @@
       ]
     },
     {
+      "name": "setup_account",
+      "discriminator": [
+        252,
+        180,
+        230,
+        167,
+        170,
+        17,
+        238,
+        56
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "docs": [
+            "The owner/creator of the account (must be signer)"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "paymaster",
+          "docs": [
+            "The paymaster for account creation (can be same as owner)"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "account",
+          "docs": [
+            "The main AccountV2 PDA"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "jar",
+          "docs": [
+            "The first jar (jar number 0)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "jar_by_id",
+          "docs": [
+            "The jar_by_id mapping for global uniqueness"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  97,
+                  114,
+                  95,
+                  98,
+                  121,
+                  95,
+                  105,
+                  100,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "jar_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault",
+          "docs": [
+            "The vault PDA for holding funds (derived but not initialized as an account)"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  97,
+                  117,
+                  108,
+                  116,
+                  95,
+                  118,
+                  50
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "account"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "System program for account creation"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "jar_id",
+          "type": "string"
+        },
+        {
+          "name": "default_currency_id",
+          "type": {
+            "option": "u8"
+          }
+        }
+      ]
+    },
+    {
       "name": "withdraw_spl_tokens",
       "discriminator": [
         30,
@@ -975,6 +1147,32 @@
         216,
         114,
         137
+      ]
+    },
+    {
+      "name": "JarByIdV2",
+      "discriminator": [
+        73,
+        52,
+        33,
+        54,
+        103,
+        70,
+        116,
+        77
+      ]
+    },
+    {
+      "name": "JarV2",
+      "discriminator": [
+        28,
+        84,
+        83,
+        157,
+        82,
+        124,
+        249,
+        63
       ]
     },
     {
@@ -1418,6 +1616,62 @@
           {
             "name": "id",
             "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JarByIdV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "jar_id_taken",
+            "type": "bool"
+          },
+          {
+            "name": "account",
+            "type": "pubkey"
+          },
+          {
+            "name": "jar_number",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JarV2",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "jar_number",
+            "type": "u8"
+          },
+          {
+            "name": "jar_id",
+            "type": "string"
+          },
+          {
+            "name": "deposit_count",
+            "type": "u32"
+          },
+          {
+            "name": "invoice_count",
+            "type": "u32"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
           },
           {
             "name": "bump",
