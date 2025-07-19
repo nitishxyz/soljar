@@ -12,7 +12,7 @@ soljar = "JARSq9S9RgyynuAwcdWh2yEG6MbhfntWq7zjXjAo87uQ"
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
